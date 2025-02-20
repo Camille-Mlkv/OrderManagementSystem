@@ -22,5 +22,13 @@ namespace UserService.BusinessLogic.Specifications.Repositories
         Task<IdentityResult> CreateUser(ApplicationUser user, string password);
 
         Task AddRoleToUser(ApplicationUser user, string role);
+
+        Task<string> GenerateEmailConfirmationToken(ApplicationUser user);
+
+        Task<IdentityResult> ConfirmUserAccount(ApplicationUser user,string confirmationToken);
+
+        Task<string> GeneratePasswordResetCode(ApplicationUser user);
+
+        Task<IdentityResult> ResetPassword(ApplicationUser user, string resetCode, string newPassword);
     }
 }

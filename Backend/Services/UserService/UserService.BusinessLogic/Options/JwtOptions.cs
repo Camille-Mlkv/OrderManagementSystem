@@ -1,4 +1,4 @@
-﻿namespace UserService.BusinessLogic.Jwt
+﻿namespace UserService.BusinessLogic.Options
 {
     public class JwtOptions
     {

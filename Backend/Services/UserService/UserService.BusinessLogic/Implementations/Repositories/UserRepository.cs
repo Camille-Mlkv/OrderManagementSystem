@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.DataAccess.Models;
 using UserService.BusinessLogic.Specifications.Repositories;
+using Azure;
 
 
 namespace UserService.BusinessLogic.Implementations.Repositories
@@ -62,6 +63,30 @@ namespace UserService.BusinessLogic.Implementations.Repositories
         public async Task UpdateUser(ApplicationUser user)
         {
             await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<string> GenerateEmailConfirmationToken(ApplicationUser user)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            return token;
+        }
+
+        public async Task<IdentityResult> ConfirmUserAccount(ApplicationUser user, string confirmationToken)
+        {
+            var result=await _userManager.ConfirmEmailAsync(user, confirmationToken);
+            return result;
+        }
+
+        public async Task<string> GeneratePasswordResetCode(ApplicationUser user)
+        {
+            var code=await _userManager.GeneratePasswordResetTokenAsync(user);
+            return code;
+        }
+
+        public async Task<IdentityResult> ResetPassword(ApplicationUser user, string resetCode, string newPassword)
+        {
+            var resetResult = await _userManager.ResetPasswordAsync(user, resetCode, newPassword);
+            return resetResult;
         }
     }
 }

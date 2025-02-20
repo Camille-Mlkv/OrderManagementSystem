@@ -1,6 +1,6 @@
 using UserService.API.Middleware;
 using UserService.BusinessLogic;
-using UserService.BusinessLogic.Jwt;
+using UserService.BusinessLogic.Options;
 using UserService.DataAccess.DI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbProvider(builder.Configuration);
+
+builder.Configuration.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
 
 builder.Services.AddIdentity();
 builder.Services.AddPersistence();

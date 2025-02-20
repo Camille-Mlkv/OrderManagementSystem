@@ -16,6 +16,10 @@ namespace UserService.BusinessLogic
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
+
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IAccountService, AccountService>();
+            
             services.AddAutoMapper(typeof(UserProfile));
         }
 
