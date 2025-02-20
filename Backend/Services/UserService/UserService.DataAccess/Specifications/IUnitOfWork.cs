@@ -1,4 +1,6 @@
-﻿namespace UserService.BusinessLogic.Specifications.Repositories
+﻿using UserService.DataAccess.Specifications.Repositories;
+
+namespace UserService.DataAccess.Specifications
 {
     public interface IUnitOfWork
     {

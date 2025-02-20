@@ -1,6 +1,6 @@
 ﻿using UserService.DataAccess.Models;
 using UserService.BusinessLogic.Specifications.Services;
-using UserService.BusinessLogic.Specifications.Repositories;
+using UserService.DataAccess.Specifications;
 using UserService.BusinessLogic.DTOs.Requests;
 using UserService.BusinessLogic.DTOs.Responses;
 using UserService.BusinessLogic.DTOs;

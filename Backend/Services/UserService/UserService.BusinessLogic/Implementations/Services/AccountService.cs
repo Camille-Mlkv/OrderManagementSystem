@@ -1,5 +1,5 @@
 ﻿using UserService.BusinessLogic.Exceptions;
-using UserService.BusinessLogic.Specifications.Repositories;
+using UserService.DataAccess.Specifications;
 using UserService.BusinessLogic.Specifications.Services;
 using UserService.BusinessLogic.DTOs.Requests;
 

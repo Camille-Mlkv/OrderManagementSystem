@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.DataAccess.Models;
 
-namespace UserService.BusinessLogic.Specifications.Repositories
+namespace UserService.DataAccess.Specifications.Repositories
 {
     public interface IUserRepository
     {

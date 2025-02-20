@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using UserService.BusinessLogic.DTOs.Requests;
+﻿using UserService.BusinessLogic.DTOs.Requests;
 
 namespace UserService.BusinessLogic.Specifications.Services
 {

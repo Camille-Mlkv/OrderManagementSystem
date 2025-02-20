@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace UserService.BusinessLogic.DTOs.Requests
+﻿namespace UserService.BusinessLogic.DTOs.Requests
 {
     public class ResetPasswordRequest
     {

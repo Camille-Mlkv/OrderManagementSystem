@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using UserService.DataAccess.Models;
-using UserService.BusinessLogic.Specifications.Repositories;
-using Azure;
+using UserService.DataAccess.Specifications.Repositories;
 
-
-namespace UserService.BusinessLogic.Implementations.Repositories
+namespace UserService.DataAccess.Implementations.Repositories
 {
     public class UserRepository : IUserRepository
     {

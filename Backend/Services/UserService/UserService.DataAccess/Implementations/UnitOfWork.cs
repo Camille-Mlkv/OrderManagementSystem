@@ -1,7 +1,8 @@
-﻿using UserService.BusinessLogic.Specifications.Repositories;
+﻿using UserService.DataAccess.Specifications;
 using UserService.DataAccess.Data;
+using UserService.DataAccess.Specifications.Repositories;
 
-namespace UserService.BusinessLogic.Implementations.Repositories
+namespace UserService.DataAccess.Implementations
 {
     public class UnitOfWork : IUnitOfWork
     {
