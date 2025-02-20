@@ -20,7 +20,7 @@ namespace UserService.API.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] RegistrationRequest request, CancellationToken cancellationToken = default)
         {
-            await _authService.SignUp(request,cancellationToken);
+            await _authService.SignUpAsync(request,cancellationToken);
             _logger.LogInformation($"Registration successful for user {request.Email}");
             return StatusCode(201);
         }
@@ -28,7 +28,7 @@ namespace UserService.API.Controllers
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] LoginRequest request, CancellationToken cancellationToken = default)
         {
-            var response=await _authService.SignIn(request, cancellationToken);
+            var response=await _authService.SignInAsync(request, cancellationToken);
             _logger.LogInformation($"User {request.UserName} successfully  logged in.");
             return Ok(response);
         }
@@ -37,7 +37,7 @@ namespace UserService.API.Controllers
         [Authorize]
         public async Task<IActionResult> RefreshAccessToken([FromBody] RefreshAccessTokenRequest request, CancellationToken cancellationToken = default)
         {
-            var response=await _authService.RefreshAccessToken(request, cancellationToken);
+            var response=await _authService.RefreshAccessTokenAsync(request, cancellationToken);
             _logger.LogInformation($"Access token for refresh token {request.RefreshToken} is refreshed.");
 
             return Ok(response);
@@ -47,7 +47,7 @@ namespace UserService.API.Controllers
         [Authorize]
         public async Task<IActionResult> RevokeRefreshToken(string username, CancellationToken cancellationToken = default)
         {
-            await _authService.RevokeRefreshToken(username, cancellationToken);
+            await _authService.RevokeRefreshTokenAsync(username, cancellationToken);
             _logger.LogInformation($"Refresh token for user {username} is revoked.");
             return Ok();
         }

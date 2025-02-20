@@ -15,9 +15,9 @@ namespace UserService.BusinessLogic.Implementations.Services
             _unitOfWork = unitOfWork;
             _emailService = emailService;
         }
-        public async Task SendConfirmationEmail(string callBack, string userName)
+        public async Task SendConfirmationEmailAsync(string callBack, string userName)
         {
-            var user=await _unitOfWork.UserRepository.GetUserByUsername(userName);
+            var user=await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName);
             if (user is null)
             {
                 throw new BadRequestException("Bad request", $"User with username {userName} doesn't exist.");
@@ -27,21 +27,21 @@ namespace UserService.BusinessLogic.Implementations.Services
                         $"Confirm your account on OMS through this link: <a href='{callBack}'>Link</a>");
         }
 
-        public async Task ConfirmEmail(string userName)
+        public async Task ConfirmEmailAsync(string userName)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsername(userName);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName);
             if (user is null)
             {
                 throw new BadRequestException("Bad request", $"User {userName} doesn't exist.");
             }
 
-            string confirmationToken = await _unitOfWork.UserRepository.GenerateEmailConfirmationToken(user);
+            var confirmationToken = await _unitOfWork.UserRepository.GenerateEmailConfirmationTokenAsync(user);
             if (confirmationToken is null)
             {
                 throw new BadRequestException("Bad request", $"User {userName} doesn't exist.");
             }
 
-            var result = await _unitOfWork.UserRepository.ConfirmUserAccount(user,confirmationToken);
+            var result = await _unitOfWork.UserRepository.ConfirmUserAccountAsync(user,confirmationToken);
             if (!result.Succeeded)
             {
                 var error=result.Errors.FirstOrDefault();
@@ -49,9 +49,9 @@ namespace UserService.BusinessLogic.Implementations.Services
             }
 
         }
-        public async Task ForgotPassword(string callBack, string userName)
+        public async Task ForgotPasswordAsync(string callBack, string userName)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsername(userName);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName);
             if (user is null)
             {
                 throw new BadRequestException("Bad request", $"User with username {userName} doesn't exist.");
@@ -62,26 +62,26 @@ namespace UserService.BusinessLogic.Implementations.Services
                         $"To reset your password follow this link where you will find password reset code: <a href='{callBack}'>Link</a>");
         }
 
-        public async Task<string> GetPasswordResetCode(string userName)
+        public async Task<string> GetPasswordResetCodeAsync(string userName)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsername(userName);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName);
             if (user is null)
             {
                 throw new BadRequestException("Bad request", $"User with username {userName} doesn't exist.");
             }
-            string code = await _unitOfWork.UserRepository.GeneratePasswordResetCode(user);
+            var code = await _unitOfWork.UserRepository.GeneratePasswordResetCodeAsync(user);
             return code;
             
         }
 
-        public async Task ResetPassword(ResetPasswordRequest request)
+        public async Task ResetPasswordAsync(ResetPasswordRequest request)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsername(request.Email);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(request.Email);
             if (user is null)
             {
                 throw new BadRequestException("Bad request", $"User with username {request.Email} doesn't exist.");
             }
-            var result = await _unitOfWork.UserRepository.ResetPassword(user, request.Code, request.Password);
+            var result = await _unitOfWork.UserRepository.ResetPasswordAsync(user, request.Code, request.Password);
             if (!result.Succeeded)
             {
                 var error = result.Errors.FirstOrDefault();

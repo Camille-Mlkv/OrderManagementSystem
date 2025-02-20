@@ -5,30 +5,30 @@ namespace UserService.DataAccess.Specifications.Repositories
 {
     public interface IUserRepository
     {
-        Task<ApplicationUser?> GetUserById(string userId);
+        Task<ApplicationUser?> GetUserByIdAsync(string userId);
 
-        Task<ApplicationUser?> GetUserByUsername(string username);
+        Task<ApplicationUser?> GetUserByUsernameAsync(string username);
 
-        Task<bool> CheckPassword(ApplicationUser user, string password);
+        Task<bool> CheckPasswordAsync(ApplicationUser user, string password);
 
-        Task<IEnumerable<string>> GetUserRoles(ApplicationUser user);
+        Task<IEnumerable<string>> GetUserRolesAsync(ApplicationUser user);
 
-        Task UpdateUser(ApplicationUser user);
+        Task UpdateUserAsync(ApplicationUser user);
 
-        Task CreateRole(string role);
+        Task CreateRoleAsync(string role);
 
-        Task<bool> RoleExists(string role);
+        Task<bool> RoleExistsAsync(string role);
 
-        Task<IdentityResult> CreateUser(ApplicationUser user, string password);
+        Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password);
 
-        Task AddRoleToUser(ApplicationUser user, string role);
+        Task AddRoleToUserAsync(ApplicationUser user, string role);
 
-        Task<string> GenerateEmailConfirmationToken(ApplicationUser user);
+        Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user);
 
-        Task<IdentityResult> ConfirmUserAccount(ApplicationUser user,string confirmationToken);
+        Task<IdentityResult> ConfirmUserAccountAsync(ApplicationUser user,string confirmationToken);
 
-        Task<string> GeneratePasswordResetCode(ApplicationUser user);
+        Task<string> GeneratePasswordResetCodeAsync(ApplicationUser user);
 
-        Task<IdentityResult> ResetPassword(ApplicationUser user, string resetCode, string newPassword);
+        Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string resetCode, string newPassword);
     }
 }

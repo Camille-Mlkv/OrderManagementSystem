@@ -13,75 +13,75 @@ namespace UserService.DataAccess.Implementations.Repositories
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task AddRoleToUser(ApplicationUser user, string role)
+        public async Task AddRoleToUserAsync(ApplicationUser user, string role)
         {
             await _userManager.AddToRoleAsync(user, role);
         }
 
-        public async Task<bool> CheckPassword(ApplicationUser user, string password)
+        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
         {
-            bool isCorrect = await _userManager.CheckPasswordAsync(user, password);
+            var isCorrect = await _userManager.CheckPasswordAsync(user, password);
             return isCorrect;
         }
 
-        public async Task CreateRole(string role)
+        public async Task CreateRoleAsync(string role)
         {
             await _roleManager.CreateAsync(new IdentityRole(role));
         }
 
-        public async Task<IdentityResult> CreateUser(ApplicationUser user, string password)
+        public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password)
         {
             var result=await _userManager.CreateAsync(user, password);
             return result;
         }
 
-        public async Task<ApplicationUser?> GetUserById(string userId)
+        public async Task<ApplicationUser?> GetUserByIdAsync(string userId)
         {
             var applicationUser = await _userManager.FindByIdAsync(userId);
             return applicationUser;
         }
 
-        public async Task<ApplicationUser?> GetUserByUsername(string username)
+        public async Task<ApplicationUser?> GetUserByUsernameAsync(string username)
         {
             var applicationUser = await _userManager.FindByEmailAsync(username);
             return applicationUser;
         }
 
-        public async Task<IEnumerable<string>> GetUserRoles(ApplicationUser user)
+        public async Task<IEnumerable<string>> GetUserRolesAsync(ApplicationUser user)
         {
             var roles = await _userManager.GetRolesAsync(user);
             return roles;
         }
 
-        public async Task<bool> RoleExists(string role)
+        public async Task<bool> RoleExistsAsync(string role)
         {
             return await _roleManager.RoleExistsAsync(role);
         }
 
-        public async Task UpdateUser(ApplicationUser user)
+        public async Task UpdateUserAsync(ApplicationUser user)
         {
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task<string> GenerateEmailConfirmationToken(ApplicationUser user)
+        public async Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             return token;
         }
 
-        public async Task<IdentityResult> ConfirmUserAccount(ApplicationUser user, string confirmationToken)
+        public async Task<IdentityResult> ConfirmUserAccountAsync(ApplicationUser user, string confirmationToken)
         {
             var result=await _userManager.ConfirmEmailAsync(user, confirmationToken);
             return result;
         }
 
-        public async Task<string> GeneratePasswordResetCode(ApplicationUser user)
+        public async Task<string> GeneratePasswordResetCodeAsync(ApplicationUser user)
         {
             var code=await _userManager.GeneratePasswordResetTokenAsync(user);
             return code;
         }
 
-        public async Task<IdentityResult> ResetPassword(ApplicationUser user, string resetCode, string newPassword)
+        public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string resetCode, string newPassword)
         {
             var resetResult = await _userManager.ResetPasswordAsync(user, resetCode, newPassword);
             return resetResult;

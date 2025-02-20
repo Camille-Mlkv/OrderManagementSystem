@@ -21,7 +21,7 @@ namespace UserService.API.Controllers
         {
             var callBack = Url.Action("ConfirmEmail", "Account", new { userName }, Request.Scheme);
 
-            await _accountService.SendConfirmationEmail(callBack!,userName);
+            await _accountService.SendConfirmationEmailAsync(callBack!,userName);
             _logger.LogInformation($"Confirmation email sent to {userName}");
             return Ok();
         }
@@ -29,7 +29,7 @@ namespace UserService.API.Controllers
         [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail([FromQuery]string userName)
         {
-            await _accountService.ConfirmEmail(userName);
+            await _accountService.ConfirmEmailAsync(userName);
             _logger.LogInformation($"User {userName} confirmed their account.");
             return Ok("Account is confirmed.");
         }
@@ -39,7 +39,7 @@ namespace UserService.API.Controllers
         {
             var callBack = Url.Action("GetPasswordResetCode", "Account", new { userName }, Request.Scheme);
 
-            await _accountService.ForgotPassword(callBack!,userName);
+            await _accountService.ForgotPasswordAsync(callBack!,userName);
             _logger.LogInformation($"Password reset email sent to {userName}");
             return Ok();
         }
@@ -47,7 +47,7 @@ namespace UserService.API.Controllers
         [HttpPost("GetPasswordResetCode")]
         public async Task<IActionResult> GetPasswordResetCode([FromQuery]string userName)
         {
-            var resetCode=await _accountService.GetPasswordResetCode(userName);
+            var resetCode=await _accountService.GetPasswordResetCodeAsync(userName);
             _logger.LogInformation($"User {userName} received password reset email.");
             return Ok(resetCode);
         }
@@ -55,7 +55,7 @@ namespace UserService.API.Controllers
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest model)
         {
-            await _accountService.ResetPassword(model);
+            await _accountService.ResetPasswordAsync(model);
             _logger.LogInformation($"Password is successfully reset for user {model.Email}");
             return Ok();
         }

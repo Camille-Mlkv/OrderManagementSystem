@@ -5,12 +5,12 @@ namespace UserService.BusinessLogic.Specifications.Services
 {
     public interface IAuthService
     {
-        public Task SignUp(RegistrationRequest request,CancellationToken cancellationToken);
+        public Task SignUpAsync(RegistrationRequest request,CancellationToken cancellationToken);
 
-        public Task<LoginResponse> SignIn(LoginRequest request, CancellationToken cancellationToken);
+        public Task<LoginResponse> SignInAsync(LoginRequest request, CancellationToken cancellationToken);
 
-        public Task<LoginResponse> RefreshAccessToken(RefreshAccessTokenRequest request, CancellationToken cancellationToken);
+        public Task<LoginResponse> RefreshAccessTokenAsync(RefreshAccessTokenRequest request, CancellationToken cancellationToken);
 
-        public Task RevokeRefreshToken(string userName, CancellationToken cancellationToken);
+        public Task RevokeRefreshTokenAsync(string userName, CancellationToken cancellationToken);
     }
 }
