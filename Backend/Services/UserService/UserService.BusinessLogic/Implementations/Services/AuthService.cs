@@ -27,7 +27,9 @@ namespace UserService.BusinessLogic.Implementations.Services
             var newUser=_mapper.Map<ApplicationUser>(request);
             newUser.UserName = newUser.Email;
 
-            var result = await _unitOfWork.UserRepository.CreateUserAsync(newUser, request.Password);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await _unitOfWork.UserRepository.CreateUserAsync(newUser, request.Password, cancellationToken);
 
             if (result.Errors.Any())
             {
@@ -35,14 +37,16 @@ namespace UserService.BusinessLogic.Implementations.Services
                 throw new BadRequestException(error.Code, error.Description);
             }
 
-            await _unitOfWork.UserRepository.AddRoleToUserAsync(newUser, request.Role);
+            await _unitOfWork.UserRepository.AddRoleToUserAsync(newUser, request.Role, cancellationToken);
         }
 
         public async Task<LoginResponse> SignInAsync(LoginRequest request, CancellationToken cancellationToken)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(request.UserName);
+            cancellationToken.ThrowIfCancellationRequested();
 
-            if(user is null || !await _unitOfWork.UserRepository.CheckPasswordAsync(user, request.Password))
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(request.UserName, cancellationToken);
+
+            if (user is null || !await _unitOfWork.UserRepository.CheckPasswordAsync(user, request.Password, cancellationToken))
             {
                 throw new UnauthorizedException("Cannot sign in.","Wrong credentials.");
             }
@@ -52,14 +56,19 @@ namespace UserService.BusinessLogic.Implementations.Services
                 throw new UnauthorizedException("Cannot sign in.", " Account is not confirmed.");
             }
 
-            var roles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
-            var (accessToken, expiry) = _tokenService.GenerateAccessToken(user, roles);
+            cancellationToken.ThrowIfCancellationRequested();
 
+            var roles = await _unitOfWork.UserRepository.GetUserRolesAsync(user, cancellationToken);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var (accessToken, expiry) = _tokenService.GenerateAccessToken(user, roles);
             var refreshToken = _tokenService.GenerateRefreshToken();
+
             user.RefreshToken = refreshToken;
             user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
-            await _unitOfWork.UserRepository.UpdateUserAsync(user);
+            await _unitOfWork.UserRepository.UpdateUserAsync(user, cancellationToken);
             await _unitOfWork.SaveAllAsync(cancellationToken);
 
             LoginResponse loginResponse = new()
@@ -80,12 +89,18 @@ namespace UserService.BusinessLogic.Implementations.Services
                 throw new BadRequestException("Access token not refreshed.", "Old access token is invalid.");
             }
 
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(principal.Identity.Name);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(principal.Identity.Name, cancellationToken);
             if (user is null || user.RefreshToken != request.RefreshToken || user.RefreshTokenExpiry < DateTime.UtcNow)
             {
                 throw new BadRequestException("Access token not refreshed.", "Refresh token expired or is invalid.");
             }
-            var roles = await _unitOfWork.UserRepository.GetUserRolesAsync(user);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var roles = await _unitOfWork.UserRepository.GetUserRolesAsync(user, cancellationToken);
+
             var accessToken = _tokenService.GenerateAccessToken(user, roles);
 
             LoginResponse loginResponseDTO = new()
@@ -100,14 +115,20 @@ namespace UserService.BusinessLogic.Implementations.Services
 
         public async Task RevokeRefreshTokenAsync(string userName, CancellationToken cancellationToken)
         {
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName, cancellationToken);
             if (user is null)
             {
                 throw new NotFoundException("Error while revoking refresh token.", $"User with username {userName} not found.");
             }
+
             user.RefreshToken = null;
             user.RefreshTokenExpiry = null;
-            await _unitOfWork.UserRepository.UpdateUserAsync(user);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await _unitOfWork.UserRepository.UpdateUserAsync(user, cancellationToken);
             await _unitOfWork.SaveAllAsync(cancellationToken);
         }
     }

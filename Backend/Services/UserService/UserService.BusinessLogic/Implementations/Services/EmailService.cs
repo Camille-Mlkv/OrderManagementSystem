@@ -15,7 +15,7 @@ namespace UserService.BusinessLogic.Implementations.Services
             _emailOptions= emailOptions.Value;
         }
 
-        public async Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message, CancellationToken cancellationToken)
         {
             var emailMessage = new MimeMessage();
 
@@ -26,6 +26,8 @@ namespace UserService.BusinessLogic.Implementations.Services
             {
                 Text = message
             };
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var client = new SmtpClient())
             {

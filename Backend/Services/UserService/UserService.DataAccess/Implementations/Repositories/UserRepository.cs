@@ -13,77 +13,112 @@ namespace UserService.DataAccess.Implementations.Repositories
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public async Task AddRoleToUserAsync(ApplicationUser user, string role)
+        public async Task AddRoleToUserAsync(ApplicationUser user, string role, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             await _userManager.AddToRoleAsync(user, role);
         }
 
-        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password)
+        public async Task<bool> CheckPasswordAsync(ApplicationUser user, string password, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var isCorrect = await _userManager.CheckPasswordAsync(user, password);
+
             return isCorrect;
         }
 
-        public async Task CreateRoleAsync(string role)
+        public async Task CreateRoleAsync(string role, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             await _roleManager.CreateAsync(new IdentityRole(role));
         }
 
-        public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password)
+        public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password, CancellationToken cancellationToken)
         {
-            var result=await _userManager.CreateAsync(user, password);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await _userManager.CreateAsync(user, password);
+
             return result;
         }
 
-        public async Task<ApplicationUser?> GetUserByIdAsync(string userId)
+        public async Task<ApplicationUser?> GetUserByIdAsync(string userId, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var applicationUser = await _userManager.FindByIdAsync(userId);
+
             return applicationUser;
         }
 
-        public async Task<ApplicationUser?> GetUserByUsernameAsync(string username)
+        public async Task<ApplicationUser?> GetUserByUsernameAsync(string username, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var applicationUser = await _userManager.FindByEmailAsync(username);
+
             return applicationUser;
         }
 
-        public async Task<IEnumerable<string>> GetUserRolesAsync(ApplicationUser user)
+        public async Task<IEnumerable<string>> GetUserRolesAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var roles = await _userManager.GetRolesAsync(user);
+
             return roles;
         }
 
-        public async Task<bool> RoleExistsAsync(string role)
+        public async Task<bool> RoleExistsAsync(string role, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             return await _roleManager.RoleExistsAsync(role);
         }
 
-        public async Task UpdateUserAsync(ApplicationUser user)
+        public async Task UpdateUserAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
+        public async Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
             return token;
         }
 
-        public async Task<IdentityResult> ConfirmUserAccountAsync(ApplicationUser user, string confirmationToken)
+        public async Task<IdentityResult> ConfirmUserAccountAsync(ApplicationUser user, string confirmationToken, CancellationToken cancellationToken)
         {
-            var result=await _userManager.ConfirmEmailAsync(user, confirmationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var result = await _userManager.ConfirmEmailAsync(user, confirmationToken);
+
             return result;
         }
 
-        public async Task<string> GeneratePasswordResetCodeAsync(ApplicationUser user)
+        public async Task<string> GeneratePasswordResetCodeAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            var code=await _userManager.GeneratePasswordResetTokenAsync(user);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
             return code;
         }
 
-        public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string resetCode, string newPassword)
+        public async Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string resetCode, string newPassword, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var resetResult = await _userManager.ResetPasswordAsync(user, resetCode, newPassword);
+
             return resetResult;
         }
     }

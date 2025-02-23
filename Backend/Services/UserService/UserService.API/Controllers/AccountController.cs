@@ -16,47 +16,52 @@ namespace UserService.API.Controllers
             _logger = logger;
         }
 
-        [HttpPost("SendEmail")]
-        public async Task<IActionResult> SendConfirmationEmail(string userName)
+        [HttpPost("users/{userName}/confirmation-email")]
+        public async Task<IActionResult> SendConfirmationEmail(string userName, CancellationToken cancellationToken)
         {
             var callBack = Url.Action("ConfirmEmail", "Account", new { userName }, Request.Scheme);
 
-            await _accountService.SendConfirmationEmailAsync(callBack!,userName);
+            await _accountService.SendConfirmationEmailAsync(callBack!,userName, cancellationToken);
             _logger.LogInformation($"Confirmation email sent to {userName}");
+
             return Ok();
         }
 
-        [HttpGet("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery]string userName)
+        [HttpGet("users/{userName}/email/confirmed")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery]string userName, CancellationToken cancellationToken)
         {
-            await _accountService.ConfirmEmailAsync(userName);
+            await _accountService.ConfirmEmailAsync(userName, cancellationToken);
             _logger.LogInformation($"User {userName} confirmed their account.");
+
             return Ok("Account is confirmed.");
         }
 
-        [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> ForgotPassword(string userName)
+        [HttpPost("users/{userName}/password-email")]
+        public async Task<IActionResult> ForgotPassword(string userName, CancellationToken cancellationToken)
         {
             var callBack = Url.Action("GetPasswordResetCode", "Account", new { userName }, Request.Scheme);
 
-            await _accountService.ForgotPasswordAsync(callBack!,userName);
+            await _accountService.ForgotPasswordAsync(callBack!,userName, cancellationToken);
             _logger.LogInformation($"Password reset email sent to {userName}");
+
             return Ok();
         }
 
-        [HttpPost("GetPasswordResetCode")]
-        public async Task<IActionResult> GetPasswordResetCode([FromQuery]string userName)
+        [HttpGet("users/{userName}/reset-code")]
+        public async Task<IActionResult> GetPasswordResetCode([FromQuery]string userName, CancellationToken cancellationToken)
         {
-            var resetCode=await _accountService.GetPasswordResetCodeAsync(userName);
+            var resetCode=await _accountService.GetPasswordResetCodeAsync(userName, cancellationToken);
             _logger.LogInformation($"User {userName} received password reset email.");
+
             return Ok(resetCode);
         }
 
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordRequest model)
+        [HttpPost("password/reset")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest model, CancellationToken cancellationToken)
         {
-            await _accountService.ResetPasswordAsync(model);
+            await _accountService.ResetPasswordAsync(model, cancellationToken);
             _logger.LogInformation($"Password is successfully reset for user {model.Email}");
+
             return Ok();
         }
 
