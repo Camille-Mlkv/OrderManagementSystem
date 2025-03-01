@@ -1,4 +1,6 @@
 using MealService.Infrastructure;
+using MealService.Application;
+using MealService.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,9 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureDbConnection(builder.Configuration);
 builder.Services.AddPersistence();
+
+builder.Services.ConfigureApplicationServices();
+
 
 var app = builder.Build();
 
@@ -22,5 +27,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.Run();

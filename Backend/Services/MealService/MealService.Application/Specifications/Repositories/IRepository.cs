@@ -21,5 +21,8 @@ namespace MealService.Application.Specifications.Repositories
             params Expression<Func<T, object>>[]? includesProperties);
 
         Task<List<T>> GetPagedListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken, Expression<Func<T, bool>>? filter = null);
+
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
+
     }
 }

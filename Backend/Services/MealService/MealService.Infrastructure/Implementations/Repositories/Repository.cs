@@ -29,7 +29,6 @@ namespace MealService.Infrastructure.Implementations.Repositories
         public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, params Expression<Func<T, object>>[]? includesProperties)
         {
             IQueryable<T> query = _context.Set<T>().AsQueryable();
-            query = query.AsNoTracking();
 
             query = query.Where(entity => entity.Id == id);
 
@@ -94,6 +93,11 @@ namespace MealService.Infrastructure.Implementations.Repositories
             _context.Set<T>().Update(entity);
 
             return Task.CompletedTask;
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
+        {
+            return await _context.Set<T>().AnyAsync(predicate, cancellationToken);
         }
     }
 }
