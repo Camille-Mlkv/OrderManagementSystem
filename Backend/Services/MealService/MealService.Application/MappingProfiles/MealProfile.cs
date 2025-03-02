@@ -9,6 +9,7 @@ namespace MealService.Application.MappingProfiles
         public MealProfile()
         {
             CreateMap<Meal,MealDto>().ReverseMap();
+            CreateMap<Meal, MealRequestDto>().ReverseMap();
         }
     }
 }

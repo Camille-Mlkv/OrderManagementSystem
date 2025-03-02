@@ -46,7 +46,7 @@ namespace MealService.API.Controllers
         }
 
         [HttpPut("category/update/{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryDto category,CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryRequestDto category,CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start updating category {id}.");
 

@@ -16,8 +16,4 @@
     <ProjectReference Include="..\MealService.Domain\MealService.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\Meals\" />
-  </ItemGroup>
-
 </Project>

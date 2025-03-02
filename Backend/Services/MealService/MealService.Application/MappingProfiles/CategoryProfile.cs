@@ -9,7 +9,7 @@ namespace MealService.Application.MappingProfiles
         public CategoryProfile()
         {
             CreateMap<Category,CategoryDto>().ReverseMap();
-            CreateMap<Category,UpdateCategoryDto>().ReverseMap();
+            CreateMap<Category,UpdateCategoryRequestDto>().ReverseMap();
         }
     }
 }
