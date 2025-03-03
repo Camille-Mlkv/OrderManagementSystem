@@ -28,11 +28,25 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
                 throw new NotFoundException($"Meal with id {request.Id} doesn't exist.");
             }
 
+            var category = await _unitOfWork.CategoryRepository.GetByIdAsync(request.UpdatedMeal.CategoryId, cancellationToken);
+
+            if (category is null)
+            {
+                throw new BadRequestException("Foreign key for category constraint is violated.");
+            }
+
+            var cuisine = await _unitOfWork.CuisineRepository.GetByIdAsync(request.UpdatedMeal.CuisineId, cancellationToken);
+
+            if (cuisine is null)
+            {
+                throw new BadRequestException("Foreign key for cuisine constraint is violated.");
+            }
+
             if (request.UpdatedMeal.ImageFile != null)
             {
                 if (foundMeal.ImageUrl != _imageService.GetDefaultImageUrl())
                 {
-                    var imagePublicId = GetPublicIdFromUrl(foundMeal.ImageUrl); // get rid of old image
+                    var imagePublicId = GetPublicIdFromUrl(foundMeal.ImageUrl);
                     await _imageService.DeleteImageAsync(imagePublicId);
                 }
 

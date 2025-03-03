@@ -11,5 +11,6 @@ namespace MealService.Application.DTOs.Meals
         public bool IsAvailable { get; set; }
         public IFormFile? ImageFile { get; set; }
         public Guid CategoryId { get; set; }
+        public Guid CuisineId { get; set; }
     }
 }

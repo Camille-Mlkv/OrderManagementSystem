@@ -2,9 +2,8 @@ using MealService.Application.DTOs.Meals;
 using MealService.Application.UseCases.Meals.Commands.AddMeal;
 using MealService.Application.UseCases.Meals.Commands.DeleteMeal;
 using MealService.Application.UseCases.Meals.Commands.UpdateMeal;
-using MealService.Application.UseCases.Meals.Queries.GetAvailableMeals;
-using MealService.Application.UseCases.Meals.Queries.GetMeals;
-using MealService.Application.UseCases.Meals.Queries.GetMealsByCategory;
+using MealService.Application.UseCases.Meals.Queries.GetAllMeals;
+using MealService.Application.UseCases.Meals.Queries.GetFilteredMeals;
 using MealService.Application.UseCases.Meals.Queries.GetMealsPerPage;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -30,13 +29,14 @@ namespace MealService.API.Controllers
         {
             _logger.LogInformation("Start retrieving meals.");
 
-            var meals = await _mediator.Send(new GetMealsQuery(), cancellationToken);
+            var meals = await _mediator.Send(new GetAllMealsQuery(), cancellationToken);
 
             _logger.LogInformation("Meals retrieved.");
 
             return Ok(meals);
         }
 
+        [Authorize(Policy = "Admin")] // admins can see paginated meals without specified cuisine
         [HttpGet("{pageNo}")]
         public async Task<IActionResult> GetMealsPerPage(CancellationToken cancellationToken, int pageNo = 1, int pageSize = 3)
         {
@@ -49,24 +49,12 @@ namespace MealService.API.Controllers
             return Ok(meals);
         }
 
-        [HttpGet("{categoryId}/{pageNo}")]
-        public async Task<IActionResult> GetMealsByCategory(CancellationToken cancellationToken,Guid categoryId, int pageNo = 1, int pageSize = 3)
+        [HttpGet("filtered")]
+        public async Task<IActionResult> GetFilteredMeals([FromQuery] MealFilterDto filter, CancellationToken cancellationToken, int pageNo = 1, int pageSize = 3)
         {
-            _logger.LogInformation($"Start retrieving meals per page {pageNo} per category.");
+            _logger.LogInformation($"Start retrieving filtered meals per page {pageNo}.");
 
-            var meals = await _mediator.Send(new GetMealsByCategoryQuery(categoryId,pageNo, pageSize), cancellationToken);
-
-            _logger.LogInformation("Meals retrieved.");
-
-            return Ok(meals);
-        }
-
-        [HttpGet("available")]
-        public async Task<IActionResult> GetAvailableMeals(CancellationToken cancellationToken, int pageNo = 1, int pageSize = 3)
-        {
-            _logger.LogInformation($"Start retrieving available meals per page {pageNo}.");
-
-            var meals = await _mediator.Send(new GetAvailableMealsQuery(pageNo,pageSize), cancellationToken);
+            var meals = await _mediator.Send(new GetFilteredMealsQuery(filter,pageNo, pageSize), cancellationToken);
 
             _logger.LogInformation("Meals retrieved.");
 
