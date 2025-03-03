@@ -1,6 +1,6 @@
-﻿namespace MealService.Application.DTOs
+﻿namespace MealService.Application.DTOs.Categories
 {
-    public class UpdateCategoryRequestDto
+    public class CategoryRequestDto
     {
         public string Name { get; set; }
         public string NormalizedName { get; set; }

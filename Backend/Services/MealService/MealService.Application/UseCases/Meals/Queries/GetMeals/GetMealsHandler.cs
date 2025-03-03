@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MealService.Application.DTOs;
+using MealService.Application.DTOs.Meals;
 using MealService.Application.Specifications;
 using MediatR;
 

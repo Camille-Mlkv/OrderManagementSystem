@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
-using MealService.Application.DTOs;
+using MealService.Application.DTOs.Categories;
 
 namespace MealService.Application.Validators
 {
-    public class CategoryValidator:AbstractValidator<CategoryDto>
+    public class CategoryValidator:AbstractValidator<CategoryRequestDto>
     {
         public CategoryValidator()
         {

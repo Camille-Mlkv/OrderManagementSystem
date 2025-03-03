@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MealService.Application.DTOs;
+using MealService.Application.DTOs.Categories;
 using MealService.Application.Exceptions;
 using MealService.Application.Specifications;
 using MealService.Domain.Entities;

@@ -1,28 +1,27 @@
 ﻿using AutoMapper;
-using MealService.Application.DTOs;
+using MealService.Application.DTOs.Meals;
 using MealService.Application.Exceptions;
 using MealService.Application.Specifications;
 using MealService.Application.Specifications.Services;
 using MealService.Domain.Entities;
 using MediatR;
-using static System.Net.WebRequestMethods;
 
-namespace MealService.Application.UseCases.Meals.Commands.CreateMeal
+namespace MealService.Application.UseCases.Meals.Commands.AddMeal
 {
-    public class CreateMealHandler : IRequestHandler<CreateMealCommand, MealDto>
+    public class AddMealHandler : IRequestHandler<AddMealCommand, MealDto>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IImageService _imageService;
 
-        public CreateMealHandler(IMapper mapper, IUnitOfWork unitOfWork,IImageService imageService)
+        public AddMealHandler(IMapper mapper, IUnitOfWork unitOfWork,IImageService imageService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _imageService = imageService;
         }
 
-        public async Task<MealDto> Handle(CreateMealCommand request, CancellationToken cancellationToken)
+        public async Task<MealDto> Handle(AddMealCommand request, CancellationToken cancellationToken)
         {
             var category=await _unitOfWork.CategoryRepository.GetByIdAsync(request.Meal.CategoryId,cancellationToken);
             if (category is null)

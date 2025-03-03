@@ -1,5 +1,5 @@
-using MealService.Application.DTOs;
-using MealService.Application.UseCases.Meals.Commands.CreateMeal;
+using MealService.Application.DTOs.Meals;
+using MealService.Application.UseCases.Meals.Commands.AddMeal;
 using MealService.Application.UseCases.Meals.Commands.DeleteMeal;
 using MealService.Application.UseCases.Meals.Commands.UpdateMeal;
 using MealService.Application.UseCases.Meals.Queries.GetAvailableMeals;
@@ -79,14 +79,14 @@ namespace MealService.API.Controllers
         {
             _logger.LogInformation("Start adding new meal.");
 
-            var newMeal = await _mediator.Send(new CreateMealCommand(meal), cancellationToken);
+            var newMeal = await _mediator.Send(new AddMealCommand(meal), cancellationToken);
             _logger.LogInformation("New meal added.");
 
             return CreatedAtAction(nameof(CreateMeal), new { id = newMeal.Id }, newMeal);
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpDelete("meal/delete/{id}")]
+        [HttpDelete("meal/delete/{mealId}")]
         public async Task<IActionResult> DeleteMeal(Guid mealId, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start deleting meal {mealId}.");

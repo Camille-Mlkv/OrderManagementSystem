@@ -45,13 +45,39 @@ namespace MealService.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("MealService.Domain.Entities.Cuisine", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Cuisines");
+                });
+
             modelBuilder.Entity("MealService.Domain.Entities.Meal", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("Calories")
+                        .HasColumnType("int");
+
                     b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CuisineId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -78,11 +104,15 @@ namespace MealService.Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("CuisineId");
+
                     b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("Meals", t =>
                         {
+                            t.HasCheckConstraint("CK_Meal_Calories", "Calories > 0");
+
                             t.HasCheckConstraint("CK_Meal_Price", "Price > 0");
                         });
                 });
@@ -95,10 +125,23 @@ namespace MealService.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("MealService.Domain.Entities.Cuisine", "Cuisine")
+                        .WithMany("Meals")
+                        .HasForeignKey("CuisineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("Cuisine");
                 });
 
             modelBuilder.Entity("MealService.Domain.Entities.Category", b =>
+                {
+                    b.Navigation("Meals");
+                });
+
+            modelBuilder.Entity("MealService.Domain.Entities.Cuisine", b =>
                 {
                     b.Navigation("Meals");
                 });

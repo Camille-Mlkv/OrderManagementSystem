@@ -13,6 +13,11 @@ namespace MealService.Infrastructure.Data.Configuration
                 .HasForeignKey(m => m.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasOne<Cuisine>()
+                .WithMany(c => c.Meals)
+                .HasForeignKey(m => m.CuisineId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Property(m => m.Name)
                 .IsRequired()
                 .HasMaxLength(150);
@@ -24,9 +29,18 @@ namespace MealService.Infrastructure.Data.Configuration
                 .IsRequired()
                 .HasMaxLength(500);
 
+            builder.Property(m => m.Price)
+                .IsRequired();
             builder.ToTable(t => t.HasCheckConstraint("CK_Meal_Price", "Price > 0"));
 
+            builder.Property(m => m.Calories)
+                .IsRequired();
+            builder.ToTable(t => t.HasCheckConstraint("CK_Meal_Calories", "Calories > 0"));
+
             builder.Property(m => m.IsAvailable)
+                .IsRequired();
+
+            builder.Property(m=>m.ImageUrl)
                 .IsRequired();
 
         }

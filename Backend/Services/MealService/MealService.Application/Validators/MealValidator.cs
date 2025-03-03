@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using MealService.Application.DTOs;
+using MealService.Application.DTOs.Meals;
 using Microsoft.AspNetCore.Http;
 
 namespace MealService.Application.Validators
@@ -18,6 +18,9 @@ namespace MealService.Application.Validators
             RuleFor(m => m.Description)
                 .NotEmpty().WithMessage("Description is required.")
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters.");
+
+            RuleFor(m => m.Calories)
+                .GreaterThan(0).WithMessage("Calories must be greater than 0.");
 
             RuleFor(m => m.ImageFile)
                 .Must(BeAValidImage).When(m => m.ImageFile != null)

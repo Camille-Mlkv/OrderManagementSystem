@@ -1,4 +1,4 @@
-﻿using MealService.Application.DTOs;
+﻿using MealService.Application.DTOs.Categories;
 using MediatR;
 
 namespace MealService.Application.UseCases.Categories.Queries.GetCategories

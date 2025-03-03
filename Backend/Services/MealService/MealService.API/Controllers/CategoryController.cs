@@ -1,4 +1,4 @@
-﻿using MealService.Application.DTOs;
+﻿using MealService.Application.DTOs.Categories;
 using MealService.Application.UseCases.Categories.Commands.AddCategory;
 using MealService.Application.UseCases.Categories.Commands.DeleteCategory;
 using MealService.Application.UseCases.Categories.Commands.UpdateCategory;
@@ -37,7 +37,7 @@ namespace MealService.API.Controllers
 
         [Authorize(Policy ="Admin")]
         [HttpPost("categories/add")]
-        public async Task<IActionResult> AddCategory([FromBody] CategoryDto category,CancellationToken cancellationToken)
+        public async Task<IActionResult> AddCategory([FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start adding new category.");
 
@@ -49,7 +49,7 @@ namespace MealService.API.Controllers
 
         [Authorize(Policy = "Admin")]
         [HttpPut("category/update/{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryRequestDto category,CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start updating category {id}.");
 

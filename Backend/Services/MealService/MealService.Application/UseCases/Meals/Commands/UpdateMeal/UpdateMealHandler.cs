@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using MealService.Application.DTOs;
+using MealService.Application.DTOs.Meals;
 using MealService.Application.Specifications.Services;
 using MealService.Application.Specifications;
 using MediatR;
 using MealService.Application.Exceptions;
-using MealService.Domain.Entities;
 
 namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
 {

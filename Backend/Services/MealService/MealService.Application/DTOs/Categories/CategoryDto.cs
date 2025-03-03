@@ -1,4 +1,4 @@
-﻿namespace MealService.Application.DTOs
+﻿namespace MealService.Application.DTOs.Categories
 {
     public class CategoryDto
     {
