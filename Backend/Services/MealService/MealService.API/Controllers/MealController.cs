@@ -7,6 +7,7 @@ using MealService.Application.UseCases.Meals.Queries.GetMeals;
 using MealService.Application.UseCases.Meals.Queries.GetMealsByCategory;
 using MealService.Application.UseCases.Meals.Queries.GetMealsPerPage;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealService.API.Controllers
@@ -72,6 +73,7 @@ namespace MealService.API.Controllers
             return Ok(meals);
         }
 
+        [Authorize(Policy ="Admin")]
         [HttpPost("meal/create")]
         public async Task<IActionResult> CreateMeal([FromForm] MealRequestDto meal, CancellationToken cancellationToken)
         {
@@ -83,6 +85,7 @@ namespace MealService.API.Controllers
             return CreatedAtAction(nameof(CreateMeal), new { id = newMeal.Id }, newMeal);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("meal/delete/{id}")]
         public async Task<IActionResult> DeleteMeal(Guid mealId, CancellationToken cancellationToken)
         {
@@ -94,8 +97,9 @@ namespace MealService.API.Controllers
             return StatusCode(204);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPut("meal/update/{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid id, [FromForm] MealRequestDto meal, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateMeal(Guid id, [FromForm] MealRequestDto meal, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start updating meal {id}.");
 

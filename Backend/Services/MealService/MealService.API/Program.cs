@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureDbConnection(builder.Configuration);
 builder.Services.AddPersistence();
 builder.Services.ConfigureUtilities(builder.Configuration);
+builder.Services.ConfigureAuth(builder.Configuration);
 
 builder.Services.ConfigureApplicationServices();
 
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

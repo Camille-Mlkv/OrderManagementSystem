@@ -5,6 +5,7 @@ using MealService.Application.UseCases.Categories.Commands.UpdateCategory;
 using MealService.Application.UseCases.Categories.Queries.GetCategories;
 using MealService.Application.UseCases.Categories.Queries.GetCategoriesByName;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealService.API.Controllers
@@ -34,6 +35,7 @@ namespace MealService.API.Controllers
             return Ok(categories);
         }
 
+        [Authorize(Policy ="Admin")]
         [HttpPost("categories/add")]
         public async Task<IActionResult> AddCategory([FromBody] CategoryDto category,CancellationToken cancellationToken)
         {
@@ -45,6 +47,7 @@ namespace MealService.API.Controllers
             return CreatedAtAction(nameof(AddCategory), new { id = newCategory.Id }, newCategory);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPut("category/update/{id}")]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] UpdateCategoryRequestDto category,CancellationToken cancellationToken)
         {
@@ -57,6 +60,7 @@ namespace MealService.API.Controllers
             return Ok(updatedCategory);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("category/delete/{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id, CancellationToken cancellationToken)
         {
@@ -70,7 +74,7 @@ namespace MealService.API.Controllers
         }
 
         [HttpGet("categories/{name}")]
-        public async Task<IActionResult> GetCategories(string name,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCategoriesByName(string name,CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start retrieving category by its name.");
 
