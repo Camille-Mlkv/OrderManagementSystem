@@ -11,6 +11,8 @@ namespace MealService.Infrastructure.Data
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Cuisine> Cuisines { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<MealTag> MealTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +21,7 @@ namespace MealService.Infrastructure.Data
             modelBuilder.ApplyConfiguration(new MealEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CuisineConfiguration());
+            modelBuilder.ApplyConfiguration(new MealTagConfiguration());
         }
     }
 }

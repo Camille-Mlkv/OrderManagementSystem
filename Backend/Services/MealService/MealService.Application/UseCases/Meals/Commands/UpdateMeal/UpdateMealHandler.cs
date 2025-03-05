@@ -21,7 +21,7 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
         }
         public async Task<MealDto> Handle(UpdateMealCommand request, CancellationToken cancellationToken)
         {
-            var foundMeal = await _unitOfWork.MealRepository.GetByIdAsync(request.Id, cancellationToken);
+            var foundMeal = await _unitOfWork.MealRepository.GetByIdAsync(request.Id, cancellationToken, meal => meal.MealTags);
 
             if (foundMeal is null)
             {
@@ -56,6 +56,9 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
             }
 
             _mapper.Map(request.UpdatedMeal, foundMeal);
+
+            var tags = await _unitOfWork.TagRepository.ListAsync(t => request.UpdatedMeal.TagIds.Contains(t.Id), cancellationToken);
+            foundMeal.SetTags(tags);
 
             await _unitOfWork.SaveAllAsync(cancellationToken);
 

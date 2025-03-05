@@ -8,6 +8,7 @@ namespace MealService.Application.Specifications
         IRepository<Meal> MealRepository { get; }
         IRepository<Category> CategoryRepository { get; }
         IRepository<Cuisine> CuisineRepository { get; }
+        IRepository<Tag> TagRepository { get; }
         public Task SaveAllAsync(CancellationToken cancellationToken);
     }
 }

@@ -26,7 +26,13 @@ namespace MealService.Application.UseCases.Meals.Commands.AddMeal
             var category=await _unitOfWork.CategoryRepository.GetByIdAsync(request.Meal.CategoryId,cancellationToken);
             if (category is null)
             {
-                throw new BadRequestException("Foreign key constraint is violated.");
+                throw new BadRequestException("Foreign key constraint for category is violated.");
+            }
+
+            var cuisine = await _unitOfWork.CuisineRepository.GetByIdAsync(request.Meal.CuisineId, cancellationToken);
+            if (cuisine is null)
+            {
+                throw new BadRequestException("Foreign key constraint for cuisine is violated.");
             }
 
             var newMeal = _mapper.Map<Meal>(request.Meal);
@@ -43,6 +49,13 @@ namespace MealService.Application.UseCases.Meals.Commands.AddMeal
             }
 
             await _unitOfWork.MealRepository.AddAsync(newMeal, cancellationToken);
+
+            
+            if (request.Meal.TagIds.Count != 0)
+            {
+                var tags = await _unitOfWork.TagRepository.ListAsync(t => request.Meal.TagIds.Contains(t.Id), cancellationToken);
+                newMeal.SetTags(tags);
+            }
 
             await _unitOfWork.SaveAllAsync(cancellationToken);
 

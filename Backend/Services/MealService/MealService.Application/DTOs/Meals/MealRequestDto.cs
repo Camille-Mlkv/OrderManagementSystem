@@ -12,5 +12,6 @@ namespace MealService.Application.DTOs.Meals
         public IFormFile? ImageFile { get; set; }
         public Guid CategoryId { get; set; }
         public Guid CuisineId { get; set; }
+        public List<Guid> TagIds { get; set; } = new List<Guid>();
     }
 }

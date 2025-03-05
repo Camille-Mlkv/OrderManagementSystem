@@ -12,7 +12,7 @@ namespace MealService.Application
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
 
-            services.AddAutoMapper(typeof(MealProfile), typeof(CategoryProfile));
+            services.AddAutoMapper(typeof(MealProfile), typeof(CategoryProfile), typeof(CuisineProfile), typeof(TagProfile));
 
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

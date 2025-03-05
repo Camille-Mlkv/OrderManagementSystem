@@ -14,5 +14,21 @@
 
         public Guid CuisineId { get; set; }
         public virtual Cuisine Cuisine { get; set; }
+
+        public ICollection<MealTag> MealTags { get; set; } = new List<MealTag>();
+
+        public void SetTags(IEnumerable<Tag> tags)
+        {
+            MealTags.Clear();
+            foreach (var tag in tags)
+            {
+                MealTags.Add(new MealTag
+                {
+                    Id = Guid.NewGuid(),
+                    MealId = Id,
+                    TagId = tag.Id
+                });
+            }
+        }
     }
 }

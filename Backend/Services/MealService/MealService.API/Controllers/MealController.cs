@@ -2,9 +2,10 @@ using MealService.Application.DTOs.Meals;
 using MealService.Application.UseCases.Meals.Commands.AddMeal;
 using MealService.Application.UseCases.Meals.Commands.DeleteMeal;
 using MealService.Application.UseCases.Meals.Commands.UpdateMeal;
-using MealService.Application.UseCases.Meals.Queries.GetAllMeals;
-using MealService.Application.UseCases.Meals.Queries.GetFilteredMeals;
-using MealService.Application.UseCases.Meals.Queries.GetMealsPerPage;
+using MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisine;
+using MealService.Application.UseCases.Meals.Queries.GetMealById;
+using MealService.Application.UseCases.Meals.Queries.GetMealsByCuisine;
+using MealService.Application.UseCases.Meals.Queries.GetMealsByName;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,39 +25,50 @@ namespace MealService.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetMeals(CancellationToken cancellationToken)
+        [HttpGet("cuisine/{cuisineId}")]
+        public async Task<IActionResult> GetMealsByCuisine(Guid cuisineId, bool? isAvailable, int pageNo=1,int pageSize=3)
         {
-            _logger.LogInformation("Start retrieving meals.");
+            _logger.LogInformation($"Start retrieving meals for cuisine {cuisineId}.");
 
-            var meals = await _mediator.Send(new GetAllMealsQuery(), cancellationToken);
+            var meals = await _mediator.Send(new GetMealsByCuisineQuery(cuisineId, pageNo, pageSize, isAvailable));
 
-            _logger.LogInformation("Meals retrieved.");
+            _logger.LogInformation($"Meals retrieved.");
 
             return Ok(meals);
         }
 
-        [Authorize(Policy = "Admin")] // admins can see paginated meals without specified cuisine
-        [HttpGet("{pageNo}")]
-        public async Task<IActionResult> GetMealsPerPage(CancellationToken cancellationToken, int pageNo = 1, int pageSize = 3)
+        [HttpGet("cuisine/{cuisineId}/filtered")]
+        public async Task<IActionResult> GetFilteredMealsByCuisine(Guid cuisineId,[FromQuery] MealFilterDto filter,int pageNo=1,int pageSize=3)
         {
-            _logger.LogInformation($"Start retrieving meals per page {pageNo}.");
+            _logger.LogInformation($"Start retrieving filtered meals for cuisine {cuisineId}.");
 
-            var meals = await _mediator.Send(new GetMealsPerPageQuery(pageNo,pageSize), cancellationToken);
+            var meals = await _mediator.Send(new GetFilteredMealsByCuisineQuery(cuisineId, filter, pageNo, pageSize));
 
-            _logger.LogInformation("Meals retrieved.");
+            _logger.LogInformation($"Meals retrieved.");
 
             return Ok(meals);
         }
 
-        [HttpGet("filtered")]
-        public async Task<IActionResult> GetFilteredMeals([FromQuery] MealFilterDto filter, CancellationToken cancellationToken, int pageNo = 1, int pageSize = 3)
+        [HttpGet("meal/{mealId}")]
+        public async Task<IActionResult> GetMealById(Guid mealId)
         {
-            _logger.LogInformation($"Start retrieving filtered meals per page {pageNo}.");
+            _logger.LogInformation($"Load data for meal {mealId}.");
 
-            var meals = await _mediator.Send(new GetFilteredMealsQuery(filter,pageNo, pageSize), cancellationToken);
+            var mealDto = await _mediator.Send(new GetMealByIdQuery(mealId));
 
-            _logger.LogInformation("Meals retrieved.");
+            _logger.LogInformation($"Data for meal {mealId} is loaded.");
+
+            return Ok(mealDto);
+        }
+
+        [HttpGet("meal/name/{name}")]
+        public async Task<IActionResult> GetMealsByName(string name)
+        {
+            _logger.LogInformation($"Start retrieving meals for with name {name}.");
+
+            var meals = await _mediator.Send(new GetMealsByNameQuery(name));
+
+            _logger.LogInformation($"Meals retrieved.");
 
             return Ok(meals);
         }
@@ -68,6 +80,7 @@ namespace MealService.API.Controllers
             _logger.LogInformation("Start adding new meal.");
 
             var newMeal = await _mediator.Send(new AddMealCommand(meal), cancellationToken);
+
             _logger.LogInformation("New meal added.");
 
             return CreatedAtAction(nameof(CreateMeal), new { id = newMeal.Id }, newMeal);
@@ -80,6 +93,7 @@ namespace MealService.API.Controllers
             _logger.LogInformation($"Start deleting meal {mealId}.");
 
             await _mediator.Send(new DeleteMealCommand(mealId), cancellationToken);
+
             _logger.LogInformation($"Meal {mealId} deleted.");
 
             return StatusCode(204);

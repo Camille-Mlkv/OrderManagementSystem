@@ -32,6 +32,8 @@ namespace MealService.Application.UseCases.Meals.Commands.DeleteMeal
                 await _imageService.DeleteImageAsync(imagePublicId);
             }
 
+            meal.MealTags.Clear();
+
             await _unitOfWork.MealRepository.Delete(meal);
             await _unitOfWork.SaveAllAsync(cancellationToken);
 

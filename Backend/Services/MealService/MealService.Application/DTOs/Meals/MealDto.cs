@@ -1,4 +1,6 @@
-﻿namespace MealService.Application.DTOs.Meals
+﻿using MealService.Application.DTOs.Tags;
+
+namespace MealService.Application.DTOs.Meals
 {
     public class MealDto
     {
@@ -11,5 +13,6 @@
         public string ImageUrl { get; set; }
         public Guid CategoryId { get; set; }
         public Guid CuisineId { get; set; }
+        public List<TagDto> Tags { get; set; } = new List<TagDto>();
     }
 }
