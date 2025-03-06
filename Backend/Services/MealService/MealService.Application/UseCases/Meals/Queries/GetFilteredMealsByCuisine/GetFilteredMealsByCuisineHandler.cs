@@ -21,7 +21,7 @@ namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisi
 
         public async Task<List<MealDto>> Handle(GetFilteredMealsByCuisineQuery request, CancellationToken cancellationToken)
         {
-            if (request.PageNo < 0 || request.PageSize < 0)
+            if (request.PageNo < 1 || request.PageSize < 1)
             {
                 throw new BadRequestException("Failed to load data.", "Provide valid data for page number and page size.");
             }
@@ -72,6 +72,7 @@ namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisi
             );
 
             var mealDtos = _mapper.Map<List<MealDto>>(meals);
+
             return mealDtos;
         }
     }

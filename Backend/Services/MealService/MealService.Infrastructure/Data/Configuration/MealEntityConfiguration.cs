@@ -42,7 +42,6 @@ namespace MealService.Infrastructure.Data.Configuration
 
             builder.Property(m=>m.ImageUrl)
                 .IsRequired();
-
         }
     }
 }

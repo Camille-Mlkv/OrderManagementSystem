@@ -9,5 +9,7 @@ namespace MealService.Application.Specifications.Services
         Task DeleteImageAsync(string imagePublicId);
 
         string GetDefaultImageUrl();
+
+        string GetPublicIdFromUrl(string imageUrl);
     }
 }

@@ -19,6 +19,7 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
             _unitOfWork = unitOfWork;
             _imageService = imageService;
         }
+
         public async Task<MealDto> Handle(UpdateMealCommand request, CancellationToken cancellationToken)
         {
             var foundMeal = await _unitOfWork.MealRepository.GetByIdAsync(request.Id, cancellationToken, meal => meal.MealTags);
@@ -46,13 +47,12 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
             {
                 if (foundMeal.ImageUrl != _imageService.GetDefaultImageUrl())
                 {
-                    var imagePublicId = GetPublicIdFromUrl(foundMeal.ImageUrl);
+                    var imagePublicId = _imageService.GetPublicIdFromUrl(foundMeal.ImageUrl);
                     await _imageService.DeleteImageAsync(imagePublicId);
                 }
 
                 var imageUrl = await _imageService.UploadImageAsync(request.UpdatedMeal.ImageFile);
                 foundMeal.ImageUrl = imageUrl;
-
             }
 
             _mapper.Map(request.UpdatedMeal, foundMeal);
@@ -63,13 +63,6 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
             await _unitOfWork.SaveAllAsync(cancellationToken);
 
             return _mapper.Map<MealDto>(foundMeal);
-        }
-
-        private string GetPublicIdFromUrl(string imageUrl)
-        {
-            var urlParts = imageUrl.Split('/');
-            var publicId = urlParts[urlParts.Length - 1].Split('.')[0];
-            return publicId;
         }
     }
 }

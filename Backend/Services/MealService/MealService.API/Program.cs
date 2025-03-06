@@ -17,7 +17,6 @@ builder.Services.ConfigureAuth(builder.Configuration);
 
 builder.Services.ConfigureApplicationServices();
 
-// for testing purposes
 builder.Services.AddSwaggerGen(option =>
 {
     option.AddSecurityDefinition(name: JwtBearerDefaults.AuthenticationScheme, securityScheme: new OpenApiSecurityScheme

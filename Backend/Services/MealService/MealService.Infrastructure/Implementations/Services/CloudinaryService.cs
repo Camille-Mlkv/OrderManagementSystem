@@ -19,9 +19,11 @@ namespace MealService.Infrastructure.Implementations.Services
                 config.Value.ApiKey,
                 config.Value.ApiSecret
             );
+
             _cloudinary = new Cloudinary(account);
 
             var cloudName = config.Value.CloudName;
+
             _defaultImageUrl = configuration["DefaultImageUrl"]!.Replace("{CloudName}", cloudName);
         }
 
@@ -33,6 +35,7 @@ namespace MealService.Infrastructure.Implementations.Services
         public async Task<string> UploadImageAsync(IFormFile file)
         {
             using var stream = file.OpenReadStream();
+
             var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
@@ -40,13 +43,22 @@ namespace MealService.Infrastructure.Implementations.Services
             };
 
             var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
             return uploadResult.SecureUrl.ToString();
         }
 
         public async Task DeleteImageAsync(string imagePublicId)
         {
             var deleteParams = new DeletionParams(imagePublicId);
+
             await _cloudinary.DestroyAsync(deleteParams);
+        }
+
+        public string GetPublicIdFromUrl(string imageUrl)
+        {
+            var urlParts = imageUrl.Split('/');
+            var publicId = urlParts[^1].Split('.')[0];
+            return publicId;
         }
     }
 }

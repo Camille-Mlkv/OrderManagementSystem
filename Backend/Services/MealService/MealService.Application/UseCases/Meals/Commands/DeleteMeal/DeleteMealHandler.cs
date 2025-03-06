@@ -18,9 +18,11 @@ namespace MealService.Application.UseCases.Meals.Commands.DeleteMeal
             _unitOfWork = unitOfWork;
             _imageService = imageService;
         }
+
         public async Task<Unit> Handle(DeleteMealCommand request, CancellationToken cancellationToken)
         {
             var meal = await _unitOfWork.MealRepository.GetByIdAsync(request.MealId, cancellationToken);
+
             if (meal is null)
             {
                 throw new NotFoundException($"Meal with id {request.MealId} dosen't exist.");
@@ -28,23 +30,17 @@ namespace MealService.Application.UseCases.Meals.Commands.DeleteMeal
 
             if (meal.ImageUrl != _imageService.GetDefaultImageUrl())
             {
-                var imagePublicId = GetPublicIdFromUrl(meal.ImageUrl);
+                var imagePublicId = _imageService.GetPublicIdFromUrl(meal.ImageUrl);
                 await _imageService.DeleteImageAsync(imagePublicId);
             }
 
             meal.MealTags.Clear();
 
             await _unitOfWork.MealRepository.Delete(meal);
+
             await _unitOfWork.SaveAllAsync(cancellationToken);
 
             return Unit.Value;
-        }
-
-        private string GetPublicIdFromUrl(string imageUrl)
-        {
-            var urlParts = imageUrl.Split('/');
-            var publicId = urlParts[urlParts.Length - 1].Split('.')[0];
-            return publicId;
         }
     }
 }

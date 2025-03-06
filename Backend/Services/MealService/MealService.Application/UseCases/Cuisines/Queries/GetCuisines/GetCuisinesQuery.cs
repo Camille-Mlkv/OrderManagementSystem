@@ -3,7 +3,5 @@ using MediatR;
 
 namespace MealService.Application.UseCases.Cuisines.Queries.GetCuisines
 {
-    public record GetCuisinesQuery : IRequest<List<CuisineDto>>
-    {
-    }
+    public record GetCuisinesQuery : IRequest<List<CuisineDto>>;
 }

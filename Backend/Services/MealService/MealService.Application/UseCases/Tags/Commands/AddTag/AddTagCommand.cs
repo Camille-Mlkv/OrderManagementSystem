@@ -3,7 +3,5 @@ using MediatR;
 
 namespace MealService.Application.UseCases.Tags.Commands.AddTag
 {
-    public record AddTagCommand(TagRequestDto Tag): IRequest<TagDto>
-    {
-    }
+    public record AddTagCommand(TagRequestDto Tag) : IRequest<TagDto>;
 }

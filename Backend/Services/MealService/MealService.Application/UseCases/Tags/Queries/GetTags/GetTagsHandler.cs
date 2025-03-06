@@ -15,6 +15,7 @@ namespace MealService.Application.UseCases.Tags.Queries.GetTags
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
+
         public async Task<List<TagDto>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
         {
             var tags = await _unitOfWork.TagRepository.ListAllAsync(cancellationToken);

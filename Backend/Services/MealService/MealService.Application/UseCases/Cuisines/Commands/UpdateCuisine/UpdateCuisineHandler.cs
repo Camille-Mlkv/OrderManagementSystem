@@ -19,6 +19,7 @@ namespace MealService.Application.UseCases.Cuisines.Commands.UpdateCuisine
             _unitOfWork = unitOfWork;
             _imageService = imageService;
         }
+
         public async Task<CuisineDto> Handle(UpdateCuisineCommand request, CancellationToken cancellationToken)
         {
             var foundCuisine = await _unitOfWork.CuisineRepository.GetByIdAsync(request.Id, cancellationToken);
@@ -32,7 +33,7 @@ namespace MealService.Application.UseCases.Cuisines.Commands.UpdateCuisine
             {
                 if (foundCuisine.ImageUrl != _imageService.GetDefaultImageUrl())
                 {
-                    var imagePublicId = GetPublicIdFromUrl(foundCuisine.ImageUrl);
+                    var imagePublicId = _imageService.GetPublicIdFromUrl(foundCuisine.ImageUrl);
                     await _imageService.DeleteImageAsync(imagePublicId);
                 }
 
@@ -45,13 +46,6 @@ namespace MealService.Application.UseCases.Cuisines.Commands.UpdateCuisine
             await _unitOfWork.SaveAllAsync(cancellationToken);
 
             return _mapper.Map<CuisineDto>(foundCuisine);
-        }
-
-        private string GetPublicIdFromUrl(string imageUrl)
-        {
-            var urlParts = imageUrl.Split('/');
-            var publicId = urlParts[urlParts.Length - 1].Split('.')[0];
-            return publicId;
         }
     }
 }

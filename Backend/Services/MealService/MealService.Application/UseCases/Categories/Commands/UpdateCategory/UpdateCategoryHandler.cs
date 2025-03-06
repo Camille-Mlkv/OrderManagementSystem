@@ -2,7 +2,6 @@
 using MealService.Application.DTOs.Categories;
 using MealService.Application.Exceptions;
 using MealService.Application.Specifications;
-using MealService.Domain.Entities;
 using MediatR;
 
 namespace MealService.Application.UseCases.Categories.Commands.UpdateCategory

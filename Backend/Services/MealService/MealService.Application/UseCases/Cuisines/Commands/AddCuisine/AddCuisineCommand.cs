@@ -3,7 +3,5 @@ using MediatR;
 
 namespace MealService.Application.UseCases.Cuisines.Commands.AddCuisine
 {
-    public record AddCuisineCommand(CuisineRequestDto Cuisine) : IRequest<CuisineDto>
-    {
-    }
+    public record AddCuisineCommand(CuisineRequestDto Cuisine) : IRequest<CuisineDto>;
 }

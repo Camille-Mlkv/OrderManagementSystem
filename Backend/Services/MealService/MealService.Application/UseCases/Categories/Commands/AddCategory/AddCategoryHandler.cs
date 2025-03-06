@@ -29,7 +29,6 @@ namespace MealService.Application.UseCases.Categories.Commands.AddCategory
             var addedCategory = _mapper.Map<CategoryDto>(newCategory);
 
             return addedCategory;
-
         }
     }
 }

@@ -2,7 +2,5 @@
 
 namespace MealService.Application.UseCases.Meals.Commands.DeleteMeal
 {
-    public record DeleteMealCommand(Guid MealId):IRequest<Unit>
-    {
-    }
+    public record DeleteMealCommand(Guid MealId) : IRequest<Unit>;
 }

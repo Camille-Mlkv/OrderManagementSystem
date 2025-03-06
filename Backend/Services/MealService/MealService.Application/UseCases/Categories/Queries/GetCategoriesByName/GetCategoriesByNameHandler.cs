@@ -15,6 +15,7 @@ namespace MealService.Application.UseCases.Categories.Queries.GetCategoriesByNam
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
+
         public async Task<List<CategoryDto>> Handle(GetCategoriesByNameQuery request, CancellationToken cancellationToken)
         {
             var categories = await _unitOfWork.CategoryRepository.ListAsync(c=>c.Name.StartsWith(request.Name),cancellationToken);

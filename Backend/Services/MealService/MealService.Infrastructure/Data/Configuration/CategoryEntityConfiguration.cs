@@ -19,7 +19,6 @@ namespace MealService.Infrastructure.Data.Configuration
 
             builder.HasIndex(c => c.Name)
                 .IsUnique();
-
         }
     }
 }

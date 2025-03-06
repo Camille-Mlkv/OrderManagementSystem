@@ -32,6 +32,7 @@ namespace MealService.Application.UseCases.Meals.Queries.GetMealsByCuisine
             );
 
             var mealDtos = _mapper.Map<List<MealDto>>(meals);
+
             return mealDtos;
         }
     }

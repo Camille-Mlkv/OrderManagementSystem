@@ -13,9 +13,12 @@ namespace MealService.Infrastructure.Data.Configuration
                     .HasForeignKey(meal => meal.CuisineId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(c => c.ImageUrl)
+            builder.Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(100);
+
+            builder.Property(c => c.ImageUrl)
+                .IsRequired();
         }
     }
 }

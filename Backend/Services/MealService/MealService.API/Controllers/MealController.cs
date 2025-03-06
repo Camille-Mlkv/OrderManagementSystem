@@ -61,7 +61,7 @@ namespace MealService.API.Controllers
             return Ok(mealDto);
         }
 
-        [HttpGet("meal/name/{name}")]
+        [HttpGet("name/{name}")]
         public async Task<IActionResult> GetMealsByName(string name)
         {
             _logger.LogInformation($"Start retrieving meals for with name {name}.");

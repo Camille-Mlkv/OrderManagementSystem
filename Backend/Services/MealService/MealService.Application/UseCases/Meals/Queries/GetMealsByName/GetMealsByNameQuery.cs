@@ -3,7 +3,5 @@ using MediatR;
 
 namespace MealService.Application.UseCases.Meals.Queries.GetMealsByName
 {
-    public record GetMealsByNameQuery(string Name): IRequest<List<MealDto>>
-    {
-    }
+    public record GetMealsByNameQuery(string Name) : IRequest<List<MealDto>>;
 }

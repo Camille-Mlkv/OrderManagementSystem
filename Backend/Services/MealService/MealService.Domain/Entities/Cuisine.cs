@@ -6,5 +6,4 @@
         public string ImageUrl { get; set; }
         public ICollection<Meal> Meals { get; set; } = new List<Meal>();
     }
-
 }

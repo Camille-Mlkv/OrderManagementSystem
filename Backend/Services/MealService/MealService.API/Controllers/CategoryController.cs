@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MealService.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -23,7 +23,7 @@ namespace MealService.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet("categories")]
+        [HttpGet]
         public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start retrieving categories.");
@@ -35,13 +35,26 @@ namespace MealService.API.Controllers
             return Ok(categories);
         }
 
+        [HttpGet("name/{name}")]
+        public async Task<IActionResult> GetCategoriesByName(string name, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Start retrieving categories by name.");
+
+            var categories = await _mediator.Send(new GetCategoriesByNameQuery(name), cancellationToken);
+
+            _logger.LogInformation("Categories retrieved.");
+
+            return Ok(categories);
+        }
+
         [Authorize(Policy ="Admin")]
-        [HttpPost("categories/add")]
+        [HttpPost("category/add")]
         public async Task<IActionResult> AddCategory([FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start adding new category.");
 
             var newCategory=await _mediator.Send(new AddCategoryCommand(category), cancellationToken);
+
             _logger.LogInformation("New category added.");
 
             return CreatedAtAction(nameof(AddCategory), new { id = newCategory.Id }, newCategory);
@@ -71,18 +84,6 @@ namespace MealService.API.Controllers
             _logger.LogInformation($"Category {id} deleted.");
 
             return StatusCode(204);
-        }
-
-        [HttpGet("categories/{name}")]
-        public async Task<IActionResult> GetCategoriesByName(string name,CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("Start retrieving category by its name.");
-
-            var categories = await _mediator.Send(new GetCategoriesByNameQuery(name), cancellationToken);
-
-            _logger.LogInformation("Categories retrieved.");
-
-            return Ok(categories);
         }
     }
 }

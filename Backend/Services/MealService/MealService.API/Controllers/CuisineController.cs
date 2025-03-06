@@ -35,7 +35,7 @@ namespace MealService.API.Controllers
             return Ok(cuisines);
         }
 
-        [HttpGet("{name}")]
+        [HttpGet("name/{name}")]
         public async Task<IActionResult> GetCuisinesByName(string name, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start retrieving cuisine by its name.");
@@ -54,6 +54,7 @@ namespace MealService.API.Controllers
             _logger.LogInformation("Start adding new cuisine.");
 
             var newCuisine = await _mediator.Send(new AddCuisineCommand(cuisine), cancellationToken);
+
             _logger.LogInformation("New cuisine added.");
 
             return CreatedAtAction(nameof(CreateCuisine), new { id = newCuisine.Id }, newCuisine);

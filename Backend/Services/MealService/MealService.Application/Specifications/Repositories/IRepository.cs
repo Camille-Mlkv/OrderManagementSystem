@@ -13,8 +13,6 @@ namespace MealService.Application.Specifications.Repositories
 
         Task AddAsync(T entity, CancellationToken cancellationToken);
 
-        Task Update(T entity);
-
         Task Delete(T entity);
 
         Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken,

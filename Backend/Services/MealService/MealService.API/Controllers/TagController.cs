@@ -41,6 +41,7 @@ namespace MealService.API.Controllers
             _logger.LogInformation("Start adding new tag.");
 
             var newTag = await _mediator.Send(new AddTagCommand(tag), cancellationToken);
+
             _logger.LogInformation("New tag added.");
 
             return CreatedAtAction(nameof(CreateTag), new { id = newTag.Id }, newTag);
@@ -66,6 +67,7 @@ namespace MealService.API.Controllers
             _logger.LogInformation($"Start deleting tag {tagId}.");
 
             await _mediator.Send(new DeleteTagCommand(tagId), cancellationToken);
+
             _logger.LogInformation($"Tag {tagId} deleted.");
 
             return StatusCode(204);

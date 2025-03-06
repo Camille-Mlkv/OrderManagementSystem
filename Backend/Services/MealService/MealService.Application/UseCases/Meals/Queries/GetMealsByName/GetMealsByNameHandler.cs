@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MealService.Application.DTOs.Meals;
-using MealService.Application.Exceptions;
 using MealService.Application.Specifications;
 using MediatR;
 

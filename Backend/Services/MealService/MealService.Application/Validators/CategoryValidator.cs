@@ -8,7 +8,7 @@ namespace MealService.Application.Validators
         public CategoryValidator()
         {
             RuleFor(c => c.Name)
-                .NotEmpty().WithMessage("Category is required.")
+                .NotEmpty().WithMessage("Category name is required.")
                 .MaximumLength(100).WithMessage("Name can't exceed 100 characters.");
 
             RuleFor(c => c.NormalizedName)
