@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace MealService.Application.Specifications.Services
+﻿namespace MealService.Application.Specifications.Services
 {
     public interface IImageService
     {
-        Task<string> UploadImageAsync(IFormFile file);
+        Task<string> UploadImageAsync(byte[] imageData);
 
         Task DeleteImageAsync(string imagePublicId);
 

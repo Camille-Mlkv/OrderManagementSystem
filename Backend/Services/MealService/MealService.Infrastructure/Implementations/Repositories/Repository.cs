@@ -28,7 +28,7 @@ namespace MealService.Infrastructure.Implementations.Repositories
 
         public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken, params Expression<Func<T, object>>[]? includesProperties)
         {
-            IQueryable<T> query = _context.Set<T>().AsQueryable();
+            var query = _context.Set<T>().AsQueryable();
 
             query = query.Where(entity => entity.Id == id);
 
@@ -68,15 +68,13 @@ namespace MealService.Infrastructure.Implementations.Repositories
 
         public async Task<IReadOnlyList<T>> ListAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, params Expression<Func<T, object>>[]? includesProperties)
         {
-            IQueryable<T>? query = _context.Set<T>().AsQueryable();
-            if (includesProperties != null)
+            var query = _context.Set<T>().AsQueryable();
+
+            if (includesProperties?.Any() == true)
             {
-                if (includesProperties.Any())
+                foreach (var included in includesProperties)
                 {
-                    foreach (Expression<Func<T, object>> included in includesProperties)
-                    {
-                        query = query.Include(included);
-                    }
+                    query = query.Include(included);
                 }
             }
 

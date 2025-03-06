@@ -40,9 +40,9 @@ namespace MealService.Application.UseCases.Meals.Commands.AddMeal
             var newMeal = _mapper.Map<Meal>(request.Meal);
             newMeal.Id = Guid.NewGuid();
 
-            if (request.Meal.ImageFile != null)
+            if (request.Meal.ImageData != null)
             {
-                var imageUrl = await _imageService.UploadImageAsync(request.Meal.ImageFile);
+                var imageUrl = await _imageService.UploadImageAsync(request.Meal.ImageData);
                 newMeal.ImageUrl = imageUrl;
             }
             else

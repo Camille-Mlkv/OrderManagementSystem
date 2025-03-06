@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace MealService.Application.DTOs.Meals
+﻿namespace MealService.Application.DTOs.Meals
 {
     public class MealRequestDto
     {
@@ -9,7 +7,8 @@ namespace MealService.Application.DTOs.Meals
         public string Description { get; set; }
         public int Calories { get; set; }
         public bool IsAvailable { get; set; }
-        public IFormFile? ImageFile { get; set; }
+        public byte[]? ImageData { get; set; }
+        public string? ImageContentType { get; set; }
         public Guid CategoryId { get; set; }
         public Guid CuisineId { get; set; }
         public List<Guid> TagIds { get; set; } = new List<Guid>();

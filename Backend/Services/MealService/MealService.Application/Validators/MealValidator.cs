@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MealService.Application.DTOs.Meals;
 using Microsoft.AspNetCore.Http;
+using System.Net.NetworkInformation;
 
 namespace MealService.Application.Validators
 {
@@ -22,24 +23,24 @@ namespace MealService.Application.Validators
             RuleFor(m => m.Calories)
                 .GreaterThan(0).WithMessage("Calories must be greater than 0.");
 
-            RuleFor(m => m.ImageFile)
-                .Must(BeAValidImage).When(m => m.ImageFile != null)
-                .WithMessage("Allowed image formats: .jpg, .jpeg, .png. Maximum size: 5MB.");
-
             RuleFor(m => m.CategoryId)
                 .NotEmpty().WithMessage("Category is required.");
+
+            RuleFor(x => x.ImageContentType)
+                .Must(BeAValidImageContentType).WithMessage("Invalid image content type.")
+                .When(x => x.ImageData != null);
         }
 
-        private bool BeAValidImage(IFormFile? file)
+        private bool BeAValidImageContentType(string? contentType)
         {
-            if (file == null)
+            if (contentType is null)
+            {
                 return true;
+            }
 
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+            var validImageTypes = new[] { "image/jpeg", "image/png", "image/jpg" };
 
-            var fileExtension = Path.GetExtension(file.FileName).ToLower();
-
-            return allowedExtensions.Contains(fileExtension);
+            return validImageTypes.Contains(contentType.ToLower());
         }
     }
 }

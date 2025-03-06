@@ -48,7 +48,7 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy ="Admin")]
-        [HttpPost("category/add")]
+        [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start adding new category.");
@@ -61,7 +61,7 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpPut("category/update/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start updating category {id}.");
@@ -74,7 +74,7 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpDelete("category/delete/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start deleting category {id}.");

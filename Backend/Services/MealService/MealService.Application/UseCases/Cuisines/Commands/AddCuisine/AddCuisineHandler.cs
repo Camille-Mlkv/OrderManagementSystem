@@ -25,9 +25,9 @@ namespace MealService.Application.UseCases.Cuisines.Commands.AddCuisine
             var newCuisine = _mapper.Map<Cuisine>(request.Cuisine);
             newCuisine.Id = Guid.NewGuid();
 
-            if (request.Cuisine.ImageFile != null)
+            if (request.Cuisine.ImageData != null)
             {
-                var imageUrl = await _imageService.UploadImageAsync(request.Cuisine.ImageFile);
+                var imageUrl = await _imageService.UploadImageAsync(request.Cuisine.ImageData);
                 newCuisine.ImageUrl = imageUrl;
             }
             else

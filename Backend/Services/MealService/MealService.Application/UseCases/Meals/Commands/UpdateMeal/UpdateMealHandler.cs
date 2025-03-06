@@ -43,7 +43,7 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
                 throw new BadRequestException("Foreign key for cuisine constraint is violated.");
             }
 
-            if (request.UpdatedMeal.ImageFile != null)
+            if (request.UpdatedMeal.ImageData != null)
             {
                 if (foundMeal.ImageUrl != _imageService.GetDefaultImageUrl())
                 {
@@ -51,7 +51,7 @@ namespace MealService.Application.UseCases.Meals.Commands.UpdateMeal
                     await _imageService.DeleteImageAsync(imagePublicId);
                 }
 
-                var imageUrl = await _imageService.UploadImageAsync(request.UpdatedMeal.ImageFile);
+                var imageUrl = await _imageService.UploadImageAsync(request.UpdatedMeal.ImageData);
                 foundMeal.ImageUrl = imageUrl;
             }
 

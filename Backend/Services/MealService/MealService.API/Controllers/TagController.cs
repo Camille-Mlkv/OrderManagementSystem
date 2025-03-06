@@ -35,7 +35,7 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpPost("tag/create")]
+        [HttpPost]
         public async Task<IActionResult> CreateTag([FromForm] TagRequestDto tag, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start adding new tag.");
@@ -48,20 +48,20 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpPut("tag/update/{id}")]
-        public async Task<IActionResult> UpdateTag(Guid id, [FromForm] TagRequestDto tag, CancellationToken cancellationToken)
+        [HttpPut("{tagId}")]
+        public async Task<IActionResult> UpdateTag(Guid tagId, [FromForm] TagRequestDto tag, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start updating tag {id}.");
+            _logger.LogInformation($"Start updating tag {tagId}.");
 
-            var updatedTag = await _mediator.Send(new UpdateTagCommand(id, tag), cancellationToken);
+            var updatedTag = await _mediator.Send(new UpdateTagCommand(tagId, tag), cancellationToken);
 
-            _logger.LogInformation($"Tag {id} updated.");
+            _logger.LogInformation($"Tag {tagId} updated.");
 
             return Ok(updatedTag);
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpDelete("tag/delete/{tagId}")]
+        [HttpDelete("{tagId}")]
         public async Task<IActionResult> DeleteMeal(Guid tagId, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start deleting tag {tagId}.");

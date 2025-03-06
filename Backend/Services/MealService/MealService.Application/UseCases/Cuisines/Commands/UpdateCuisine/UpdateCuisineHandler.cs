@@ -29,7 +29,7 @@ namespace MealService.Application.UseCases.Cuisines.Commands.UpdateCuisine
                 throw new NotFoundException($"Cuisine with id {request.Id} doesn't exist.");
             }
 
-            if (request.Cuisine.ImageFile != null)
+            if (request.Cuisine.ImageData != null)
             {
                 if (foundCuisine.ImageUrl != _imageService.GetDefaultImageUrl())
                 {
@@ -37,7 +37,7 @@ namespace MealService.Application.UseCases.Cuisines.Commands.UpdateCuisine
                     await _imageService.DeleteImageAsync(imagePublicId);
                 }
 
-                var imageUrl = await _imageService.UploadImageAsync(request.Cuisine.ImageFile);
+                var imageUrl = await _imageService.UploadImageAsync(request.Cuisine.ImageData);
                 foundCuisine.ImageUrl = imageUrl;
             }
 

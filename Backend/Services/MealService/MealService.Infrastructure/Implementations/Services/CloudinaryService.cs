@@ -1,7 +1,6 @@
 ﻿using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
 using MealService.Application.Specifications.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Configuration;
 
@@ -32,13 +31,13 @@ namespace MealService.Infrastructure.Implementations.Services
             return _defaultImageUrl;
         }
 
-        public async Task<string> UploadImageAsync(IFormFile file)
+        public async Task<string> UploadImageAsync(byte[] imageData)
         {
-            using var stream = file.OpenReadStream();
+            using var fileStream = new MemoryStream(imageData);
 
             var uploadParams = new ImageUploadParams
             {
-                File = new FileDescription(file.FileName, stream),
+                File = new FileDescription(Guid.NewGuid().ToString(), fileStream),
                 Transformation = new Transformation().Width(500).Height(500).Crop("fill")
             };
 

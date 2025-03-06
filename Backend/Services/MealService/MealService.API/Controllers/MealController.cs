@@ -49,7 +49,7 @@ namespace MealService.API.Controllers
             return Ok(meals);
         }
 
-        [HttpGet("meal/{mealId}")]
+        [HttpGet("{mealId}")]
         public async Task<IActionResult> GetMealById(Guid mealId)
         {
             _logger.LogInformation($"Load data for meal {mealId}.");
@@ -73,11 +73,16 @@ namespace MealService.API.Controllers
             return Ok(meals);
         }
 
-        [Authorize(Policy ="Admin")]
-        [HttpPost("meal/create")]
-        public async Task<IActionResult> CreateMeal([FromForm] MealRequestDto meal, CancellationToken cancellationToken)
+        [Authorize(Policy = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateMeal([FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start adding new meal.");
+
+            if (imageFile != null)
+            {
+                await ProcessImageFileAsync(imageFile, meal, cancellationToken);
+            }
 
             var newMeal = await _mediator.Send(new AddMealCommand(meal), cancellationToken);
 
@@ -87,7 +92,7 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpDelete("meal/delete/{mealId}")]
+        [HttpDelete("{mealId}")]
         public async Task<IActionResult> DeleteMeal(Guid mealId, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start deleting meal {mealId}.");
@@ -100,10 +105,15 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpPut("meal/update/{id}")]
-        public async Task<IActionResult> UpdateMeal(Guid id, [FromForm] MealRequestDto meal, CancellationToken cancellationToken)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMeal(Guid id, [FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start updating meal {id}.");
+
+            if (imageFile != null)
+            {
+                await ProcessImageFileAsync(imageFile, meal, cancellationToken);
+            }
 
             var updatedMeal = await _mediator.Send(new UpdateMealCommand(id, meal), cancellationToken);
 
@@ -112,5 +122,13 @@ namespace MealService.API.Controllers
             return Ok(updatedMeal);
         }
 
+        private async Task ProcessImageFileAsync(IFormFile imageFile, MealRequestDto meal, CancellationToken cancellationToken)
+        {
+            using var memoryStream = new MemoryStream();
+            await imageFile.CopyToAsync(memoryStream, cancellationToken);
+
+            meal.ImageData = memoryStream.ToArray();
+            meal.ImageContentType = imageFile.ContentType;
+        }
     }
 }

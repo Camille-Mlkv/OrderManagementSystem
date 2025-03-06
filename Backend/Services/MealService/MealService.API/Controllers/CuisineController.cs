@@ -48,10 +48,15 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpPost("cuisine/create")]
-        public async Task<IActionResult> CreateCuisine([FromForm] CuisineRequestDto cuisine, CancellationToken cancellationToken)
+        [HttpPost]
+        public async Task<IActionResult> CreateCuisine([FromForm] CuisineRequestDto cuisine, IFormFile? imageFile, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Start adding new cuisine.");
+
+            if (imageFile != null)
+            {
+                await ProcessImageFileAsync(imageFile, cuisine, cancellationToken);
+            }
 
             var newCuisine = await _mediator.Send(new AddCuisineCommand(cuisine), cancellationToken);
 
@@ -61,20 +66,25 @@ namespace MealService.API.Controllers
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpPut("cuisine/update/{id}")]
-        public async Task<IActionResult> UpdateCuisine(Guid id, [FromForm] CuisineRequestDto cuisine, CancellationToken cancellationToken)
+        [HttpPut("{cuisineId}")]
+        public async Task<IActionResult> UpdateCuisine(Guid cuisineId, [FromForm] CuisineRequestDto cuisine, IFormFile? imageFile, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start updating cuisine {id}.");
+            _logger.LogInformation($"Start updating cuisine {cuisineId}.");
 
-            var updatedCuisine = await _mediator.Send(new UpdateCuisineCommand(id, cuisine), cancellationToken);
+            if (imageFile != null)
+            {
+                await ProcessImageFileAsync(imageFile, cuisine, cancellationToken);
+            }
 
-            _logger.LogInformation($"Cuisine {id} updated.");
+            var updatedCuisine = await _mediator.Send(new UpdateCuisineCommand(cuisineId, cuisine), cancellationToken);
+
+            _logger.LogInformation($"Cuisine {cuisineId} updated.");
 
             return Ok(updatedCuisine);
         }
 
         [Authorize(Policy = "Admin")]
-        [HttpDelete("cuisine/delete/{cuisineId}")]
+        [HttpDelete("{cuisineId}")]
         public async Task<IActionResult> DeleteCuisine(Guid cuisineId, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Start deleting cuisine {cuisineId}.");
@@ -84,6 +94,15 @@ namespace MealService.API.Controllers
             _logger.LogInformation($"cuisine {cuisineId} deleted.");
 
             return StatusCode(204);
+        }
+
+        private async Task ProcessImageFileAsync(IFormFile imageFile, CuisineRequestDto cuisine, CancellationToken cancellationToken)
+        {
+            using var memoryStream = new MemoryStream();
+            await imageFile.CopyToAsync(memoryStream, cancellationToken);
+
+            cuisine.ImageData = memoryStream.ToArray();
+            cuisine.ImageContentType = imageFile.ContentType;
         }
     }
 }
