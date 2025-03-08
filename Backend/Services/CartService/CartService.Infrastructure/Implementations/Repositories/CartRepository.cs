@@ -48,6 +48,19 @@ namespace CartService.Infrastructure.Implementations.Repositories
             return cartItem;
         }
 
+        public async Task RemoveItemFromCartAsync(string userId, CartItem cartItem)
+        {
+            var key = GetCartKey(userId);
+            var cartItemJson = JsonConvert.SerializeObject(cartItem);
+            await _database.ListRemoveAsync(key, cartItemJson);
+        }
+
+        public async Task ClearCartAsync(string userId)
+        {
+            var key = GetCartKey(userId);
+            await _database.KeyDeleteAsync(key);
+        }
+
         private string GetCartKey(string userId)
         {
             return $"cart:{userId}";

@@ -9,5 +9,9 @@ namespace CartService.Application.Specifications.Repositories
         Task<CartItem?> GetItemFromCartAsync(string userId, Guid mealId);
 
         Task<IEnumerable<CartItem>> GetCartItemsAsync(string userId);
+
+        Task RemoveItemFromCartAsync(string userId, CartItem cartItem);
+
+        Task ClearCartAsync(string userId);
     }
 }

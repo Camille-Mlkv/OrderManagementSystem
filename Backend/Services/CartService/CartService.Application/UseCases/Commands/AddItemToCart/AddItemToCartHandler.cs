@@ -18,9 +18,22 @@ namespace CartService.Application.UseCases.Commands.AddItemToCart
 
         public async Task Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
         {
-            var newItem = _mapper.Map<CartItem>(request.Item);
+            var existingItem = await _cartRepository.GetItemFromCartAsync(request.UserId, request.Item.MealId);
 
-            await _cartRepository.AddItemToCartAsync(request.UserId, newItem);
+            if (existingItem != null)
+            {
+                await _cartRepository.RemoveItemFromCartAsync(request.UserId, existingItem);
+
+                existingItem.Quantity += request.Item.Quantity; 
+
+                await _cartRepository.AddItemToCartAsync(request.UserId, existingItem);
+            }
+            else
+            {
+                var newItem = _mapper.Map<CartItem>(request.Item);
+
+                await _cartRepository.AddItemToCartAsync(request.UserId, newItem);
+            }
         }
     }
 }
