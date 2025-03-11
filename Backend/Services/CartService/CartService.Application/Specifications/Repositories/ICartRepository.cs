@@ -4,14 +4,10 @@ namespace CartService.Application.Specifications.Repositories
 {
     public interface ICartRepository
     {
-        Task AddItemToCartAsync(string userId, CartItem cartItem);
+        Task<Cart?> GetCartAsync(string userId, CancellationToken cancellationToken);
 
-        Task<CartItem?> GetItemFromCartAsync(string userId, Guid mealId);
+        Task SaveCartAsync(Cart cart, CancellationToken cancellationToken);
 
-        Task<IEnumerable<CartItem>> GetCartItemsAsync(string userId);
-
-        Task RemoveItemFromCartAsync(string userId, CartItem cartItem);
-
-        Task ClearCartAsync(string userId);
+        Task DeleteCartAsync(string userId, CancellationToken cancellationToken);
     }
 }

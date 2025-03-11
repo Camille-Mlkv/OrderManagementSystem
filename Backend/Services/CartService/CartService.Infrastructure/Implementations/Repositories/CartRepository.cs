@@ -5,65 +5,39 @@ using StackExchange.Redis;
 
 namespace CartService.Infrastructure.Implementations.Repositories
 {
-    public class CartRepository : ICartRepository
+    public class CartRepository: ICartRepository
     {
-        private readonly IConnectionMultiplexer _connectionMultiplexer;
         private readonly IDatabase _database;
 
         public CartRepository(IConnectionMultiplexer connectionMultiplexer)
         {
-            _connectionMultiplexer = connectionMultiplexer;
-            _database = _connectionMultiplexer.GetDatabase();
+            _database = connectionMultiplexer.GetDatabase();
         }
 
-        public async Task AddItemToCartAsync(string userId, CartItem cartItem)
+        public async Task<Cart?> GetCartAsync(string userId, CancellationToken cancellationToken)
         {
             var key = GetCartKey(userId);
-            var cartItemJson = JsonConvert.SerializeObject(cartItem);
 
-            await _database.ListRightPushAsync(key, cartItemJson);
+            var cartJson = await _database.StringGetAsync(key).WaitAsync(cancellationToken);
+
+            return string.IsNullOrEmpty(cartJson) ? null : JsonConvert.DeserializeObject<Cart>(cartJson!);
         }
 
-        public async Task<IEnumerable<CartItem>> GetCartItemsAsync(string userId)
+        public async Task SaveCartAsync(Cart cart, CancellationToken cancellationToken)
         {
-            var key = GetCartKey(userId);
-            var cartItemsData = await _database.ListRangeAsync(key);
+            var key = GetCartKey(cart.UserId!);
 
-            var cartItems = cartItemsData
-                .Select(data => JsonConvert.DeserializeObject<CartItem>(data!))
-                .ToList();
+            var cartJson = JsonConvert.SerializeObject(cart);
 
-            return cartItems!;
+            await _database.StringSetAsync(key, cartJson).WaitAsync(cancellationToken);
         }
 
-        public async Task<CartItem?> GetItemFromCartAsync(string userId, Guid mealId)
+        public async Task DeleteCartAsync(string userId, CancellationToken cancellationToken)
         {
-            var key = GetCartKey(userId);
-            var cartItemsData = await _database.ListRangeAsync(key);
-
-            var cartItem = cartItemsData
-                .Select(data => JsonConvert.DeserializeObject<CartItem>(data!))
-                .FirstOrDefault(item => item != null && item.MealId == mealId);
-
-            return cartItem;
+            await _database.KeyDeleteAsync(GetCartKey(userId)).WaitAsync(cancellationToken);
         }
 
-        public async Task RemoveItemFromCartAsync(string userId, CartItem cartItem)
-        {
-            var key = GetCartKey(userId);
-            var cartItemJson = JsonConvert.SerializeObject(cartItem);
-            await _database.ListRemoveAsync(key, cartItemJson);
-        }
-
-        public async Task ClearCartAsync(string userId)
-        {
-            var key = GetCartKey(userId);
-            await _database.KeyDeleteAsync(key);
-        }
-
-        private string GetCartKey(string userId)
-        {
-            return $"cart:{userId}";
-        }
+        private string GetCartKey(string userId) => 
+           $"cart_{userId}";
     }
 }

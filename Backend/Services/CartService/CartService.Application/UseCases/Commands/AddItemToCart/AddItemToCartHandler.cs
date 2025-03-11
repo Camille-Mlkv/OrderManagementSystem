@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using CartService.Application.Specifications.Repositories;
+using CartService.Application.Specifications;
+using CartService.Application.Specifications.Jobs;
 using CartService.Domain.Entities;
 using MediatR;
 
@@ -7,33 +8,35 @@ namespace CartService.Application.UseCases.Commands.AddItemToCart
 {
     public class AddItemToCartHandler : IRequestHandler<AddItemToCartCommand>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICartJobService _jobService;
 
-        public AddItemToCartHandler(ICartRepository cartRepository, IMapper mapper)
+        public AddItemToCartHandler(IUnitOfWork unitOfWork, IMapper mapper, ICartJobService jobService)
         {
-            _cartRepository = cartRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _jobService = jobService;
         }
 
         public async Task Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
         {
-            var existingItem = await _cartRepository.GetItemFromCartAsync(request.UserId, request.Item.MealId);
+            var cart = await _unitOfWork.CartRepository.GetCartAsync(request.UserId, cancellationToken);
 
-            if (existingItem != null)
+            if (cart is null)
             {
-                await _cartRepository.RemoveItemFromCartAsync(request.UserId, existingItem);
-
-                existingItem.Quantity += request.Item.Quantity; 
-
-                await _cartRepository.AddItemToCartAsync(request.UserId, existingItem);
+                cart = new Cart { UserId = request.UserId, Items = new List<CartItem>() };
             }
-            else
-            {
-                var newItem = _mapper.Map<CartItem>(request.Item);
 
-                await _cartRepository.AddItemToCartAsync(request.UserId, newItem);
-            }
+            var newItem = _mapper.Map<CartItem>(request.Item);
+            cart.AddItem(newItem);
+            await _unitOfWork.CartRepository.SaveCartAsync(cart, cancellationToken);
+
+            // delete old job if exists
+            await _jobService.DeleteJobAsync(request.UserId, cancellationToken);
+
+            // schedule new job
+            await _jobService.ScheduleJobAsync(request.UserId, cancellationToken); 
         }
     }
 }

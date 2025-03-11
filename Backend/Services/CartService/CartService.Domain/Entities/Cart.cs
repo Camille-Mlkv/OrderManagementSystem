@@ -2,12 +2,13 @@
 {
     public class Cart
     {
-        public string UserId { get; set; } = default!;
-        public List<CartItem> Items { get; private set; } = new();
+        public string? UserId { get; set; }
+        public List<CartItem> Items { get; set; } = new();
 
         public void AddItem(CartItem item)
         {
             var existingItem = Items.FirstOrDefault(x => x.MealId == item.MealId);
+
             if (existingItem != null)
             {
                 existingItem.Quantity += item.Quantity;
@@ -18,15 +19,14 @@
             }
         }
 
-        public void RemoveItem(Guid itemId)
+        public void RemoveItem(Guid mealId)
         {
-            Items.RemoveAll(x => x.MealId == itemId);
+            Items.RemoveAll(i => i.MealId == mealId);
         }
 
-        public void Clear()
+        public CartItem? GetItemById(Guid mealId)
         {
-            Items.Clear();
+            return Items.FirstOrDefault(i => i.MealId == mealId);
         }
-
     }
 }

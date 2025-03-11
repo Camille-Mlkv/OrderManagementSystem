@@ -3,5 +3,5 @@ using MediatR;
 
 namespace CartService.Application.UseCases.Commands.AddItemToCart
 {
-    public record AddItemToCartCommand(string UserId, CartItemDto Item): IRequest;
+    public record AddItemToCartCommand(string UserId, CartItemRequestDto Item): IRequest;
 }

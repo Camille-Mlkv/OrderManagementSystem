@@ -1,28 +1,44 @@
 ﻿using CartService.Application.Exceptions;
-using CartService.Application.Specifications.Repositories;
+using CartService.Application.Specifications;
+using CartService.Application.Specifications.Jobs;
 using MediatR;
 
 namespace CartService.Application.UseCases.Commands.DeleteItemFromCart
 {
     public class DeleteItemFromCartHandler : IRequestHandler<DeleteItemFromCartCommand>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICartJobService _jobService;
 
-        public DeleteItemFromCartHandler(ICartRepository cartRepository)
+        public DeleteItemFromCartHandler(IUnitOfWork unitOfWork, ICartJobService jobService)
         {
-            _cartRepository = cartRepository;
+            _unitOfWork = unitOfWork;
+            _jobService = jobService;
         }
 
         public async Task Handle(DeleteItemFromCartCommand request, CancellationToken cancellationToken)
         {
-            var existingItem = await _cartRepository.GetItemFromCartAsync(request.UserId, request.MealId);
-
-            if (existingItem is null)
+            var cart = await _unitOfWork.CartRepository.GetCartAsync(request.UserId, cancellationToken);
+            if (cart is null)
             {
-                throw new NotFoundException("Item not found", $"Meal {request.MealId} not found in user {request.UserId} cart.");
+                throw new BadRequestException("Bad request.", "You can't delete items from an empty cart."); 
             }
 
-            await _cartRepository.RemoveItemFromCartAsync(request.UserId, existingItem);
+            cart.RemoveItem(request.MealId);
+
+            await _jobService.DeleteJobAsync(request.UserId, cancellationToken);
+
+            if (cart.Items.Count == 0)
+            {
+                await _unitOfWork.CartRepository.DeleteCartAsync(request.UserId, cancellationToken);
+            }
+            else
+            {
+                await _unitOfWork.CartRepository.SaveCartAsync(cart, cancellationToken);
+
+                await _jobService.ScheduleJobAsync(request.UserId, cancellationToken);
+            }
+
         }
     }
 }

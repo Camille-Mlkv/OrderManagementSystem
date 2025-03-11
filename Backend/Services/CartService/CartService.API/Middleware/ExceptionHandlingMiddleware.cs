@@ -22,6 +22,14 @@ namespace CartService.API.Middleware
             {
                 await HandleException(context, ex);
             }
+            catch (BadRequestException ex)
+            {
+                await HandleException(context, ex);
+            }
+            catch (UnauthorizedException ex)
+            {
+                await HandleException(context, ex);
+            }
             catch (Exception ex)
             {
                 await HandleException(context, ex);
@@ -35,6 +43,8 @@ namespace CartService.API.Middleware
             int statusCode = exception switch
             {
                 NotFoundException => 404,
+                BadRequestException => 400,
+                UnauthorizedException => 401,
                 _ => 500
             };
 

@@ -1,28 +1,33 @@
 ﻿using AutoMapper;
 using CartService.Application.DTOs;
-using CartService.Application.Specifications.Repositories;
+using CartService.Application.Specifications;
 using MediatR;
 
 namespace CartService.Application.UseCases.Queries.GetItemsFromCart
 {
     public class GetItemsFromCartHandler: IRequestHandler<GetItemsFromCartQuery, List<CartItemDto>>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetItemsFromCartHandler(ICartRepository cartRepository, IMapper mapper)
+        public GetItemsFromCartHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _cartRepository = cartRepository;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<List<CartItemDto>> Handle(GetItemsFromCartQuery query, CancellationToken cancellationToken)
+        public async Task<List<CartItemDto>> Handle(GetItemsFromCartQuery request, CancellationToken cancellationToken)
         {
-            var cartItems = await _cartRepository.GetCartItemsAsync(query.UserId);
+            var cart = await _unitOfWork.CartRepository.GetCartAsync(request.UserId, cancellationToken);
 
-            var cartItemsDtos = _mapper.Map<List<CartItemDto>>(cartItems);
+            if (cart is null)
+            {
+                return new List<CartItemDto>();
+            }
 
-            return cartItemsDtos;
+            var itemsDtos = _mapper.Map<List<CartItemDto>>(cart.Items);
+
+            return itemsDtos;
         }
     }
 }

@@ -4,7 +4,6 @@ using CartService.Application.UseCases.Commands.ClearCart;
 using CartService.Application.UseCases.Commands.DecreaseItemQuantity;
 using CartService.Application.UseCases.Commands.DeleteItemFromCart;
 using CartService.Application.UseCases.Commands.IncreaseItemQuantity;
-using CartService.Application.UseCases.Queries.GetItemByIdFromCart;
 using CartService.Application.UseCases.Queries.GetItemsFromCart;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,21 +24,13 @@ namespace CartService.API.Controllers
         [HttpGet("{userId}/items")]
         public async Task<IActionResult> GetItemsFromCart([FromRoute] string userId, CancellationToken cancellationToken)
         {
-            var items = await _mediator.Send(new GetItemsFromCartQuery(userId));
+            var items = await _mediator.Send(new GetItemsFromCartQuery(userId), cancellationToken);
 
             return Ok(items);
         }
 
-        [HttpGet("{userId}/items/{mealId}")]
-        public async Task<IActionResult> GetItemByIdFromCart([FromRoute] string userId, [FromRoute] Guid mealId, CancellationToken cancellationToken)
-        {
-            var item = await _mediator.Send(new GetItemByIdFromCartQuery(userId, mealId));
-
-            return Ok(item);
-        }
-
         [HttpPost("{userId}")]
-        public async Task<IActionResult> AddItemToCart([FromBody] CartItemDto cartItem, [FromRoute] string userId, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddItemToCart([FromBody] CartItemRequestDto cartItem, [FromRoute] string userId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new AddItemToCartCommand(userId, cartItem),cancellationToken);
 
@@ -50,6 +41,7 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> IncreaseItemQuantity([FromRoute] string userId, [FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new IncreaseItemQuantityCommand(userId, mealId), cancellationToken);
+
             return NoContent();
         }
 
@@ -57,6 +49,7 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> DecreaseItemQuantity([FromRoute] string userId, [FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DecreaseItemQuantityCommand(userId, mealId), cancellationToken);
+
             return NoContent();
         }
 
@@ -68,7 +61,7 @@ namespace CartService.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{userId}/clear")]
+        [HttpDelete("{userId}/items/clear")]
         public async Task<IActionResult> CLearCart([FromRoute] string userId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new ClearCartCommand(userId), cancellationToken);
