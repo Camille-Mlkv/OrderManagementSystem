@@ -1,17 +1,26 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OrderService.Application.UseCases.Commands.CreateOrder;
 
 namespace OrderService.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/orders")]
     public class OrderController : ControllerBase
     {
-        private readonly ILogger<OrderController> _logger;
+        private readonly IMediator _mediator;
 
-        public OrderController(ILogger<OrderController> logger)
+        public OrderController(IMediator mediator)
         {
-            _logger = logger;
+            _mediator = mediator;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommand command)
+        {
+            var orderId = await _mediator.Send(command);
+
+            return Ok(orderId);
+        }
     }
 }

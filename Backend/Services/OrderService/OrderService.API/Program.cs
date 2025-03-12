@@ -1,4 +1,6 @@
 using OrderService.Infrastructure;
+using OrderService.Application;
+using OrderService.Infrastructure.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,7 +8,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.ConfigureDbConnection(builder.Configuration);
+MongoDbConfiguration.RegisterCustomSerializers();
+builder.Services.ConfigureDbServices(builder.Configuration);
+
+builder.Services.ConfigureApplicationServices();
 
 var app = builder.Build();
 

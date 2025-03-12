@@ -5,11 +5,16 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService.API", "OrderService.API\OrderService.API.csproj", "{99BCCA0E-F3FE-4685-ADA9-0CB2806F6500}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Application", "OrderService.Application\OrderService.Application.csproj", "{B029F55A-67A0-407F-92AE-58E30A46687C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService.Application", "OrderService.Application\OrderService.Application.csproj", "{B029F55A-67A0-407F-92AE-58E30A46687C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Infrastructure", "OrderService.Infrastructure\OrderService.Infrastructure.csproj", "{E96B1F73-645E-4048-B4CD-53946B7F7A32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService.Infrastructure", "OrderService.Infrastructure\OrderService.Infrastructure.csproj", "{E96B1F73-645E-4048-B4CD-53946B7F7A32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderService.Domain", "OrderService.Domain\OrderService.Domain.csproj", "{EF917CA0-FF8D-4632-9C0F-FA14A716F555}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OrderService.Domain", "OrderService.Domain\OrderService.Domain.csproj", "{EF917CA0-FF8D-4632-9C0F-FA14A716F555}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4E6A0B7A-2276-4036-91E4-998CB1B11140}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

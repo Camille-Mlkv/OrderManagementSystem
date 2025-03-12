@@ -8,7 +8,7 @@ namespace OrderService.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static void ConfigureDbConnection(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureDbServices(this IServiceCollection services, IConfiguration configuration)
         {
             var mongoConnectionString = configuration.GetConnectionString("MongoDb");
 
@@ -16,6 +16,7 @@ namespace OrderService.Infrastructure
             var database = client.GetDatabase("OrderDatabase");
 
             services.AddSingleton<IMongoDatabase>(database);
+
             services.AddScoped<IOrderRepository, OrderRepository>();
         }
     }

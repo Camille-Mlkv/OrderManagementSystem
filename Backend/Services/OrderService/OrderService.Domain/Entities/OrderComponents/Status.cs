@@ -4,8 +4,7 @@ namespace OrderService.Domain.Entities.OrderComponents
 {
     public class Status
     {
-        public int Id { get; set; }
-        public StatusName Name => (StatusName)Id;
+        public StatusName Name;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }
