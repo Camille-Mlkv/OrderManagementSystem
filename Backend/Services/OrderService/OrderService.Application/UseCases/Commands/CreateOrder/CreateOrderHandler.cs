@@ -42,7 +42,7 @@ namespace OrderService.Application.UseCases.Commands.CreateOrder
 
             order.CalculateTotalPrice();
 
-            await _orderRepository.CreateAsync(order);
+            await _orderRepository.CreateAsync(order, cancellationToken);
 
             return order.Id;
         }

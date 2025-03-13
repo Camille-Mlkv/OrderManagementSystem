@@ -8,7 +8,7 @@ namespace OrderService.Application.MappingProfiles
     {
         public AddressProfile()
         {
-            CreateMap<Address, AddressRequestDto>().ReverseMap();
+            CreateMap<Address, AddressDto>().ReverseMap();
         }
     }
 }

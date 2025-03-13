@@ -1,6 +1,6 @@
 ﻿namespace OrderService.Application.DTOs.Address
 {
-    public class AddressRequestDto
+    public class AddressDto
     {
         public string Street { get; set; }
         public string City { get; set; }

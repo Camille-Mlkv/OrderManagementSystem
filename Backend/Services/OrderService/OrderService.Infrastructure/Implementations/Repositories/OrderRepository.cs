@@ -14,27 +14,27 @@ namespace OrderService.Infrastructure.Implementations.Repositories
             _ordersCollection = database.GetCollection<Order>("Orders");
         }
 
-        public async Task<Order> GetByIdAsync(Guid orderId)
+        public async Task<Order> GetByIdAsync(Guid orderId, CancellationToken cancellationToken)
         {
             return await _ordersCollection.Find(o => o.Id == orderId).FirstOrDefaultAsync();
         }
 
-        public async Task<List<Order>> GetListAsync(Expression<Func<Order, bool>> filter)
+        public async Task<List<Order>> GetListAsync(Expression<Func<Order, bool>> filter, CancellationToken cancellationToken)
         {
             return await _ordersCollection.Find(filter).ToListAsync();
         }
 
-        public async Task CreateAsync(Order order)
+        public async Task CreateAsync(Order order, CancellationToken cancellationToken)
         {
             await _ordersCollection.InsertOneAsync(order);
         }
 
-        public async Task UpdateAsync(Order order)
+        public async Task UpdateAsync(Order order, CancellationToken cancellationToken)
         {
             await _ordersCollection.ReplaceOneAsync(o => o.Id == order.Id, order);
         }
 
-        public async Task DeleteAsync(Guid orderId)
+        public async Task DeleteAsync(Guid orderId, CancellationToken cancellationToken)
         {
             await _ordersCollection.DeleteOneAsync(o => o.Id == orderId);
         }
