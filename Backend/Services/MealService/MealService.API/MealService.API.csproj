@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>4ec877d6-6cf3-4445-8797-003f5384031f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MealService.Application\MealService.Application.csproj" />
+    <ProjectReference Include="..\MealService.Infrastructure\MealService.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
