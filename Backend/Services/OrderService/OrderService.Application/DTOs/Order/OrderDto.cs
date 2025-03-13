@@ -14,5 +14,6 @@ namespace OrderService.Application.DTOs.Order
         public List<OrderMealDto> Meals { get; set; } = new();
         public decimal TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? DeliveryDate { get; set; }
     }
 }

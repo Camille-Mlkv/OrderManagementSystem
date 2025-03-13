@@ -9,6 +9,8 @@ namespace OrderService.Application.MappingProfiles
         public OrderProfile()
         {
             CreateMap<Order, OpenedOrderDto>().ReverseMap();
+            CreateMap<Order, OrderDto>()
+               .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.Name.ToString()));
         }
     }
 }

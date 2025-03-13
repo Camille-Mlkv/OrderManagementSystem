@@ -2,7 +2,7 @@
 using MediatR;
 using OrderService.Application.DTOs.Order;
 using OrderService.Application.Specifications.Repositories;
-using OrderService.Application.Utilities;
+using OrderService.Domain.Enums;
 
 namespace OrderService.Application.UseCases.Queries.GetOpenedOrders
 {
@@ -16,9 +16,10 @@ namespace OrderService.Application.UseCases.Queries.GetOpenedOrders
             _orderRepository = orderRepository;
             _mapper = mapper;
         }
+
         public async Task<List<OpenedOrderDto>> Handle(GetOpenedOrdersQuery request, CancellationToken cancellationToken)
         {
-            var orders = await _orderRepository.GetListAsync(order => order.CourierId == null, cancellationToken);
+            var orders = await _orderRepository.GetListAsync(order => order.CourierId == null && order.Status.Name == StatusName.ReadyForDelivery, cancellationToken);
 
             var ordersDtos = _mapper.Map<List<OpenedOrderDto>>(orders);
 

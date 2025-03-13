@@ -13,6 +13,9 @@ namespace OrderService.Domain.Entities
         public List<OrderMeal> Meals { get; set; } = new();
         public decimal TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public bool ConfirmedByClient {  get; set; }
+        public bool ConfirmedByCourier { get; set; }
+        public DateTime? DeliveryDate { get; set; }
 
         public void CalculateTotalPrice()
         {

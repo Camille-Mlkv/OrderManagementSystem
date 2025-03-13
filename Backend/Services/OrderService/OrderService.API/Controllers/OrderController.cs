@@ -2,7 +2,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.UseCases.Commands.CreateOrder;
 using OrderService.Application.UseCases.Commands.DeletePendingOrder;
-using OrderService.Application.UseCases.Queries.GetOpenedOrders;
+using OrderService.Application.UseCases.Commands.UpdateOrderWithCourierId;
+using OrderService.Application.UseCases.Commands.UpdateOrderWithReadyStatus;
 using OrderService.Application.UseCases.Queries.GetOrderById;
 
 namespace OrderService.API.Controllers
@@ -19,6 +20,7 @@ namespace OrderService.API.Controllers
         }
 
         [HttpPost]
+        // client
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommand command, CancellationToken cancellationToken)
         {
             var orderId = await _mediator.Send(command,cancellationToken);
@@ -27,19 +29,12 @@ namespace OrderService.API.Controllers
         }
 
         [HttpDelete("{orderId}")]
+        // client
         public async Task<IActionResult> DeletePendingOrder(Guid orderId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DeletePendingOrderCommand(orderId), cancellationToken);
 
             return NoContent();
-        }
-
-        [HttpGet("opened")]
-        public async Task<IActionResult> GetOpenedOrders(CancellationToken cancellationToken)
-        {
-            var orders = await _mediator.Send(new GetOpenedOrdersQuery(), cancellationToken);
-
-            return Ok(orders);
         }
 
         [HttpGet("{orderId}")]
@@ -49,5 +44,26 @@ namespace OrderService.API.Controllers
 
             return Ok(order);
         }
+
+        [HttpPatch("{orderId:guid}/assign-courier")]
+        // courier
+        public async Task<IActionResult> UpdateOrderWithCourierId(Guid orderId, Guid courierId, CancellationToken cancellationToken)
+        {
+            // later courierId will be retrieved from the token
+
+            await _mediator.Send(new UpdateOrderWithCourierIdCommand(courierId, orderId), cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{orderId:guid}/set-ready")]
+        // admin
+        public async Task<IActionResult> UpdateOrderWithReadyStatus(Guid orderId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new UpdateOrderWithReadyStatusCommand(orderId), cancellationToken);
+
+            return NoContent();
+        }
+
     }
 }

@@ -1,6 +1,4 @@
 ﻿using OrderService.Application.DTOs.Address;
-using OrderService.Application.DTOs.Meal;
-using OrderService.Domain.Entities.OrderComponents;
 
 namespace OrderService.Application.DTOs.Order
 {
