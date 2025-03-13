@@ -50,7 +50,7 @@ namespace UserService.API.Controllers
         [HttpGet("users/{userName}/reset-code")]
         public async Task<IActionResult> GetPasswordResetCode([FromRoute]string userName, CancellationToken cancellationToken)
         {
-            var resetCode=await _accountService.GetPasswordResetCodeAsync(userName, cancellationToken);
+            var resetCode = await _accountService.GetPasswordResetCodeAsync(userName, cancellationToken);
             _logger.LogInformation($"User {userName} received password reset email.");
 
             return Ok(resetCode);
