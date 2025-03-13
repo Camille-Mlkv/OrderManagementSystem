@@ -45,7 +45,7 @@ namespace CartService.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("{mealId}/increase")]
+        [HttpPost("{mealId:Guid}/increase")]
         public async Task<IActionResult> IncreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
@@ -54,7 +54,7 @@ namespace CartService.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("{mealId}/decrease")]
+        [HttpPost("{mealId:Guid}/decrease")]
         public async Task<IActionResult> DecreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
@@ -63,7 +63,7 @@ namespace CartService.API.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{mealId}")]
+        [HttpDelete("{mealId:Guid}")]
         public async Task<IActionResult> DeleteItemFromCart([FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
