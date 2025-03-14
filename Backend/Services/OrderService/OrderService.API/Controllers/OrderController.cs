@@ -1,10 +1,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using OrderService.Application.UseCases.Commands.ConfirmOrderByClient;
+using OrderService.Application.UseCases.Commands.ConfirmOrderByCourier;
 using OrderService.Application.UseCases.Commands.CreateOrder;
 using OrderService.Application.UseCases.Commands.DeletePendingOrder;
+using OrderService.Application.UseCases.Commands.UpdateOrdersWithOutForDeliveryStatus;
 using OrderService.Application.UseCases.Commands.UpdateOrderWithCourierId;
 using OrderService.Application.UseCases.Commands.UpdateOrderWithReadyStatus;
+using OrderService.Application.UseCases.Queries.GetClientOrdersByStatus;
+using OrderService.Application.UseCases.Queries.GetCourierOrders;
+using OrderService.Application.UseCases.Queries.GetOpenedOrders;
 using OrderService.Application.UseCases.Queries.GetOrderById;
+using OrderService.Application.UseCases.Queries.GetOrdersByStatus;
 
 namespace OrderService.API.Controllers
 {
@@ -45,22 +52,89 @@ namespace OrderService.API.Controllers
             return Ok(order);
         }
 
+        [HttpGet("client/status-{status}")]
+        // client
+        public async Task<IActionResult> GetClientOrdersByStatus(Guid clientId, string status, CancellationToken cancellationToken)
+        {
+            // client id will be retrieved from token
+
+            var orders = await _mediator.Send(new GetClientOrdersByStatusQuery(clientId, status), cancellationToken);
+
+            return Ok(orders);
+        }
+
+        [HttpPatch("{orderId:guid}/client-confirmation")]
+        // client
+        public async Task<IActionResult> ConfirmOrderByClient(Guid orderId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new ConfirmOrderByClientCommand(orderId), cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpGet("status-{status}")]
+        // admin
+        public async Task<IActionResult> GetOrdersByStatus(string status, CancellationToken cancellationToken)
+        {
+            var orders = await _mediator.Send(new GetOrdersByStatusQuery(status), cancellationToken);
+
+            return Ok(orders);
+        }
+
+        [HttpPatch("{orderId:guid}/status/ready")]
+        // admin
+        public async Task<IActionResult> UpdateOrderWithReadyStatus(Guid orderId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new UpdateOrderWithReadyStatusCommand(orderId), cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPatch("{courierId:guid}/status/out-for-delivery")]
+        // admin
+        public async Task<IActionResult> UpdateOrdersWithOutForDeliveryStatus(Guid courierId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new UpdateOrdersWithOutForDeliveryStatusCommand(courierId), cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpGet("opened-orders")]
+        // courier
+        public async Task<IActionResult> GetOpenedOrders(CancellationToken cancellationToken)
+        {
+            var orders = await _mediator.Send(new GetOpenedOrdersQuery(), cancellationToken);
+
+            return Ok(orders);
+        }
+
         [HttpPatch("{orderId:guid}/assign-courier")]
         // courier
         public async Task<IActionResult> UpdateOrderWithCourierId(Guid orderId, Guid courierId, CancellationToken cancellationToken)
         {
-            // later courierId will be retrieved from the token
+            // courierId will be retrieved from the token
 
             await _mediator.Send(new UpdateOrderWithCourierIdCommand(courierId, orderId), cancellationToken);
 
             return NoContent();
         }
 
-        [HttpPatch("{orderId:guid}/set-ready")]
-        // admin
-        public async Task<IActionResult> UpdateOrderWithReadyStatus(Guid orderId, CancellationToken cancellationToken)
+        [HttpGet("out-for-delivery")]
+        // courier
+        public async Task<IActionResult> GetCourierOrders(Guid courierId, CancellationToken cancellationToken)
         {
-            await _mediator.Send(new UpdateOrderWithReadyStatusCommand(orderId), cancellationToken);
+            // courierId will be retrieved from the token
+
+            var orders = await _mediator.Send(new GetCourierOrdersQuery(courierId), cancellationToken);
+
+            return Ok(orders);
+        }
+
+        [HttpPatch("{orderId:guid}/courier-confirmation")]
+        // courier
+        public async Task<IActionResult> ConfirmOrderByCourier(Guid orderId, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new ConfirmOrderByCourierCommand(orderId), cancellationToken);
 
             return NoContent();
         }

@@ -19,7 +19,8 @@ namespace OrderService.Application.UseCases.Queries.GetCourierOrders
 
         public async Task<List<OrderDto>> Handle(GetCourierOrdersQuery request, CancellationToken cancellationToken)
         {
-            var orders = await _orderRepository.GetListAsync(order => order.CourierId == request.CourierId && order.Status.Name == StatusName.OutForDelivery, cancellationToken);
+            var orders = await _orderRepository.GetListAsync(order => order.CourierId == request.CourierId 
+               && order.Status.Name == StatusName.OutForDelivery, cancellationToken);
 
             var ordersDtos = _mapper.Map<List<OrderDto>>(orders);
 
