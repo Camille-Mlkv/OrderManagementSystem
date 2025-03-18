@@ -1,17 +1,17 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Application.UseCases.Commands.ConfirmOrderByClient;
-using OrderService.Application.UseCases.Commands.ConfirmOrderByCourier;
-using OrderService.Application.UseCases.Commands.CreateOrder;
-using OrderService.Application.UseCases.Commands.DeletePendingOrder;
-using OrderService.Application.UseCases.Commands.UpdateOrdersWithOutForDeliveryStatus;
-using OrderService.Application.UseCases.Commands.UpdateOrderWithCourierId;
-using OrderService.Application.UseCases.Commands.UpdateOrderWithReadyStatus;
-using OrderService.Application.UseCases.Queries.GetClientOrdersByStatus;
-using OrderService.Application.UseCases.Queries.GetCourierOrders;
-using OrderService.Application.UseCases.Queries.GetOpenedOrders;
-using OrderService.Application.UseCases.Queries.GetOrderById;
-using OrderService.Application.UseCases.Queries.GetOrdersByStatus;
+using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByClient;
+using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByCourier;
+using OrderService.Application.UseCases.Orders.Commands.CreateOrder;
+using OrderService.Application.UseCases.Orders.Commands.DeletePendingOrder;
+using OrderService.Application.UseCases.Orders.Commands.UpdateOrdersWithOutForDeliveryStatus;
+using OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithCourierId;
+using OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithReadyStatus;
+using OrderService.Application.UseCases.Orders.Queries.GetClientOrdersByStatus;
+using OrderService.Application.UseCases.Orders.Queries.GetCourierOrders;
+using OrderService.Application.UseCases.Orders.Queries.GetOpenedOrders;
+using OrderService.Application.UseCases.Orders.Queries.GetOrderById;
+using OrderService.Application.UseCases.Orders.Queries.GetOrdersByStatus;
 
 namespace OrderService.API.Controllers
 {
@@ -138,6 +138,5 @@ namespace OrderService.API.Controllers
 
             return NoContent();
         }
-
     }
 }

@@ -9,7 +9,7 @@ namespace OrderService.Application.CommonValidators
         {
             RuleFor(status => status)
                 .Must(status => Enum.TryParse(typeof(StatusName), status, true, out _))
-                .WithMessage("Invalid status.");
+                .WithMessage("Invalid status: specify either InProgress, ReadyForDelivery, OutForDelivery or Delivered.");
         }
     }
 }
