@@ -1,5 +1,8 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OrderService.Application.DTOs.Address;
+using OrderService.Application.Exceptions;
 using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByClient;
 using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByCourier;
 using OrderService.Application.UseCases.Orders.Commands.CreateOrder;
@@ -12,6 +15,7 @@ using OrderService.Application.UseCases.Orders.Queries.GetCourierOrders;
 using OrderService.Application.UseCases.Orders.Queries.GetOpenedOrders;
 using OrderService.Application.UseCases.Orders.Queries.GetOrderById;
 using OrderService.Application.UseCases.Orders.Queries.GetOrdersByStatus;
+using System.Security.Claims;
 
 namespace OrderService.API.Controllers
 {
@@ -20,23 +24,27 @@ namespace OrderService.API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public OrderController(IMediator mediator)
+        public OrderController(IMediator mediator, IHttpContextAccessor httpContextAccessor)
         {
             _mediator = mediator;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        [Authorize(Policy = "Client")]
         [HttpPost]
-        // client
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateOrder([FromBody] AddressDto address, CancellationToken cancellationToken)
         {
-            var orderId = await _mediator.Send(command,cancellationToken);
+            var clientId = GetUserId();
+
+            var orderId = await _mediator.Send(new CreateOrderCommand(clientId, address),cancellationToken);
 
             return Ok(orderId);
         }
 
+        [Authorize(Policy = "Client")]
         [HttpDelete("{orderId}")]
-        // client
         public async Task<IActionResult> DeletePendingOrder(Guid orderId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DeletePendingOrderCommand(orderId), cancellationToken);
@@ -44,6 +52,7 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("{orderId}")]
         public async Task<IActionResult> GetOrderById(Guid orderId, CancellationToken cancellationToken)
         {
@@ -52,19 +61,19 @@ namespace OrderService.API.Controllers
             return Ok(order);
         }
 
+        [Authorize(Policy = "Client")]
         [HttpGet("client/status-{status}")]
-        // client
-        public async Task<IActionResult> GetClientOrdersByStatus(Guid clientId, string status, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetClientOrdersByStatus(string status, CancellationToken cancellationToken)
         {
-            // client id will be retrieved from token
+            var clientId = GetUserId();
 
             var orders = await _mediator.Send(new GetClientOrdersByStatusQuery(clientId, status), cancellationToken);
 
             return Ok(orders);
         }
 
+        [Authorize(Policy = "Client")]
         [HttpPatch("{orderId:guid}/client-confirmation")]
-        // client
         public async Task<IActionResult> ConfirmOrderByClient(Guid orderId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new ConfirmOrderByClientCommand(orderId), cancellationToken);
@@ -72,8 +81,8 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet("status-{status}")]
-        // admin
         public async Task<IActionResult> GetOrdersByStatus(string status, CancellationToken cancellationToken)
         {
             var orders = await _mediator.Send(new GetOrdersByStatusQuery(status), cancellationToken);
@@ -81,8 +90,8 @@ namespace OrderService.API.Controllers
             return Ok(orders);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPatch("{orderId:guid}/status/ready")]
-        // admin
         public async Task<IActionResult> UpdateOrderWithReadyStatus(Guid orderId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new UpdateOrderWithReadyStatusCommand(orderId), cancellationToken);
@@ -90,17 +99,19 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPatch("{courierId:guid}/status/out-for-delivery")]
-        // admin
-        public async Task<IActionResult> UpdateOrdersWithOutForDeliveryStatus(Guid courierId, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateOrdersWithOutForDeliveryStatus(CancellationToken cancellationToken)
         {
+            var courierId = GetUserId();
+
             await _mediator.Send(new UpdateOrdersWithOutForDeliveryStatusCommand(courierId), cancellationToken);
 
             return NoContent();
         }
 
+        [Authorize(Policy = "Courier")]
         [HttpGet("opened-orders")]
-        // courier
         public async Task<IActionResult> GetOpenedOrders(CancellationToken cancellationToken)
         {
             var orders = await _mediator.Send(new GetOpenedOrdersQuery(), cancellationToken);
@@ -108,35 +119,48 @@ namespace OrderService.API.Controllers
             return Ok(orders);
         }
 
+        [Authorize(Policy = "Courier")]
         [HttpPatch("{orderId:guid}/assign-courier")]
-        // courier
-        public async Task<IActionResult> UpdateOrderWithCourierId(Guid orderId, Guid courierId, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateOrderWithCourierId(Guid orderId, CancellationToken cancellationToken)
         {
-            // courierId will be retrieved from the token
+            var courierId = GetUserId();
 
             await _mediator.Send(new UpdateOrderWithCourierIdCommand(courierId, orderId), cancellationToken);
 
             return NoContent();
         }
 
+        [Authorize(Policy = "Courier")]
         [HttpGet("out-for-delivery")]
-        // courier
-        public async Task<IActionResult> GetCourierOrders(Guid courierId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetCourierOrders(CancellationToken cancellationToken)
         {
-            // courierId will be retrieved from the token
+            var courierId = GetUserId();
 
             var orders = await _mediator.Send(new GetCourierOrdersQuery(courierId), cancellationToken);
 
             return Ok(orders);
         }
 
+        [Authorize(Policy = "Courier")]
         [HttpPatch("{orderId:guid}/courier-confirmation")]
-        // courier
         public async Task<IActionResult> ConfirmOrderByCourier(Guid orderId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new ConfirmOrderByCourierCommand(orderId), cancellationToken);
 
             return NoContent();
+        }
+
+        private Guid GetUserId()
+        {
+            var userIdString = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+               ?? throw new UnauthorizedException("Unauthorized.", "To access orders' api you must be logged in.");
+
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                throw new UnauthorizedException("Unauthorized.", "User ID is not a valid GUID.");
+            }
+
+            return userId;
         }
     }
 }

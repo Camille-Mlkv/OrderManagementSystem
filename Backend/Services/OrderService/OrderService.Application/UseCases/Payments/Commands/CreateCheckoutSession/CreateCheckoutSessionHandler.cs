@@ -25,7 +25,14 @@ namespace OrderService.Application.UseCases.Payments.Commands.CreateCheckoutSess
                 throw new NotFoundException("Order with id doesn't exist");
             }
 
-            var paymentResult = await _paymentService.CreateCheckoutSessionAsync(request.OrderId, 22);
+            // for retrieving email via gRPC
+            var clientId = order.ClientId;
+
+            // value is hardcoded for testing purposes (will be removed when adding gRPC)
+            var email = "testclient@gmail.com";
+
+            // price is hardcoded for testing purposes because meals are not retrieved yet, so price is currently 0
+            var paymentResult = await _paymentService.CreateCheckoutSessionAsync(request.OrderId, 22, email);
 
             return paymentResult;
         }

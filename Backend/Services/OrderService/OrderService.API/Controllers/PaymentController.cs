@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.UseCases.Payments.Commands.CreateCheckoutSession;
 using OrderService.Application.UseCases.Payments.Commands.HandleWebhook;
@@ -16,6 +17,7 @@ namespace OrderService.API.Controllers
             _mediator = mediator;
         }
 
+        [Authorize(Policy = "Client")]
         [HttpPost]
         public async Task<IActionResult> CreateCheckoutSession(Guid orderId, CancellationToken cancellationToken)
         {

@@ -17,7 +17,7 @@ namespace OrderService.Infrastructure.Implementations.Services
             StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
         }
 
-        public async Task<PaymentResult> CreateCheckoutSessionAsync(Guid orderId, decimal amount)
+        public async Task<PaymentResult> CreateCheckoutSessionAsync(Guid orderId, decimal amount, string clientEmail)
         {
             var options = new SessionCreateOptions
             {
@@ -41,6 +41,7 @@ namespace OrderService.Infrastructure.Implementations.Services
                 Mode = "payment",
                 SuccessUrl = _stripeSettings.SuccessUrl,
                 CancelUrl = _stripeSettings.CancelUrl,
+                CustomerEmail = clientEmail,
                 Metadata = new Dictionary<string, string>
                 {
                     { "orderId", orderId.ToString() }
