@@ -14,9 +14,8 @@ namespace UserService.DataAccess.DI
         public static void AddIdentity(this IServiceCollection services)
         {
             services.AddIdentityCore<ApplicationUser>()
-                    .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>()
-                    .AddDefaultTokenProviders();
+                    .AddRoles<IdentityRole<Guid>>()
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
         }
 
         public static void AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)

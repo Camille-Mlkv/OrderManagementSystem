@@ -20,15 +20,15 @@ namespace UserService.DataAccess.DI
         public static async Task SeedRolesData(this IServiceCollection services)
         {
             using var scope = services.BuildServiceProvider().CreateScope();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
             string[] roles = { "Admin", "Client", "Courier" };
 
             foreach (var role in roles)
             {
-                if (!await roleManager.RoleExistsAsync(role))
+                if (!await roleManager.Roles.AnyAsync(r => r.Name == role))
                 {
-                    await roleManager.CreateAsync(new IdentityRole(role));
+                    await roleManager.CreateAsync(new IdentityRole<Guid>(role));
                 }
             }
         }

@@ -2,7 +2,7 @@
 {
     public class Cart
     {
-        public string? UserId { get; set; }
+        public Guid? UserId { get; set; }
         public List<CartItem> Items { get; set; } = new();
 
         public void AddItem(CartItem item)

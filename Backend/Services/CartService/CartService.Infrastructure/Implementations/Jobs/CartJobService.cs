@@ -13,7 +13,7 @@ namespace CartService.Infrastructure.Implementations.Jobs
             _unitOfWork = unitOfWork;
         }
 
-        public async Task ScheduleJobAsync(string userId, CancellationToken cancellationToken)
+        public async Task ScheduleJobAsync(Guid userId, CancellationToken cancellationToken)
         {
             var newJobId = BackgroundJob.Schedule(
                () => ExecuteJobAsync(userId),
@@ -22,7 +22,7 @@ namespace CartService.Infrastructure.Implementations.Jobs
             await _unitOfWork.CartJobRepository.SaveJobIdAsync(userId, newJobId, cancellationToken);
         }
 
-        public async Task ExecuteJobAsync(string userId)
+        public async Task ExecuteJobAsync(Guid userId)
         {
             var cart = await _unitOfWork.CartRepository.GetCartAsync(userId, CancellationToken.None);
 
@@ -36,7 +36,7 @@ namespace CartService.Infrastructure.Implementations.Jobs
             await DeleteJobAsync(userId, CancellationToken.None);
         }
 
-        public async Task DeleteJobAsync(string userId, CancellationToken cancellationToken)
+        public async Task DeleteJobAsync(Guid userId, CancellationToken cancellationToken)
         {
             var jobId = await _unitOfWork.CartJobRepository.GetJobIdAsync(userId, cancellationToken);
 

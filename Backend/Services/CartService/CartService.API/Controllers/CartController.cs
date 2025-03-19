@@ -81,10 +81,17 @@ namespace CartService.API.Controllers
             return NoContent();
         }
 
-        private string GetUserId()
+        private Guid GetUserId()
         {
-            return _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-               ?? throw new UnauthorizedException("Unauthorized.", "Cart is available only to clients.");
+            var userIdString = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+               ?? throw new UnauthorizedException("Unauthorized.", "To access orders' api you must be logged in.");
+
+            if (!Guid.TryParse(userIdString, out var userId))
+            {
+                throw new UnauthorizedException("Unauthorized.", "User ID is not a valid GUID.");
+            }
+
+            return userId;
         }
     }
 }
