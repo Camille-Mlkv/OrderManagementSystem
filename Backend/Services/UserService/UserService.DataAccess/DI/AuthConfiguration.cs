@@ -15,12 +15,13 @@ namespace UserService.DataAccess.DI
         {
             services.AddIdentityCore<ApplicationUser>()
                     .AddRoles<IdentityRole<Guid>>()
-                    .AddEntityFrameworkStores<ApplicationDbContext>();
+                    .AddEntityFrameworkStores<ApplicationDbContext>()
+                    .AddDefaultTokenProviders();
         }
 
         public static void AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var settingsSection = configuration.GetSection("ApiSettings:JwtOptions");
+            var settingsSection = configuration.GetSection("JwtOptions");
 
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");

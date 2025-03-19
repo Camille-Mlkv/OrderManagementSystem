@@ -28,7 +28,7 @@ namespace UserService.API.Controllers
         }
 
         [HttpGet("users/{userName}/email/confirmed")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery]string userName, CancellationToken cancellationToken)
+        public async Task<IActionResult> ConfirmEmail([FromRoute]string userName, CancellationToken cancellationToken)
         {
             await _accountService.ConfirmEmailAsync(userName, cancellationToken);
             _logger.LogInformation($"User {userName} confirmed their account.");
