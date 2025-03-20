@@ -11,6 +11,8 @@ using CartService.Infrastructure.Implementations.Jobs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CartService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CartService.Infrastructure
 {
@@ -34,6 +36,8 @@ namespace CartService.Infrastructure
         public static void ConfigureHangfireServices(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("Hangfire");
+
+            services.AddDbContext<HangfireDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddHangfire(config => config.UseSqlServerStorage(connectionString));
             services.AddHangfireServer();

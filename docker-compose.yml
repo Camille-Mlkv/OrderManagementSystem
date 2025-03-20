@@ -55,8 +55,28 @@ services:
       - ASPNETCORE_HTTPS_PORTS=5003
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - CLOUDINARY__APIKEY=${CLOUDINARY__APIKEY}
+      - CLOUDINARY__APISECRET=${CLOUDINARY__APISECRET}
     depends_on:
       - mssql
+
+  cartservice.api:
+    image: ${DOCKER_REGISTRY-}cartserviceapi
+    container_name: cart.api
+    build:
+      context: .
+      dockerfile: Backend/Services/CartService/CartService.API/Dockerfile
+    ports:
+      - 5004:5004
+    environment:
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORTS=5004
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+    depends_on:
+      - mssql
+      - redis
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -92,8 +112,19 @@ services:
       - STRIPE_API_KEY=${STRIPE_API_KEY}
       - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
 
+  redis:
+    image: "redis:latest"
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+
+
 volumes:
   mongo-data:
     driver: local
   mssql-data:
+    driver: local
+  redis_data:
     driver: local

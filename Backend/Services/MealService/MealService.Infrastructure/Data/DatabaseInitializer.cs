@@ -44,7 +44,7 @@ namespace MealService.Infrastructure.Data
                 {
                     new() { Id = Guid.NewGuid(), Name = "Italian", ImageUrl = "https://res.cloudinary.com/dlr5ta8h6/image/upload/v1742413673/Italian_zihjcm.png" },
                     new() { Id = Guid.NewGuid(), Name = "Chinese", ImageUrl = "https://res.cloudinary.com/dlr5ta8h6/image/upload/v1742413764/Chinese_mfbae9.png" },
-                    new() { Id = Guid.NewGuid(), Name = "French", ImageUrl = "https://res.cloudinary.com/dlr5ta8h6/image/upload/v1742413849/French_yg3siw.pngg" }
+                    new() { Id = Guid.NewGuid(), Name = "French", ImageUrl = "https://res.cloudinary.com/dlr5ta8h6/image/upload/v1742413849/French_yg3siw.png" }
                 };
 
                 await context.Cuisines.AddRangeAsync(cuisines);

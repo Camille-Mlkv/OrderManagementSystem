@@ -4,6 +4,8 @@ using CartService.API.Middleware;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using CartService.Infrastructure.Data;
+using CartService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,16 +52,27 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    using var scope = app.Services.CreateScope();
+    await DatabaseInitializer.InitializeHangfireDbAsync(scope.ServiceProvider);
 }
 
 app.UseHttpsRedirection();
 
+var options = new DashboardOptions()
+{
+    Authorization = [new HangfireDashboardAuthFilter()]
+};
+
+app.UseHangfireDashboard("/hangfire", options);
+
+app.MapHangfireDashboard();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
-
-app.UseHangfireDashboard();
 
 app.Run();
