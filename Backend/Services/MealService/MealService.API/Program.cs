@@ -3,6 +3,7 @@ using MealService.Application;
 using MealService.API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using MealService.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +50,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider);
 }
 
 app.UseHttpsRedirection();

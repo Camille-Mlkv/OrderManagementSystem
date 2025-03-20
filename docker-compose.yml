@@ -41,6 +41,23 @@ services:
     depends_on:
       - mssql
 
+  mealservice.api:
+    image: ${DOCKER_REGISTRY-}mealserviceapi
+    container_name: meals.api
+    build:
+      context: .
+      dockerfile: Backend/Services/MealService/MealService.API/Dockerfile
+    ports:
+      - 5003:5003
+    environment:
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORTS=5003
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+    depends_on:
+      - mssql
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql_server
