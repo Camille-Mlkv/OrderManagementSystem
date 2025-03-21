@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+  orderservice.api:
+    image: ${DOCKER_REGISTRY-}orderserviceapi
+    container_name: orders.api
+    build:
+      context: .
+      dockerfile: Backend/Services/OrderService/OrderService.API/Dockerfile
+    ports:
+      - 5001:5001
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORTS=5001
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+
+      - STRIPESETTINGS__SECRETKEY=${STRIPESETTINGS__SECRETKEY}
+      - STRIPESETTINGS__WEBHOOKKEY=${STRIPESETTINGS__WEBHOOKKEY}
+      - STRIPESETTINGS__SUCCESSURL=${STRIPESETTINGS__SUCCESSURL}
+      - STRIPESETTINGS__CANCELURL=${STRIPESETTINGS__CANCELURL}
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_DATABASE: OrderDatabase
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    restart: always
+
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    command: ["listen", "-H", "x-djstripe-webhook-secret: ${STRIPESETTINGS__WEBHOOKKEY}", "--forward-to", "https://orderservice.api:5001/api/payments/webhook", "--skip-verify"]
+    depends_on:
+      - orderservice.api
+    environment:
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
+
+volumes:
+  mongo-data:
+    driver: local
