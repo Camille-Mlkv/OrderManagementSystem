@@ -13,35 +13,25 @@ namespace MealService.GrpcServer.Services
             _logger = logger;
         }
 
-        public override async Task<GetMealByIdReply> CheckIfMealExists(GetMealByIdRequest request, ServerCallContext context)
+        public override async Task<GetMealByIdReply> GetMealById(GetMealByIdRequest request, ServerCallContext context)
         {
-            _logger.LogInformation("GRPC meal service request started");
-
-            Guid mealGuidId;
-            var isIdValid = Guid.TryParse(request.MealId, out mealGuidId);
-
-            if (!isIdValid)
+            if (!Guid.TryParse(request.MealId, out var mealGuid))
             {
-                _logger.LogError("Failed to parse meal id into GUID.");
-
-                throw new RpcException(new Status(StatusCode.InvalidArgument, "Meal id is not valid"));
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid meal ID format"));
             }
 
-            var meal = await _unitOfWork.MealRepository.GetByIdAsync(mealGuidId, context.CancellationToken);
+            var meal = await _unitOfWork.MealRepository.GetByIdAsync(mealGuid, CancellationToken.None);
 
             if (meal is null)
             {
-                _logger.LogError("GRPC meal service request failed: Meal not found");
-
-                return new GetMealByIdReply
-                {
-                    Exists = false
-                };
+                throw new RpcException(new Status(StatusCode.NotFound, "Meal not found"));
             }
 
             return new GetMealByIdReply
             {
-                Exists = true
+                MealId = meal.Id.ToString(),
+                Name = meal.Name,
+                Price = meal.Price
             };
         }
     }

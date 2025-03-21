@@ -32,9 +32,9 @@ namespace CartService.Application.UseCases.Commands.AddItemToCart
 
             var mealRequest = new MealService.GrpcServer.GetMealByIdRequest{ MealId = mealId };
 
-            var response = await _grpcClient.CheckIfMealExistsAsync(mealRequest);
+            var response = await _grpcClient.GetMealByIdAsync(mealRequest);
 
-            if (!response.Exists)
+            if (response is null)
             {
                 throw new NotFoundException("Failed to add item to the cart.",$"Meal with Id {mealId} wasn't found.");
             }

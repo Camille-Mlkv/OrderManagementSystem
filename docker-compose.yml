@@ -96,6 +96,23 @@ services:
       - redis
       - mealservice.grpc
 
+  cartservice.grpc:
+    image: ${DOCKER_REGISTRY-}cartservicegrpc
+    container_name: cart.grpc
+    build:
+      context: .
+      dockerfile: Backend/Services/CartService/CartService.GrpcServer/Dockerfile
+    ports:
+      - 5007:5007
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORTS=5007
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+    depends_on:
+      - redis
+
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql_server
