@@ -19,6 +19,8 @@ builder.Services.ConfigureAuth(builder.Configuration);
 
 builder.Services.ConfigureApplicationServices();
 
+builder.Services.ConfigureGrpcConnection(builder.Configuration);
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSwaggerGen(option =>

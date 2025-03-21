@@ -1,6 +1,5 @@
 ﻿using FluentValidation.AspNetCore;
 using FluentValidation;
-using MealService.Application.MappingProfiles;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 

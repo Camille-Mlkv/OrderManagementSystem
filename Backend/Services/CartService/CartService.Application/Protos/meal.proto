@@ -1,0 +1,17 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "MealService.GrpcServer";
+
+package meal;
+
+service MealService {
+  rpc CheckIfMealExists (GetMealByIdRequest) returns (GetMealByIdReply);
+}
+
+message GetMealByIdRequest {
+  string mealId = 1;
+}
+
+message GetMealByIdReply {
+  bool exists = 1;
+}
