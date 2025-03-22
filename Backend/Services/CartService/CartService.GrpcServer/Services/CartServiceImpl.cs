@@ -18,14 +18,13 @@ namespace CartService.GrpcServer.Services
 
         public override async Task<GetCartByUserIdReply> GetCartContent(GetCartByUserIdRequest request, ServerCallContext context)
         {
-            Guid userGuidId;
-            var isIdValid = Guid.TryParse(request.UserId, out userGuidId);
+            var isIdValid = Guid.TryParse(request.UserId, out Guid userGuidId);
 
             if (!isIdValid)
             {
                 _logger.LogError("Failed to parse user id into GUID.");
 
-                throw new RpcException(new Status(StatusCode.InvalidArgument, "User id is not valid"));
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "User id is not valid."));
             }
 
             var cart = await _unitOfWork.CartRepository.GetCartAsync(userGuidId, CancellationToken.None);
@@ -48,14 +47,13 @@ namespace CartService.GrpcServer.Services
 
         public override async Task<Empty> ClearCart(ClearCartRequest request, ServerCallContext context)
         {
-            Guid userGuidId;
-            var isIdValid = Guid.TryParse(request.UserId, out userGuidId);
+            var isIdValid = Guid.TryParse(request.UserId, out Guid userGuidId);
 
             if (!isIdValid)
             {
                 _logger.LogError("Failed to parse user id into GUID.");
 
-                throw new RpcException(new Status(StatusCode.InvalidArgument, "User id is not valid"));
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "User id is not valid."));
             }
 
             await _unitOfWork.CartRepository.DeleteCartAsync(userGuidId, CancellationToken.None);

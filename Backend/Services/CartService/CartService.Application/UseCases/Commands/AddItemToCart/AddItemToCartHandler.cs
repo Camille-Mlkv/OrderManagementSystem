@@ -32,7 +32,7 @@ namespace CartService.Application.UseCases.Commands.AddItemToCart
 
             var mealRequest = new MealService.GrpcServer.GetMealByIdRequest{ MealId = mealId };
 
-            var response = await _grpcClient.GetMealByIdAsync(mealRequest);
+            var response = await _grpcClient.GetMealByIdAsync(mealRequest, cancellationToken: cancellationToken);
 
             if (response is null)
             {

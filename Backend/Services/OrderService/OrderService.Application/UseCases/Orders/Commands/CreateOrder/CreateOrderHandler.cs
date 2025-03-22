@@ -36,7 +36,7 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
         {
             var clientId = request.ClientId.ToString();
             var cartContentRequest = new CartService.GrpcServer.GetCartByUserIdRequest() { UserId = clientId };
-            var response = await _cartClient.GetCartContentAsync(cartContentRequest);
+            var response = await _cartClient.GetCartContentAsync(cartContentRequest, cancellationToken: cancellationToken);
             var cartItems = response.Items.ToList();
 
             if(cartItems.Count() == 0)
@@ -49,7 +49,7 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
             foreach (var item in cartItems)
             {
                 var mealRequest = new GetMealByIdRequest { MealId = item.MealId };
-                var mealResponse = await _mealClient.GetMealByIdAsync(mealRequest);
+                var mealResponse = await _mealClient.GetMealByIdAsync(mealRequest, cancellationToken: cancellationToken);
 
                 orderMeals.Add(new OrderMeal
                 {
@@ -79,7 +79,7 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
 
             // after the order is created, cart is cleared
             var cartClearRequest = new CartService.GrpcServer.ClearCartRequest() { UserId = clientId };
-            await _cartClient.ClearCartAsync(cartClearRequest);
+            await _cartClient.ClearCartAsync(cartClearRequest, cancellationToken: cancellationToken);
 
             return order.Id;
         }

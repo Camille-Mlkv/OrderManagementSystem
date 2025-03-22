@@ -32,6 +32,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// use this code to seed the db with sample data
 //using (var scope = app.Services.CreateScope())
 //{
 //    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider);
