@@ -1,5 +1,6 @@
 using Grpc.Core;
 using CartService.Application.Specifications;
+using CartService.Application.Specifications.Jobs;
 
 namespace CartService.GrpcServer.Services
 {
@@ -7,10 +8,12 @@ namespace CartService.GrpcServer.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<CartServiceImpl> _logger;
-        public CartServiceImpl(IUnitOfWork unitOfWork, ILogger<CartServiceImpl> logger)
+        private readonly ICartJobService _jobService;
+        public CartServiceImpl(IUnitOfWork unitOfWork, ILogger<CartServiceImpl> logger, ICartJobService jobService)
         {
             _unitOfWork = unitOfWork;
             _logger = logger;
+            _jobService = jobService;
         }
 
         public override async Task<GetCartByUserIdReply> GetCartContent(GetCartByUserIdRequest request, ServerCallContext context)
@@ -41,6 +44,25 @@ namespace CartService.GrpcServer.Services
             }));
 
             return reply;
+        }
+
+        public override async Task<Empty> ClearCart(ClearCartRequest request, ServerCallContext context)
+        {
+            Guid userGuidId;
+            var isIdValid = Guid.TryParse(request.UserId, out userGuidId);
+
+            if (!isIdValid)
+            {
+                _logger.LogError("Failed to parse user id into GUID.");
+
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "User id is not valid"));
+            }
+
+            await _unitOfWork.CartRepository.DeleteCartAsync(userGuidId, CancellationToken.None);
+
+            await _jobService.DeleteJobAsync(userGuidId, CancellationToken.None);
+
+            return new Empty();
         }
     }
 }

@@ -138,6 +138,15 @@ services:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
     restart: always
 
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 9091:8081
+    environment:
+      VCAP_APP_PORT: 8081
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+
   stripe-cli:
     image: stripe/stripe-cli:latest
     command: ["listen", "-H", "x-djstripe-webhook-secret: ${STRIPESETTINGS__WEBHOOKKEY}", "--forward-to", "https://orderservice.api:5001/api/payments/webhook", "--skip-verify"]
@@ -155,6 +164,14 @@ services:
     volumes:
       - redis_data:/data
 
+  redis-insight:
+    image: redis/redisinsight:latest
+    restart: always
+    ports:
+      - "5540:5540"
+    volumes:
+      - redis-insight:/data
+
 
 volumes:
   mongo-data:
@@ -163,3 +180,4 @@ volumes:
     driver: local
   redis_data:
     driver: local
+  redis-insight:

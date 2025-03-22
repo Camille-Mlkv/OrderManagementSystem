@@ -6,6 +6,7 @@ package cart;
 
 service CartService {
   rpc GetCartContent (GetCartByUserIdRequest) returns (GetCartByUserIdReply);
+  rpc ClearCart (ClearCartRequest) returns (Empty);
 }
 
 message GetCartByUserIdRequest {
@@ -19,4 +20,12 @@ message CartItemReply {
 
 message GetCartByUserIdReply {
   repeated CartItemReply items = 1;
+}
+
+message ClearCartRequest {
+  string userId = 1;
+}
+
+message Empty {
+
 }

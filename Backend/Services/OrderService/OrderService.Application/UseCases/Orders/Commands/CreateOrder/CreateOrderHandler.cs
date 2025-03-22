@@ -34,22 +34,15 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
 
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
-            // get cart via gRPC
-
             var clientId = request.ClientId.ToString();
-
             var cartContentRequest = new CartService.GrpcServer.GetCartByUserIdRequest() { UserId = clientId };
-
             var response = await _cartClient.GetCartContentAsync(cartContentRequest);
-
             var cartItems = response.Items.ToList();
 
             if(cartItems.Count() == 0)
             {
                 throw new BadRequestException("Bad request.", "You can't create an order from an empty cart.");
             }
-
-            // get cart meals via gRPC
 
             var orderMeals = new List<OrderMeal>();
 
@@ -83,6 +76,10 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
             order.CalculateTotalPrice();
 
             await _orderRepository.CreateAsync(order, cancellationToken);
+
+            // after the order is created, cart is cleared
+            var cartClearRequest = new CartService.GrpcServer.ClearCartRequest() { UserId = clientId };
+            await _cartClient.ClearCartAsync(cartClearRequest);
 
             return order.Id;
         }
