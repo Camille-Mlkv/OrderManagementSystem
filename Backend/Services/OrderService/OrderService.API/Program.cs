@@ -34,6 +34,7 @@ builder.Services.ConfigureApplicationServices();
 
 builder.Services.ConfigureCartGrpcService(builder.Configuration);
 builder.Services.ConfigureMealGrpcService(builder.Configuration);
+builder.Services.ConfigureUserGrpcService(builder.Configuration);
 
 builder.Services.AddHttpContextAccessor();
 

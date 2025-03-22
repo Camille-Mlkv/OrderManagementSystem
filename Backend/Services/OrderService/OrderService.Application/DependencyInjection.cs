@@ -54,5 +54,22 @@ namespace OrderService.Application
                 return handler;
             });
         }
+
+        public static void ConfigureUserGrpcService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddGrpcClient<UserService.GrpcServer.UserService.UserServiceClient>(options =>
+            {
+                options.Address = new Uri(configuration["UserGrpcUrl"]!);
+
+            }).ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                var handler = new HttpClientHandler();
+
+                handler.ServerCertificateCustomValidationCallback =
+                   (sender, certificate, chain, sslPolicyErrors) => true;
+
+                return handler;
+            });
+        }
     }
 }

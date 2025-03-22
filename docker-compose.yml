@@ -41,6 +41,23 @@ services:
     depends_on:
       - mssql
 
+  userservice.grpc:
+    image: ${DOCKER_REGISTRY-}userservicegrpc
+    container_name: users.grpc
+    build:
+      context: .
+      dockerfile: Backend/Services/UserService/UserService.GrpcServer/Dockerfile
+    ports:
+      - 5009:5009
+    environment:
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTPS_PORTS=5009
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+    depends_on:
+      - mssql
+
   mealservice.api:
     image: ${DOCKER_REGISTRY-}mealserviceapi
     container_name: meals.api

@@ -6,11 +6,9 @@ namespace MealService.GrpcServer.Services
     public class MealServiceImpl : MealService.MealServiceBase
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<MealServiceImpl> _logger;
-        public MealServiceImpl(IUnitOfWork unitOfWork, ILogger<MealServiceImpl> logger)
+        public MealServiceImpl(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _logger = logger;
         }
 
         public override async Task<GetMealByIdReply> GetMealById(GetMealByIdRequest request, ServerCallContext context)
