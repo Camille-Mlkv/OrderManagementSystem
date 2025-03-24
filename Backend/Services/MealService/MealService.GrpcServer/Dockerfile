@@ -30,6 +30,7 @@ COPY ${CERT_PATH} /https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
 
-EXPOSE 5005
+ARG MEAL_GRPCSERVER_PORT
+EXPOSE ${MEAL_GRPCSERVER_PORT}
 
 ENTRYPOINT ["dotnet", "MealService.GrpcServer.dll"]

@@ -4,110 +4,115 @@ services:
   orderservice.api:
     image: ${DOCKER_REGISTRY-}orderserviceapi
     container_name: orders.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${ORDERSERVICE_PORT}
+      - CONNECTIONSTRINGS__MONGODB=${MONGO_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/OrderService/OrderService.API/Dockerfile
     ports:
-      - 5001:5001
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5001
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-
-      - STRIPESETTINGS__SECRETKEY=${STRIPESETTINGS__SECRETKEY}
-      - STRIPESETTINGS__WEBHOOKKEY=${STRIPESETTINGS__WEBHOOKKEY}
-      - STRIPESETTINGS__SUCCESSURL=${STRIPESETTINGS__SUCCESSURL}
-      - STRIPESETTINGS__CANCELURL=${STRIPESETTINGS__CANCELURL}
+      - ${ORDERSERVICE_PORT}:${ORDERSERVICE_PORT}
     depends_on:
       - mongo
 
   userservice.api:
     image: ${DOCKER_REGISTRY-}userserviceapi
     container_name: users.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${USERSERVICE_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/UserService/UserService.API/Dockerfile
     ports:
-      - 5002:5002
-    environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5002
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - EMAILOPTIONS__SENDEREMAIL=${EMAILOPTIONS__SENDEREMAIL}
-      - EMAILOPTIONS__PASSWORD=${EMAILOPTIONS__PASSWORD}
+      - "${USERSERVICE_PORT}:${USERSERVICE_PORT}"
     depends_on:
       - mssql
 
   userservice.grpc:
     image: ${DOCKER_REGISTRY-}userservicegrpc
     container_name: users.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${USER_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/UserService/UserService.GrpcServer/Dockerfile
     ports:
-      - 5009:5009
-    environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5009
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - "${USER_GRPCSERVER_PORT}:${USER_GRPCSERVER_PORT}"
     depends_on:
       - mssql
 
   mealservice.api:
     image: ${DOCKER_REGISTRY-}mealserviceapi
     container_name: meals.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${MEALSERVICE_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${MEALSERVICE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/MealService/MealService.API/Dockerfile
     ports:
-      - 5003:5003
-    environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5003
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - CLOUDINARY__APIKEY=${CLOUDINARY__APIKEY}
-      - CLOUDINARY__APISECRET=${CLOUDINARY__APISECRET}
+      - "${MEALSERVICE_PORT}:${MEALSERVICE_PORT}"
     depends_on:
       - mssql
 
   mealservice.grpc:
     image: ${DOCKER_REGISTRY-}mealservicegrpc
     container_name: meals.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${MEAL_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${MEALSERVICE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/MealService/MealService.GrpcServer/Dockerfile
     ports:
-      - 5005:5005
-    environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5005
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - "${MEAL_GRPCSERVER_PORT}:${MEAL_GRPCSERVER_PORT}"
     depends_on:
       - mssql
 
   cartservice.api:
     image: ${DOCKER_REGISTRY-}cartserviceapi
     container_name: cart.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${CARTSERVICE_PORT}
+      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
+      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/CartService/CartService.API/Dockerfile
     ports:
-      - 5004:5004
-    environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5004
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - "${CARTSERVICE_PORT}:${CARTSERVICE_PORT}"
     depends_on:
       - mssql
       - redis
@@ -116,19 +121,22 @@ services:
   cartservice.grpc:
     image: ${DOCKER_REGISTRY-}cartservicegrpc
     container_name: cart.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${CART_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
+      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/CartService/CartService.GrpcServer/Dockerfile
     ports:
-      - 5007:5007
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5007
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - "${CART_GRPCSERVER_PORT}:${CART_GRPCSERVER_PORT}"
     depends_on:
       - redis
-
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -138,7 +146,7 @@ services:
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_PID=Developer
     ports:
-      - 1433:1433
+      - ${MSSQL_PORTS}
     volumes:
       - mssql-data:/var/opt/mssql
     restart: always
@@ -149,7 +157,7 @@ services:
     environment:
       MONGO_INITDB_DATABASE: OrderDatabase
     ports:
-      - 27017:27017
+      - ${MONGO_PORTS}
     volumes:
       - mongo-data:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
@@ -159,10 +167,10 @@ services:
     image: mongo-express
     restart: always
     ports:
-      - 9091:8081
+      - ${MONGO_EXPRESS_PORTS}
     environment:
       VCAP_APP_PORT: 8081
-      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_MONGODB_URL: ${MONGO_CONNECTION}
 
   stripe-cli:
     image: stripe/stripe-cli:latest
@@ -177,7 +185,7 @@ services:
     image: "redis:latest"
     container_name: redis
     ports:
-      - 6379:6379
+      - ${REDIS_PORTS}
     volumes:
       - redis_data:/data
 
@@ -185,7 +193,7 @@ services:
     image: redis/redisinsight:latest
     restart: always
     ports:
-      - "5540:5540"
+      - ${REDIS_INSIGHT_PORTS}
     volumes:
       - redis-insight:/data
 

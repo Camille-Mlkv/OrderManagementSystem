@@ -28,6 +28,7 @@ COPY ${CERT_PATH} /https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
 
-EXPOSE 5009
+ARG USER_GRPCSERVER_PORT
+EXPOSE ${USER_GRPCSERVER_PORT}
 
 ENTRYPOINT ["dotnet", "UserService.GrpcServer.dll"]

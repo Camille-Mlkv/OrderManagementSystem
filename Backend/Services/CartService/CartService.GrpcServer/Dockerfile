@@ -30,6 +30,7 @@ COPY ${CERT_PATH} /https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
 
-EXPOSE 5007
+ARG CART_GRPCSERVER_PORT
+EXPOSE ${CART_GRPCSERVER_PORT}
 
 ENTRYPOINT ["dotnet", "CartService.GrpcServer.dll"]

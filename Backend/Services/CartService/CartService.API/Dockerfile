@@ -31,6 +31,7 @@ COPY ${CERT_PATH} /https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
 
-EXPOSE 5004
+ARG CARTSERVICE_PORT
+EXPOSE ${CARTSERVICE_PORT}
 
 ENTRYPOINT ["dotnet", "CartService.API.dll"]

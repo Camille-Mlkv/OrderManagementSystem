@@ -29,6 +29,7 @@ COPY ${CERT_PATH} /https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
 
-EXPOSE 5002
+ARG USERSERVICE_PORT
+EXPOSE ${USERSERVICE_PORT}
 
 ENTRYPOINT ["dotnet", "UserService.API.dll"]
