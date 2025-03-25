@@ -20,7 +20,10 @@ namespace UserService.API.Controllers
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] RegistrationRequest request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Start signing up procedure for user {request.Email}");
+
             await _authService.SignUpAsync(request,cancellationToken);
+
             _logger.LogInformation($"Registration successful for user {request.Email}");
 
             return StatusCode(201);
@@ -29,7 +32,10 @@ namespace UserService.API.Controllers
         [HttpPost("signin")]
         public async Task<IActionResult> SignIn([FromBody] LoginRequest request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Start logging in procedure for user {request.UserName}");
+
             var response=await _authService.SignInAsync(request, cancellationToken);
+
             _logger.LogInformation($"User {request.UserName} successfully  logged in.");
 
             return Ok(response);
@@ -39,7 +45,10 @@ namespace UserService.API.Controllers
         [Authorize]
         public async Task<IActionResult> RefreshAccessToken([FromBody] RefreshAccessTokenRequest request, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Start refreshing access token.");
+
             var response=await _authService.RefreshAccessTokenAsync(request, cancellationToken);
+
             _logger.LogInformation($"Access token for refresh token {request.RefreshToken} is refreshed.");
 
             return Ok(response);
@@ -49,7 +58,10 @@ namespace UserService.API.Controllers
         [Authorize]
         public async Task<IActionResult> RevokeRefreshToken(string username, CancellationToken cancellationToken)
         {
+            _logger.LogInformation($"Start revoking refresh token.");
+
             await _authService.RevokeRefreshTokenAsync(username, cancellationToken);
+
             _logger.LogInformation($"Refresh token for user {username} is revoked.");
 
             return Ok();

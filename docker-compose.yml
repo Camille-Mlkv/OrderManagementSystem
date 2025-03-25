@@ -4,23 +4,94 @@ services:
   orderservice.api:
     image: ${DOCKER_REGISTRY-}orderserviceapi
     container_name: orders.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${ORDERSERVICE_PORT}
+      - CONNECTIONSTRINGS__MONGODB=${MONGO_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/OrderService/OrderService.API/Dockerfile
     ports:
-      - 5001:5001
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5001
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-
-      - STRIPESETTINGS__SECRETKEY=${STRIPESETTINGS__SECRETKEY}
-      - STRIPESETTINGS__WEBHOOKKEY=${STRIPESETTINGS__WEBHOOKKEY}
-      - STRIPESETTINGS__SUCCESSURL=${STRIPESETTINGS__SUCCESSURL}
-      - STRIPESETTINGS__CANCELURL=${STRIPESETTINGS__CANCELURL}
+      - ${ORDERSERVICE_PORT}:${ORDERSERVICE_PORT}
     depends_on:
       - mongo
+
+  userservice.api:
+    image: ${DOCKER_REGISTRY-}userserviceapi
+    container_name: users.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${USERSERVICE_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/UserService/UserService.API/Dockerfile
+    ports:
+      - "${USERSERVICE_PORT}:${USERSERVICE_PORT}"
+    depends_on:
+      - mssql
+      - elasticsearch
+
+  mealservice.api:
+    image: ${DOCKER_REGISTRY-}mealserviceapi
+    container_name: meals.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${MEALSERVICE_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${MEALSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/MealService/MealService.API/Dockerfile
+    ports:
+      - "${MEALSERVICE_PORT}:${MEALSERVICE_PORT}"
+    depends_on:
+      - mssql
+
+  cartservice.api:
+    image: ${DOCKER_REGISTRY-}cartserviceapi
+    container_name: cart.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${CARTSERVICE_PORT}
+      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
+      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/CartService/CartService.API/Dockerfile
+    ports:
+      - "${CARTSERVICE_PORT}:${CARTSERVICE_PORT}"
+    depends_on:
+      - mssql
+      - redis
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - ${MSSQL_PORTS}
+    volumes:
+      - mssql-data:/var/opt/mssql
+    restart: always
 
   mongo:
     image: mongo:latest
@@ -28,7 +99,7 @@ services:
     environment:
       MONGO_INITDB_DATABASE: OrderDatabase
     ports:
-      - 27017:27017
+      - ${MONGO_PORTS}
     volumes:
       - mongo-data:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
@@ -43,6 +114,67 @@ services:
       - STRIPE_API_KEY=${STRIPE_API_KEY}
       - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
 
+  redis:
+    image: "redis:latest"
+    container_name: redis
+    ports:
+      - ${REDIS_PORTS}
+    volumes:
+      - redis_data:/data
+
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    container_name: elasticsearch
+    env_file:
+      - .env
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xms512m
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - ${ELASTIC_PORTS}
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.3
+    container_name: kibana
+    env_file:
+      - .env
+    environment:
+      - ELASTICSEARCH_URL=${ELASTICSEARCHURI}
+    ports:
+      - ${KIBANA_PORTS}
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.14.3
+    container_name: logstash
+    env_file:
+      - .env
+    environment:
+      - LOGSTASH_HTTP_HOST=0.0.0.0
+      - LOGSTASH_HTTP_PORT=${LOGSTASH_PORT}
+    ports:
+      - ${LOGSTASH_PORT}:${LOGSTASH_PORT}
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
+
+
 volumes:
   mongo-data:
     driver: local
+  mssql-data:
+    driver: local
+  redis_data:
+    driver: local
+  redis-insight:
+    driver: local
+  elasticsearch-data:
+
+

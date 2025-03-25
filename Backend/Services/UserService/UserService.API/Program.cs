@@ -1,3 +1,4 @@
+using Serilog;
 using UserService.API.Middleware;
 using UserService.BusinessLogic;
 using UserService.BusinessLogic.Options;
@@ -23,7 +24,10 @@ builder.Services.AddValidation();
 builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddAppAuthorization();
 
-await builder.Services.SeedRolesData();
+//await builder.Services.SeedRolesData();
+
+LoggingConfiguration.ConfigureLogging(builder.Configuration);
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

@@ -1,4 +1,9 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
+WORKDIR /app
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Debug
 WORKDIR /src
 
 COPY ./Backend/Services/OrderService/*.sln ./
@@ -18,10 +23,6 @@ RUN dotnet publish -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
-
-RUN apt-get update && \
-    apt-get install -y curl netcat-traditional telnet && \
-    apt-get clean 
 
 ARG CERT_PATH=/certificates/aspnetapp.pfx
 COPY ${CERT_PATH} /https/aspnetapp.pfx
