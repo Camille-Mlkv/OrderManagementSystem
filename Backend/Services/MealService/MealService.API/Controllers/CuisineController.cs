@@ -26,8 +26,6 @@ namespace MealService.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCuisines(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start retrieving cuisines.");
-
             var cuisines = await _mediator.Send(new GetCuisinesQuery(), cancellationToken);
 
             _logger.LogInformation("Cuisines retrieved.");
@@ -38,11 +36,9 @@ namespace MealService.API.Controllers
         [HttpGet("name/{name}")]
         public async Task<IActionResult> GetCuisinesByName(string name, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start retrieving cuisine by its name.");
-
             var cuisines = await _mediator.Send(new GetCuisinesByNameQuery(name), cancellationToken);
 
-            _logger.LogInformation("Cuisines retrieved.");
+            _logger.LogInformation($"Cuisines retrieved by name {name}.");
 
             return Ok(cuisines);
         }
@@ -51,8 +47,6 @@ namespace MealService.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCuisine([FromForm] CuisineRequestDto cuisine, IFormFile? imageFile, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start adding new cuisine.");
-
             if (imageFile != null)
             {
                 await ProcessImageFileAsync(imageFile, cuisine, cancellationToken);
@@ -60,7 +54,7 @@ namespace MealService.API.Controllers
 
             var newCuisine = await _mediator.Send(new AddCuisineCommand(cuisine), cancellationToken);
 
-            _logger.LogInformation("New cuisine added.");
+            _logger.LogInformation($"New cuisine {newCuisine.Id} added.");
 
             return CreatedAtAction(nameof(CreateCuisine), new { id = newCuisine.Id }, newCuisine);
         }
@@ -69,8 +63,6 @@ namespace MealService.API.Controllers
         [HttpPut("{cuisineId}")]
         public async Task<IActionResult> UpdateCuisine(Guid cuisineId, [FromForm] CuisineRequestDto cuisine, IFormFile? imageFile, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start updating cuisine {cuisineId}.");
-
             if (imageFile != null)
             {
                 await ProcessImageFileAsync(imageFile, cuisine, cancellationToken);
@@ -87,11 +79,9 @@ namespace MealService.API.Controllers
         [HttpDelete("{cuisineId}")]
         public async Task<IActionResult> DeleteCuisine(Guid cuisineId, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start deleting cuisine {cuisineId}.");
-
             await _mediator.Send(new DeleteCuisineCommand(cuisineId), cancellationToken);
 
-            _logger.LogInformation($"cuisine {cuisineId} deleted.");
+            _logger.LogInformation($"Cuisine {cuisineId} deleted.");
 
             return StatusCode(204);
         }

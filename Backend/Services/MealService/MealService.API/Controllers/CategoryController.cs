@@ -26,8 +26,6 @@ namespace MealService.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategories(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start retrieving categories.");
-
             var categories=await _mediator.Send(new GetCategoriesQuery(),cancellationToken);
 
             _logger.LogInformation("Categories retrieved.");
@@ -38,11 +36,9 @@ namespace MealService.API.Controllers
         [HttpGet("name/{name}")]
         public async Task<IActionResult> GetCategoriesByName(string name, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start retrieving categories by name.");
-
             var categories = await _mediator.Send(new GetCategoriesByNameQuery(name), cancellationToken);
 
-            _logger.LogInformation("Categories retrieved.");
+            _logger.LogInformation($"Categories retrieved by name {name}.");
 
             return Ok(categories);
         }
@@ -51,11 +47,9 @@ namespace MealService.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start adding new category.");
-
             var newCategory=await _mediator.Send(new AddCategoryCommand(category), cancellationToken);
 
-            _logger.LogInformation("New category added.");
+            _logger.LogInformation($"New category {newCategory.Id} added.");
 
             return CreatedAtAction(nameof(AddCategory), new { id = newCategory.Id }, newCategory);
         }
@@ -64,8 +58,6 @@ namespace MealService.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start updating category {id}.");
-
             var updatedCategory =await _mediator.Send(new UpdateCategoryCommand(id,category),cancellationToken);
 
             _logger.LogInformation($"Category {id} updated.");

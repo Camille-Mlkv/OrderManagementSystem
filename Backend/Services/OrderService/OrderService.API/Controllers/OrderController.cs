@@ -34,13 +34,6 @@ namespace OrderService.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet("some/data")]
-        public IActionResult Get()
-        {
-            _logger.LogInformation("Test order service");
-            return Ok();
-        }
-
         [Authorize(Policy = "Client")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] AddressDto address, CancellationToken cancellationToken)

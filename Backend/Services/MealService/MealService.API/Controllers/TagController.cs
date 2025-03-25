@@ -25,8 +25,6 @@ namespace MealService.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTags(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start retrieving tags.");
-
             var tags = await _mediator.Send(new GetTagsQuery(), cancellationToken);
 
             _logger.LogInformation("Tags retrieved.");
@@ -38,11 +36,9 @@ namespace MealService.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTag([FromForm] TagRequestDto tag, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start adding new tag.");
-
             var newTag = await _mediator.Send(new AddTagCommand(tag), cancellationToken);
 
-            _logger.LogInformation("New tag added.");
+            _logger.LogInformation($"New tag {newTag.Id} added.");
 
             return CreatedAtAction(nameof(CreateTag), new { id = newTag.Id }, newTag);
         }
@@ -51,8 +47,6 @@ namespace MealService.API.Controllers
         [HttpPut("{tagId}")]
         public async Task<IActionResult> UpdateTag(Guid tagId, [FromForm] TagRequestDto tag, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start updating tag {tagId}.");
-
             var updatedTag = await _mediator.Send(new UpdateTagCommand(tagId, tag), cancellationToken);
 
             _logger.LogInformation($"Tag {tagId} updated.");
@@ -64,8 +58,6 @@ namespace MealService.API.Controllers
         [HttpDelete("{tagId}")]
         public async Task<IActionResult> DeleteMeal(Guid tagId, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start deleting tag {tagId}.");
-
             await _mediator.Send(new DeleteTagCommand(tagId), cancellationToken);
 
             _logger.LogInformation($"Tag {tagId} deleted.");

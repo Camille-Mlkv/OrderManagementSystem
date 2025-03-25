@@ -28,8 +28,6 @@ namespace MealService.API.Controllers
         [HttpGet("cuisine/{cuisineId}")]
         public async Task<IActionResult> GetMealsByCuisine(Guid cuisineId, bool? isAvailable, int pageNo=1,int pageSize=3)
         {
-            _logger.LogInformation($"Start retrieving meals for cuisine {cuisineId}.");
-
             var meals = await _mediator.Send(new GetMealsByCuisineQuery(cuisineId, pageNo, pageSize, isAvailable));
 
             _logger.LogInformation($"Meals retrieved.");
@@ -40,11 +38,9 @@ namespace MealService.API.Controllers
         [HttpGet("cuisine/{cuisineId}/filtered")]
         public async Task<IActionResult> GetFilteredMealsByCuisine(Guid cuisineId,[FromQuery] MealFilterDto filter,int pageNo=1,int pageSize=3)
         {
-            _logger.LogInformation($"Start retrieving filtered meals for cuisine {cuisineId}.");
-
             var meals = await _mediator.Send(new GetFilteredMealsByCuisineQuery(cuisineId, filter, pageNo, pageSize));
 
-            _logger.LogInformation($"Meals retrieved.");
+            _logger.LogInformation($"Filtered meals retrieved.");
 
             return Ok(meals);
         }
@@ -52,8 +48,6 @@ namespace MealService.API.Controllers
         [HttpGet("{mealId}")]
         public async Task<IActionResult> GetMealById(Guid mealId)
         {
-            _logger.LogInformation($"Load data for meal {mealId}.");
-
             var mealDto = await _mediator.Send(new GetMealByIdQuery(mealId));
 
             _logger.LogInformation($"Data for meal {mealId} is loaded.");
@@ -64,11 +58,9 @@ namespace MealService.API.Controllers
         [HttpGet("name/{name}")]
         public async Task<IActionResult> GetMealsByName(string name)
         {
-            _logger.LogInformation($"Start retrieving meals for with name {name}.");
-
             var meals = await _mediator.Send(new GetMealsByNameQuery(name));
 
-            _logger.LogInformation($"Meals retrieved.");
+            _logger.LogInformation($"Meals retrieved by name {name}.");
 
             return Ok(meals);
         }
@@ -77,8 +69,6 @@ namespace MealService.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMeal([FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Start adding new meal.");
-
             if (imageFile != null)
             {
                 await ProcessImageFileAsync(imageFile, meal, cancellationToken);
@@ -86,7 +76,7 @@ namespace MealService.API.Controllers
 
             var newMeal = await _mediator.Send(new AddMealCommand(meal), cancellationToken);
 
-            _logger.LogInformation("New meal added.");
+            _logger.LogInformation($"New meal {newMeal.Id} added.");
 
             return CreatedAtAction(nameof(CreateMeal), new { id = newMeal.Id }, newMeal);
         }
@@ -95,8 +85,6 @@ namespace MealService.API.Controllers
         [HttpDelete("{mealId}")]
         public async Task<IActionResult> DeleteMeal(Guid mealId, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start deleting meal {mealId}.");
-
             await _mediator.Send(new DeleteMealCommand(mealId), cancellationToken);
 
             _logger.LogInformation($"Meal {mealId} deleted.");
@@ -108,8 +96,6 @@ namespace MealService.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateMeal(Guid id, [FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
         {
-            _logger.LogInformation($"Start updating meal {id}.");
-
             if (imageFile != null)
             {
                 await ProcessImageFileAsync(imageFile, meal, cancellationToken);

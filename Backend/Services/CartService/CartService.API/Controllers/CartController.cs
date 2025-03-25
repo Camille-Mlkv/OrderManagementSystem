@@ -33,12 +33,9 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> GetItemsFromCart(CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-
-            _logger.LogInformation($"Start getting items from the cart {userId}.");
-
             var items = await _mediator.Send(new GetItemsFromCartQuery(userId), cancellationToken);
 
-            _logger.LogInformation("Items retrieved.");
+            _logger.LogInformation($"Items retrieved from cart {userId}.");
 
             return Ok(items);
         }
@@ -47,12 +44,9 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> AddItemToCart([FromBody] CartItemRequestDto cartItem, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-
-            _logger.LogInformation($"Start adding items to the cart {userId}.");
-
             await _mediator.Send(new AddItemToCartCommand(userId, cartItem),cancellationToken);
 
-            _logger.LogInformation($"Items added.");
+            _logger.LogInformation($"Item {cartItem.MealId} added to the cart {userId}.");
 
             return NoContent();
         }
@@ -61,12 +55,9 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> IncreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-
-            _logger.LogInformation($"Start increasing item {mealId} in the cart {userId}.");
-
             await _mediator.Send(new IncreaseItemQuantityCommand(userId, mealId), cancellationToken);
 
-            _logger.LogInformation($"Amount is increased.");
+            _logger.LogInformation($"Amount is increased for item {mealId} in cart {userId}.");
 
             return NoContent();
         }
@@ -75,12 +66,9 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> DecreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-
-            _logger.LogInformation($"Start decreasing item {mealId} in the cart {userId}.");
-
             await _mediator.Send(new DecreaseItemQuantityCommand(userId, mealId), cancellationToken);
 
-            _logger.LogInformation($"Amount is decreased.");
+            _logger.LogInformation($"Amount is decreased for item {mealId} in cart {userId}.");
 
             return NoContent();
         }
@@ -89,12 +77,9 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> DeleteItemFromCart([FromRoute] Guid mealId, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-
-            _logger.LogInformation($"Start deleting item {mealId} from the cart {userId}.");
-
             await _mediator.Send(new DeleteItemFromCartCommand(userId, mealId), cancellationToken);
 
-            _logger.LogInformation($"Item deleted.");
+            _logger.LogInformation($"Item {mealId} deleted from cart {userId}.");
 
             return NoContent();
         }
@@ -103,9 +88,6 @@ namespace CartService.API.Controllers
         public async Task<IActionResult> CLearCart(CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-
-            _logger.LogInformation($"Start clearing the cart {userId}.");
-
             await _mediator.Send(new ClearCartCommand(userId), cancellationToken);
 
             _logger.LogInformation($"Cart {userId} is cleared.");
