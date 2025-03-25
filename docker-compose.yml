@@ -37,8 +37,10 @@ services:
     ports:
       - "${USERSERVICE_PORT}:${USERSERVICE_PORT}"
     depends_on:
-      - mssql
-      - elasticsearch
+      mssql:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
 
   mealservice.api:
     image: ${DOCKER_REGISTRY-}mealserviceapi
@@ -57,7 +59,10 @@ services:
     ports:
       - "${MEALSERVICE_PORT}:${MEALSERVICE_PORT}"
     depends_on:
-      - mssql
+      mssql:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
 
   cartservice.api:
     image: ${DOCKER_REGISTRY-}cartserviceapi
@@ -137,6 +142,12 @@ services:
       - ${ELASTIC_PORTS}
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+      timeout: 5s
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.14.3

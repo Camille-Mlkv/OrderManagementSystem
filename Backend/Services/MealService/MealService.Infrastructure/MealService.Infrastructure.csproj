@@ -19,6 +19,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+	<PackageReference Include="Elastic.Serilog.Sinks" Version="8.12.3" />
+	<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+	<PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
+	<PackageReference Include="Serilog.Sinks.Http" Version="9.1.1" />
   </ItemGroup>
 
   <ItemGroup>
