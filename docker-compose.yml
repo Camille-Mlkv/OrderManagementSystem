@@ -18,7 +18,10 @@ services:
     ports:
       - ${ORDERSERVICE_PORT}:${ORDERSERVICE_PORT}
     depends_on:
-      - mongo
+      mongo:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
 
   userservice.api:
     image: ${DOCKER_REGISTRY-}userserviceapi
