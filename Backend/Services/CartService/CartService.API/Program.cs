@@ -4,6 +4,8 @@ using CartService.API.Middleware;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using CartService.Infrastructure.DI;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureCartServices(builder.Configuration);
 builder.Services.ConfigureHangfireServices(builder.Configuration);
 builder.Services.ConfigureAuth(builder.Configuration);
+
+LoggingConfiguration.ConfigureLogging(builder.Configuration);
+builder.Host.UseSerilog();
 
 builder.Services.ConfigureApplicationServices();
 

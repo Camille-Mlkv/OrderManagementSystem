@@ -82,8 +82,12 @@ services:
     ports:
       - "${CARTSERVICE_PORT}:${CARTSERVICE_PORT}"
     depends_on:
-      - mssql
-      - redis
+      mssql:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -145,7 +149,7 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9200"]
       interval: 10s
-      retries: 5
+      retries: 3
       start_period: 10s
       timeout: 5s
 
