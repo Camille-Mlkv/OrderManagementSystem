@@ -11,18 +11,12 @@ namespace OrderService.Infrastructure.DI
     {
         public static void ConfigureLogging(IConfiguration configuration)
         {
-            var elasticSearchUri = configuration["ElasticSearchUri"];
             var logstashUri = configuration["LogstashUri"];
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console()
-                .WriteTo.Elasticsearch([new Uri(elasticSearchUri!)], options =>
-                {
-                    options.DataStream = new DataStreamName("OrderService-DataStream");
-                    options.BootstrapMethod = BootstrapMethod.Failure;
-                })
                 .WriteTo.Http(logstashUri!, queueLimitBytes: null)
                 .CreateLogger();
         }

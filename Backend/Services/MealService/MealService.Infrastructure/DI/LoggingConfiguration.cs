@@ -1,9 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Exceptions;
-using Elastic.Ingest.Elasticsearch;
-using Elastic.Ingest.Elasticsearch.DataStreams;
-using Elastic.Serilog.Sinks;
 
 namespace MealService.Infrastructure.DI
 {
@@ -11,18 +8,12 @@ namespace MealService.Infrastructure.DI
     {
         public static void ConfigureLogging(IConfiguration configuration)
         {
-            var elasticSearchUri = configuration["ElasticSearchUri"];
             var logstashUri = configuration["LogstashUri"];
 
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .WriteTo.Console()
-                .WriteTo.Elasticsearch([new Uri(elasticSearchUri!)], options =>
-                {
-                    options.DataStream = new DataStreamName("UserService-DataStream");
-                    options.BootstrapMethod = BootstrapMethod.Failure;
-                })
                 .WriteTo.Http(logstashUri!, queueLimitBytes: null)
                 .CreateLogger();
         }
