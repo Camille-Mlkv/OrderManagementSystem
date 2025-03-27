@@ -18,7 +18,10 @@ services:
     ports:
       - ${ORDERSERVICE_PORT}:${ORDERSERVICE_PORT}
     depends_on:
-      - mongo
+      mongo:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
 
   userservice.api:
     image: ${DOCKER_REGISTRY-}userserviceapi
@@ -37,26 +40,10 @@ services:
     ports:
       - "${USERSERVICE_PORT}:${USERSERVICE_PORT}"
     depends_on:
-      - mssql
-
-  userservice.grpc:
-    image: ${DOCKER_REGISTRY-}userservicegrpc
-    container_name: users.grpc
-    env_file:
-      - .env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_HTTPS_PORTS=${USER_GRPCSERVER_PORT}
-      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
-    build:
-      context: .
-      dockerfile: Backend/Services/UserService/UserService.GrpcServer/Dockerfile
-    ports:
-      - "${USER_GRPCSERVER_PORT}:${USER_GRPCSERVER_PORT}"
-    depends_on:
-      - mssql
+      mssql:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
 
   mealservice.api:
     image: ${DOCKER_REGISTRY-}mealserviceapi
@@ -74,6 +61,54 @@ services:
       dockerfile: Backend/Services/MealService/MealService.API/Dockerfile
     ports:
       - "${MEALSERVICE_PORT}:${MEALSERVICE_PORT}"
+    depends_on:
+      mssql:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+
+  cartservice.api:
+    image: ${DOCKER_REGISTRY-}cartserviceapi
+    container_name: cart.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${CARTSERVICE_PORT}
+      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
+      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/CartService/CartService.API/Dockerfile
+    ports:
+      - "${CARTSERVICE_PORT}:${CARTSERVICE_PORT}"
+    depends_on:
+      mssql:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+
+  userservice.grpc:
+    image: ${DOCKER_REGISTRY-}userservicegrpc
+    container_name: users.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${USER_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/UserService/UserService.GrpcServer/Dockerfile
+    ports:
+      - "${USER_GRPCSERVER_PORT}:${USER_GRPCSERVER_PORT}"
     depends_on:
       - mssql
 
@@ -95,28 +130,6 @@ services:
       - "${MEAL_GRPCSERVER_PORT}:${MEAL_GRPCSERVER_PORT}"
     depends_on:
       - mssql
-
-  cartservice.api:
-    image: ${DOCKER_REGISTRY-}cartserviceapi
-    container_name: cart.api
-    env_file:
-      - .env
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_HTTPS_PORTS=${CARTSERVICE_PORT}
-      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
-      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
-    build:
-      context: .
-      dockerfile: Backend/Services/CartService/CartService.API/Dockerfile
-    ports:
-      - "${CARTSERVICE_PORT}:${CARTSERVICE_PORT}"
-    depends_on:
-      - mssql
-      - redis
-      - mealservice.grpc
 
   cartservice.grpc:
     image: ${DOCKER_REGISTRY-}cartservicegrpc
@@ -172,15 +185,6 @@ services:
       VCAP_APP_PORT: 8081
       ME_CONFIG_MONGODB_URL: ${MONGO_CONNECTION}
 
-  stripe-cli:
-    image: stripe/stripe-cli:latest
-    command: ["listen", "-H", "x-djstripe-webhook-secret: ${STRIPESETTINGS__WEBHOOKKEY}", "--forward-to", "https://orderservice.api:5001/api/payments/webhook", "--skip-verify"]
-    depends_on:
-      - orderservice.api
-    environment:
-      - STRIPE_API_KEY=${STRIPE_API_KEY}
-      - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
-
   redis:
     image: "redis:latest"
     container_name: redis
@@ -197,6 +201,62 @@ services:
     volumes:
       - redis-insight:/data
 
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    command: ["listen", "-H", "x-djstripe-webhook-secret: ${STRIPESETTINGS__WEBHOOKKEY}", "--forward-to", "https://orderservice.api:5001/api/payments/webhook", "--skip-verify"]
+    depends_on:
+      - orderservice.api
+    environment:
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    container_name: elasticsearch
+    env_file:
+      - .env
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xms512m
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - ${ELASTIC_PORTS}
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.14.3
+    container_name: kibana
+    env_file:
+      - .env
+    environment:
+      - ELASTICSEARCH_URL=${ELASTICSEARCHURI}
+    ports:
+      - ${KIBANA_PORTS}
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.14.3
+    container_name: logstash
+    env_file:
+      - .env
+    environment:
+      - LOGSTASH_HTTP_HOST=0.0.0.0
+      - LOGSTASH_HTTP_PORT=${LOGSTASH_PORT}
+    ports:
+      - ${LOGSTASH_PORT}:${LOGSTASH_PORT}
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    depends_on:
+      - elasticsearch
 
 volumes:
   mongo-data:
@@ -206,3 +266,7 @@ volumes:
   redis_data:
     driver: local
   redis-insight:
+    driver: local
+  elasticsearch-data:
+
+

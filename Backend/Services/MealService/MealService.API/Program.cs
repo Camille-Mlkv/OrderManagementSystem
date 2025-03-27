@@ -1,9 +1,11 @@
-using MealService.Infrastructure;
 using MealService.Application;
 using MealService.API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
-using MealService.Infrastructure.Data;
+using Serilog;
+using MealService.Infrastructure.DI;
+//using MealService.Infrastructure.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,8 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureDbConnection(builder.Configuration);
-builder.Services.AddPersistence();
-builder.Services.ConfigureUtilities(builder.Configuration);
+builder.Services.AddPersistence(builder.Configuration);
 builder.Services.ConfigureAuth(builder.Configuration);
 
 builder.Services.ConfigureApplicationServices();
@@ -43,6 +44,8 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+LoggingConfiguration.ConfigureLogging(builder.Configuration);
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

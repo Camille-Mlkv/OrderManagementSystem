@@ -22,6 +22,7 @@ namespace UserService.API.Controllers
             var callBack = Url.Action("ConfirmEmail", "Account", new { userName }, Request.Scheme);
 
             await _accountService.SendConfirmationEmailAsync(callBack!,userName, cancellationToken);
+
             _logger.LogInformation($"Confirmation email sent to {userName}");
 
             return Ok();
@@ -31,6 +32,7 @@ namespace UserService.API.Controllers
         public async Task<IActionResult> ConfirmEmail([FromRoute]string userName, CancellationToken cancellationToken)
         {
             await _accountService.ConfirmEmailAsync(userName, cancellationToken);
+
             _logger.LogInformation($"User {userName} confirmed their account.");
 
             return Ok("Account is confirmed.");
@@ -42,6 +44,7 @@ namespace UserService.API.Controllers
             var callBack = Url.Action("GetPasswordResetCode", "Account", new { userName }, Request.Scheme);
 
             await _accountService.ForgotPasswordAsync(callBack!,userName, cancellationToken);
+
             _logger.LogInformation($"Password reset email sent to {userName}");
 
             return Ok();
@@ -51,6 +54,7 @@ namespace UserService.API.Controllers
         public async Task<IActionResult> GetPasswordResetCode([FromRoute]string userName, CancellationToken cancellationToken)
         {
             var resetCode = await _accountService.GetPasswordResetCodeAsync(userName, cancellationToken);
+
             _logger.LogInformation($"User {userName} received password reset email.");
 
             return Ok(resetCode);
@@ -60,6 +64,7 @@ namespace UserService.API.Controllers
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest model, CancellationToken cancellationToken)
         {
             await _accountService.ResetPasswordAsync(model, cancellationToken);
+
             _logger.LogInformation($"Password is successfully reset for user {model.Email}");
 
             return Ok();

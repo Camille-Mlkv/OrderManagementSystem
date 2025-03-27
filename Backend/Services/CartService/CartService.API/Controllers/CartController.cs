@@ -20,11 +20,13 @@ namespace CartService.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<CartController> _logger;
 
-        public CartController(IMediator mediator, IHttpContextAccessor httpContextAccessor)
+        public CartController(IMediator mediator, IHttpContextAccessor httpContextAccessor, ILogger<CartController> logger)
         {
             _mediator = mediator;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -32,6 +34,8 @@ namespace CartService.API.Controllers
         {
             var userId = GetUserId();
             var items = await _mediator.Send(new GetItemsFromCartQuery(userId), cancellationToken);
+
+            _logger.LogInformation($"Items retrieved from cart {userId}.");
 
             return Ok(items);
         }
@@ -42,6 +46,8 @@ namespace CartService.API.Controllers
             var userId = GetUserId();
             await _mediator.Send(new AddItemToCartCommand(userId, cartItem),cancellationToken);
 
+            _logger.LogInformation($"Item {cartItem.MealId} added to the cart {userId}.");
+
             return NoContent();
         }
 
@@ -50,6 +56,8 @@ namespace CartService.API.Controllers
         {
             var userId = GetUserId();
             await _mediator.Send(new IncreaseItemQuantityCommand(userId, mealId), cancellationToken);
+
+            _logger.LogInformation($"Amount is increased for item {mealId} in cart {userId}.");
 
             return NoContent();
         }
@@ -60,6 +68,8 @@ namespace CartService.API.Controllers
             var userId = GetUserId();
             await _mediator.Send(new DecreaseItemQuantityCommand(userId, mealId), cancellationToken);
 
+            _logger.LogInformation($"Amount is decreased for item {mealId} in cart {userId}.");
+
             return NoContent();
         }
 
@@ -69,6 +79,8 @@ namespace CartService.API.Controllers
             var userId = GetUserId();
             await _mediator.Send(new DeleteItemFromCartCommand(userId, mealId), cancellationToken);
 
+            _logger.LogInformation($"Item {mealId} deleted from cart {userId}.");
+
             return NoContent();
         }
 
@@ -77,6 +89,8 @@ namespace CartService.API.Controllers
         {
             var userId = GetUserId();
             await _mediator.Send(new ClearCartCommand(userId), cancellationToken);
+
+            _logger.LogInformation($"Cart {userId} is cleared.");
 
             return NoContent();
         }

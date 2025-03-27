@@ -11,10 +11,12 @@ namespace OrderService.API.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<PaymentController> _logger;
 
-        public PaymentController(IMediator mediator)
+        public PaymentController(IMediator mediator, ILogger<PaymentController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
 
         [Authorize(Policy = "Client")]
@@ -22,6 +24,8 @@ namespace OrderService.API.Controllers
         public async Task<IActionResult> CreateCheckoutSession(Guid orderId, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new CreateCheckoutSessionCommand(orderId), cancellationToken);
+
+            _logger.LogInformation($"Checkout session created for order {orderId}.");
 
             return Ok(result);
         }

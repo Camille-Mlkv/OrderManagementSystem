@@ -1,9 +1,10 @@
-using OrderService.Infrastructure;
 using OrderService.Application;
 using OrderService.Infrastructure.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using OrderService.API.Middleware;
+using OrderService.Infrastructure.DI;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,8 +26,6 @@ builder.Services.AddSwaggerGen();
 
 MongoDbConfiguration.RegisterCustomSerializers();
 builder.Services.ConfigureDbServices(builder.Configuration);
-
-builder.Services.ConfigureStripeSettings(builder.Configuration);
 
 builder.Services.ConfigureAuth(builder.Configuration);
 
@@ -62,6 +61,9 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+
+LoggingConfiguration.ConfigureLogging(builder.Configuration);
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

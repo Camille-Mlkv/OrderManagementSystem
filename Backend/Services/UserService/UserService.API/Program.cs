@@ -1,3 +1,4 @@
+using Serilog;
 using Microsoft.EntityFrameworkCore;
 using UserService.API.Middleware;
 using UserService.BusinessLogic;
@@ -23,6 +24,12 @@ builder.Services.AddValidation();
 
 builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddAppAuthorization();
+
+
+//await builder.Services.SeedRolesData();
+
+LoggingConfiguration.ConfigureLogging(builder.Configuration);
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 

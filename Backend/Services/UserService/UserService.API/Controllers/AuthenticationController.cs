@@ -21,6 +21,7 @@ namespace UserService.API.Controllers
         public async Task<IActionResult> SignUp([FromBody] RegistrationRequest request, CancellationToken cancellationToken)
         {
             await _authService.SignUpAsync(request,cancellationToken);
+
             _logger.LogInformation($"Registration successful for user {request.Email}");
 
             return StatusCode(201);
@@ -30,7 +31,8 @@ namespace UserService.API.Controllers
         public async Task<IActionResult> SignIn([FromBody] LoginRequest request, CancellationToken cancellationToken)
         {
             var response=await _authService.SignInAsync(request, cancellationToken);
-            _logger.LogInformation($"User {request.UserName} successfully  logged in.");
+
+            _logger.LogInformation($"User {request.UserName} successfully logged in.");
 
             return Ok(response);
         }
@@ -40,6 +42,7 @@ namespace UserService.API.Controllers
         public async Task<IActionResult> RefreshAccessToken([FromBody] RefreshAccessTokenRequest request, CancellationToken cancellationToken)
         {
             var response=await _authService.RefreshAccessTokenAsync(request, cancellationToken);
+
             _logger.LogInformation($"Access token for refresh token {request.RefreshToken} is refreshed.");
 
             return Ok(response);
@@ -50,6 +53,7 @@ namespace UserService.API.Controllers
         public async Task<IActionResult> RevokeRefreshToken(string username, CancellationToken cancellationToken)
         {
             await _authService.RevokeRefreshTokenAsync(username, cancellationToken);
+
             _logger.LogInformation($"Refresh token for user {username} is revoked.");
 
             return Ok();
