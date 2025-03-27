@@ -3,8 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CartService.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace OrderService.Infrastructure.DI
 {
