@@ -29,6 +29,7 @@ COPY ${CERT_PATH} /https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
 
-EXPOSE 5001
+ARG ORDERSERVICE_PORT
+EXPOSE ${ORDERSERVICE_PORT}
 
 ENTRYPOINT ["dotnet", "OrderService.API.dll"]

@@ -2,10 +2,10 @@
 {
     public interface ICartJobService
     {
-        Task ScheduleJobAsync(string userId, CancellationToken cancellationToken);
+        Task ScheduleJobAsync(Guid userId, CancellationToken cancellationToken);
 
-        Task ExecuteJobAsync(string userId);
+        Task ExecuteJobAsync(Guid userId);
 
-        Task DeleteJobAsync(string userId, CancellationToken cancellationToken);
+        Task DeleteJobAsync(Guid userId, CancellationToken cancellationToken);
     }
 }

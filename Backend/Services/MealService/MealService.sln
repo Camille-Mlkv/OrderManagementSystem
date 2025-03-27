@@ -5,11 +5,13 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealService.API", "MealService.API\MealService.API.csproj", "{7483BDAF-3143-49AC-BC93-875250543758}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealService.Domain", "MealService.Domain\MealService.Domain.csproj", "{FA1A27F8-96C2-4052-8906-BB7CA88EB3AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealService.Domain", "MealService.Domain\MealService.Domain.csproj", "{FA1A27F8-96C2-4052-8906-BB7CA88EB3AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealService.Application", "MealService.Application\MealService.Application.csproj", "{BD29A6B9-3DC9-4716-A682-C1D33D9739DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealService.Application", "MealService.Application\MealService.Application.csproj", "{BD29A6B9-3DC9-4716-A682-C1D33D9739DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealService.Infrastructure", "MealService.Infrastructure\MealService.Infrastructure.csproj", "{194FDDF1-218A-4A76-9BE8-E60C11C4C923}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MealService.Infrastructure", "MealService.Infrastructure\MealService.Infrastructure.csproj", "{194FDDF1-218A-4A76-9BE8-E60C11C4C923}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealService.GrpcServer", "MealService.GrpcServer\MealService.GrpcServer.csproj", "{15EC8499-BE31-4411-B154-360B5736816B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{194FDDF1-218A-4A76-9BE8-E60C11C4C923}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{194FDDF1-218A-4A76-9BE8-E60C11C4C923}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{194FDDF1-218A-4A76-9BE8-E60C11C4C923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15EC8499-BE31-4411-B154-360B5736816B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15EC8499-BE31-4411-B154-360B5736816B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15EC8499-BE31-4411-B154-360B5736816B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15EC8499-BE31-4411-B154-360B5736816B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

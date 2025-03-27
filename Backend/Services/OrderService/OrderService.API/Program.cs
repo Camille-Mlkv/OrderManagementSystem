@@ -31,6 +31,10 @@ builder.Services.ConfigureAuth(builder.Configuration);
 
 builder.Services.ConfigureApplicationServices();
 
+builder.Services.ConfigureCartGrpcService(builder.Configuration);
+builder.Services.ConfigureMealGrpcService(builder.Configuration);
+builder.Services.ConfigureUserGrpcService(builder.Configuration);
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSwaggerGen(option =>

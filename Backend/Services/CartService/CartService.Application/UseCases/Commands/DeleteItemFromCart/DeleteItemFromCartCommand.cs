@@ -2,5 +2,5 @@
 
 namespace CartService.Application.UseCases.Commands.DeleteItemFromCart
 {
-    public record DeleteItemFromCartCommand(string UserId, Guid MealId) : IRequest;
+    public record DeleteItemFromCartCommand(Guid UserId, Guid MealId) : IRequest;
 }

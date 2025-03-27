@@ -92,6 +92,65 @@ services:
       redis:
         condition: service_started
 
+
+  userservice.grpc:
+    image: ${DOCKER_REGISTRY-}userservicegrpc
+    container_name: users.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${USER_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/UserService/UserService.GrpcServer/Dockerfile
+    ports:
+      - "${USER_GRPCSERVER_PORT}:${USER_GRPCSERVER_PORT}"
+    depends_on:
+      - mssql
+
+  mealservice.grpc:
+    image: ${DOCKER_REGISTRY-}mealservicegrpc
+    container_name: meals.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${MEAL_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${MEALSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/MealService/MealService.GrpcServer/Dockerfile
+    ports:
+      - "${MEAL_GRPCSERVER_PORT}:${MEAL_GRPCSERVER_PORT}"
+    depends_on:
+      - mssql
+
+  cartservice.grpc:
+    image: ${DOCKER_REGISTRY-}cartservicegrpc
+    container_name: cart.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${CART_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
+      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/CartService/CartService.GrpcServer/Dockerfile
+    ports:
+      - "${CART_GRPCSERVER_PORT}:${CART_GRPCSERVER_PORT}"
+    depends_on:
+      - redis
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql_server
@@ -117,14 +176,14 @@ services:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
     restart: always
 
-  stripe-cli:
-    image: stripe/stripe-cli:latest
-    command: ["listen", "-H", "x-djstripe-webhook-secret: ${STRIPESETTINGS__WEBHOOKKEY}", "--forward-to", "https://orderservice.api:5001/api/payments/webhook", "--skip-verify"]
-    depends_on:
-      - orderservice.api
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - ${MONGO_EXPRESS_PORTS}
     environment:
-      - STRIPE_API_KEY=${STRIPE_API_KEY}
-      - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
+      VCAP_APP_PORT: 8081
+      ME_CONFIG_MONGODB_URL: ${MONGO_CONNECTION}
 
   redis:
     image: "redis:latest"
@@ -134,6 +193,22 @@ services:
     volumes:
       - redis_data:/data
 
+  redis-insight:
+    image: redis/redisinsight:latest
+    restart: always
+    ports:
+      - ${REDIS_INSIGHT_PORTS}
+    volumes:
+      - redis-insight:/data
+
+  stripe-cli:
+    image: stripe/stripe-cli:latest
+    command: ["listen", "-H", "x-djstripe-webhook-secret: ${STRIPESETTINGS__WEBHOOKKEY}", "--forward-to", "https://orderservice.api:5001/api/payments/webhook", "--skip-verify"]
+    depends_on:
+      - orderservice.api
+    environment:
+      - STRIPE_API_KEY=${STRIPE_API_KEY}
+      - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
@@ -182,7 +257,6 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     depends_on:
       - elasticsearch
-
 
 volumes:
   mongo-data:

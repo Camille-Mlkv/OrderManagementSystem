@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartService.API", "CartService.API\CartService.API.csproj", "{88318AC0-07DA-48A9-A698-0F1C9EE3D075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartService.API", "CartService.API\CartService.API.csproj", "{88318AC0-07DA-48A9-A698-0F1C9EE3D075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartService.Domain", "CartService.Domain\CartService.Domain.csproj", "{CAB6E525-60A9-4A49-B26B-4D91687320C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartService.Domain", "CartService.Domain\CartService.Domain.csproj", "{CAB6E525-60A9-4A49-B26B-4D91687320C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartService.Application", "CartService.Application\CartService.Application.csproj", "{D75E90E9-A663-4C16-AA16-58936117AE9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartService.Application", "CartService.Application\CartService.Application.csproj", "{D75E90E9-A663-4C16-AA16-58936117AE9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartService.Infrastructure", "CartService.Infrastructure\CartService.Infrastructure.csproj", "{45005328-C7DF-4365-BDD6-AE63E6D94D01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CartService.Infrastructure", "CartService.Infrastructure\CartService.Infrastructure.csproj", "{45005328-C7DF-4365-BDD6-AE63E6D94D01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartService.GrpcServer", "CartService.GrpcServer\CartService.GrpcServer.csproj", "{A5297F6F-11D9-4FB3-8265-ADFD1E2D9C36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{45005328-C7DF-4365-BDD6-AE63E6D94D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45005328-C7DF-4365-BDD6-AE63E6D94D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45005328-C7DF-4365-BDD6-AE63E6D94D01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5297F6F-11D9-4FB3-8265-ADFD1E2D9C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5297F6F-11D9-4FB3-8265-ADFD1E2D9C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5297F6F-11D9-4FB3-8265-ADFD1E2D9C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5297F6F-11D9-4FB3-8265-ADFD1E2D9C36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

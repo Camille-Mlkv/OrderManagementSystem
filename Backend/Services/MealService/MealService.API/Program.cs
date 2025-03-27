@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using MealService.Infrastructure.DI;
+//using MealService.Infrastructure.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +54,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// use this code to seed the db with sample data
+//using (var scope = app.Services.CreateScope())
+//{
+//    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider);
+//}
 
 app.UseHttpsRedirection();
 

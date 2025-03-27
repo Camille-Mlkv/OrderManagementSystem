@@ -2,5 +2,5 @@
 
 namespace CartService.Application.UseCases.Commands.IncreaseItemQuantity
 {
-    public record IncreaseItemQuantityCommand(string UserId, Guid MealId): IRequest;
+    public record IncreaseItemQuantityCommand(Guid UserId, Guid MealId): IRequest;
 }

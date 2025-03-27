@@ -1,7 +1,9 @@
 using Serilog;
+using Microsoft.EntityFrameworkCore;
 using UserService.API.Middleware;
 using UserService.BusinessLogic;
 using UserService.BusinessLogic.Options;
+using UserService.DataAccess.Data;
 using UserService.DataAccess.DI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbProvider(builder.Configuration);
 
-builder.Configuration.AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailOptions"));
 
 builder.Services.AddIdentity();
@@ -23,6 +24,7 @@ builder.Services.AddValidation();
 
 builder.Services.AddAppAuthentication(builder.Configuration);
 builder.Services.AddAppAuthorization();
+
 
 //await builder.Services.SeedRolesData();
 
@@ -36,6 +38,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// use this code to seed the db with sample data
+//using (var scope = app.Services.CreateScope())
+//{
+//    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider);
+//}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();

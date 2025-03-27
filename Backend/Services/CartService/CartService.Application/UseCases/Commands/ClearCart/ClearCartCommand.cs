@@ -2,5 +2,5 @@
 
 namespace CartService.Application.UseCases.Commands.ClearCart
 {
-    public record ClearCartCommand(string UserId): IRequest;
+    public record ClearCartCommand(Guid UserId): IRequest;
 }
