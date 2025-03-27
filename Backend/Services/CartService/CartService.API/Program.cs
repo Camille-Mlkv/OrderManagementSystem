@@ -1,4 +1,3 @@
-using CartService.Infrastructure;
 using CartService.Application;
 using CartService.API.Middleware;
 using Hangfire;
