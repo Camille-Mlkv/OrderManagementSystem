@@ -2,7 +2,7 @@
 
 namespace UserService.DataAccess.Models
 {
-    public class ApplicationUser:IdentityUser
+    public class ApplicationUser:IdentityUser<Guid>
     {
         public string Name { get; set; }
         public string? RefreshToken { get; set; }

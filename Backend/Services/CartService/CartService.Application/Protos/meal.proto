@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "MealService.GrpcServer";
+
+package meal;
+
+service MealService {
+  rpc GetMealById (GetMealByIdRequest) returns (GetMealByIdReply);
+}
+
+message GetMealByIdRequest {
+  string mealId = 1;
+}
+
+message GetMealByIdReply {
+  string mealId = 1;
+  string name = 2;
+  double price = 3;
+}

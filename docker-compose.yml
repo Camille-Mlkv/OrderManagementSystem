@@ -4,23 +4,152 @@ services:
   orderservice.api:
     image: ${DOCKER_REGISTRY-}orderserviceapi
     container_name: orders.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${ORDERSERVICE_PORT}
+      - CONNECTIONSTRINGS__MONGODB=${MONGO_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/OrderService/OrderService.API/Dockerfile
     ports:
-      - 5001:5001
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTPS_PORTS=5001
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-
-      - STRIPESETTINGS__SECRETKEY=${STRIPESETTINGS__SECRETKEY}
-      - STRIPESETTINGS__WEBHOOKKEY=${STRIPESETTINGS__WEBHOOKKEY}
-      - STRIPESETTINGS__SUCCESSURL=${STRIPESETTINGS__SUCCESSURL}
-      - STRIPESETTINGS__CANCELURL=${STRIPESETTINGS__CANCELURL}
+      - ${ORDERSERVICE_PORT}:${ORDERSERVICE_PORT}
     depends_on:
       - mongo
+
+  userservice.api:
+    image: ${DOCKER_REGISTRY-}userserviceapi
+    container_name: users.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${USERSERVICE_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/UserService/UserService.API/Dockerfile
+    ports:
+      - "${USERSERVICE_PORT}:${USERSERVICE_PORT}"
+    depends_on:
+      - mssql
+
+  userservice.grpc:
+    image: ${DOCKER_REGISTRY-}userservicegrpc
+    container_name: users.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${USER_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/UserService/UserService.GrpcServer/Dockerfile
+    ports:
+      - "${USER_GRPCSERVER_PORT}:${USER_GRPCSERVER_PORT}"
+    depends_on:
+      - mssql
+
+  mealservice.api:
+    image: ${DOCKER_REGISTRY-}mealserviceapi
+    container_name: meals.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${MEALSERVICE_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${MEALSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/MealService/MealService.API/Dockerfile
+    ports:
+      - "${MEALSERVICE_PORT}:${MEALSERVICE_PORT}"
+    depends_on:
+      - mssql
+
+  mealservice.grpc:
+    image: ${DOCKER_REGISTRY-}mealservicegrpc
+    container_name: meals.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${MEAL_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__DEFAULTCONNECTION=${MEALSERVICE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/MealService/MealService.GrpcServer/Dockerfile
+    ports:
+      - "${MEAL_GRPCSERVER_PORT}:${MEAL_GRPCSERVER_PORT}"
+    depends_on:
+      - mssql
+
+  cartservice.api:
+    image: ${DOCKER_REGISTRY-}cartserviceapi
+    container_name: cart.api
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${CARTSERVICE_PORT}
+      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
+      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/CartService/CartService.API/Dockerfile
+    ports:
+      - "${CARTSERVICE_PORT}:${CARTSERVICE_PORT}"
+    depends_on:
+      - mssql
+      - redis
+      - mealservice.grpc
+
+  cartservice.grpc:
+    image: ${DOCKER_REGISTRY-}cartservicegrpc
+    container_name: cart.grpc
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${CART_GRPCSERVER_PORT}
+      - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
+      - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
+    build:
+      context: .
+      dockerfile: Backend/Services/CartService/CartService.GrpcServer/Dockerfile
+    ports:
+      - "${CART_GRPCSERVER_PORT}:${CART_GRPCSERVER_PORT}"
+    depends_on:
+      - redis
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - ${MSSQL_PORTS}
+    volumes:
+      - mssql-data:/var/opt/mssql
+    restart: always
 
   mongo:
     image: mongo:latest
@@ -28,11 +157,20 @@ services:
     environment:
       MONGO_INITDB_DATABASE: OrderDatabase
     ports:
-      - 27017:27017
+      - ${MONGO_PORTS}
     volumes:
       - mongo-data:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
     restart: always
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - ${MONGO_EXPRESS_PORTS}
+    environment:
+      VCAP_APP_PORT: 8081
+      ME_CONFIG_MONGODB_URL: ${MONGO_CONNECTION}
 
   stripe-cli:
     image: stripe/stripe-cli:latest
@@ -43,6 +181,28 @@ services:
       - STRIPE_API_KEY=${STRIPE_API_KEY}
       - STRIPE_DEVICE_NAME=${STRIPE_DEVICE_NAME}
 
+  redis:
+    image: "redis:latest"
+    container_name: redis
+    ports:
+      - ${REDIS_PORTS}
+    volumes:
+      - redis_data:/data
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    restart: always
+    ports:
+      - ${REDIS_INSIGHT_PORTS}
+    volumes:
+      - redis-insight:/data
+
+
 volumes:
   mongo-data:
     driver: local
+  mssql-data:
+    driver: local
+  redis_data:
+    driver: local
+  redis-insight:

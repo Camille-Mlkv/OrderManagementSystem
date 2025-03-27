@@ -38,7 +38,7 @@ namespace MealService.Infrastructure
 
         public static void ConfigureAuth(this IServiceCollection services, IConfiguration configuration)
         {
-            var settingsSection = configuration.GetSection("ApiSettings:JwtOptions");
+            var settingsSection = configuration.GetSection("JwtOptions");
 
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");

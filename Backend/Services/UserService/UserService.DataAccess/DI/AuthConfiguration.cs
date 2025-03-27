@@ -14,14 +14,14 @@ namespace UserService.DataAccess.DI
         public static void AddIdentity(this IServiceCollection services)
         {
             services.AddIdentityCore<ApplicationUser>()
-                    .AddRoles<IdentityRole>()
+                    .AddRoles<IdentityRole<Guid>>()
                     .AddEntityFrameworkStores<ApplicationDbContext>()
                     .AddDefaultTokenProviders();
         }
 
         public static void AddAppAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var settingsSection = configuration.GetSection("ApiSettings:JwtOptions");
+            var settingsSection = configuration.GetSection("JwtOptions");
 
             var secret = settingsSection.GetValue<string>("Secret");
             var issuer = settingsSection.GetValue<string>("Issuer");

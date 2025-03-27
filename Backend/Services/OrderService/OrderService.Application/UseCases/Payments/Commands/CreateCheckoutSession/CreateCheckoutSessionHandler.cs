@@ -10,12 +10,18 @@ namespace OrderService.Application.UseCases.Payments.Commands.CreateCheckoutSess
     {
         private readonly IPaymentService _paymentService;
         private readonly IOrderRepository _orderRepository;
+        private readonly UserService.GrpcServer.UserService.UserServiceClient _userClient;
 
-        public CreateCheckoutSessionHandler(IPaymentService paymentService, IOrderRepository orderRepository)
+        public CreateCheckoutSessionHandler(
+            IPaymentService paymentService, 
+            IOrderRepository orderRepository,
+            UserService.GrpcServer.UserService.UserServiceClient userClient)
         {
             _paymentService = paymentService;
             _orderRepository = orderRepository;
+            _userClient = userClient;
         }
+
         public async Task<PaymentResult> Handle(CreateCheckoutSessionCommand request, CancellationToken cancellationToken)
         {
             var order = await _orderRepository.GetByIdAsync(request.OrderId, cancellationToken);
@@ -25,14 +31,12 @@ namespace OrderService.Application.UseCases.Payments.Commands.CreateCheckoutSess
                 throw new NotFoundException("Order with id doesn't exist");
             }
 
-            // for retrieving email via gRPC
-            var clientId = order.ClientId;
+            var clientId = order.ClientId.ToString();
+            var userRequest = new UserService.GrpcServer.UserRequest { UserId = clientId };
+            var response = await _userClient.GetUserEmailByIdAsync(userRequest);
+            var email = response.Email;
 
-            // value is hardcoded for testing purposes (will be removed when adding gRPC)
-            var email = "testclient@gmail.com";
-
-            // price is hardcoded for testing purposes because meals are not retrieved yet, so price is currently 0
-            var paymentResult = await _paymentService.CreateCheckoutSessionAsync(request.OrderId, 22, email);
+            var paymentResult = await _paymentService.CreateCheckoutSessionAsync(request.OrderId, order.TotalPrice, email);
 
             return paymentResult;
         }

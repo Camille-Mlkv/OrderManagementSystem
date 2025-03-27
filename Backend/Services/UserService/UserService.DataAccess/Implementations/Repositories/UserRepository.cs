@@ -7,8 +7,8 @@ namespace UserService.DataAccess.Implementations.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        public UserRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+        public UserRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -33,7 +33,7 @@ namespace UserService.DataAccess.Implementations.Repositories
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            await _roleManager.CreateAsync(new IdentityRole(role));
+            await _roleManager.CreateAsync(new IdentityRole<Guid>(role));
         }
 
         public async Task<IdentityResult> CreateUserAsync(ApplicationUser user, string password, CancellationToken cancellationToken)

@@ -12,25 +12,11 @@ namespace UserService.DataAccess.DI
         {
             services.AddDbContext<ApplicationDbContext>(option =>
             {
-                option.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                option.UseSqlServer(
+                   configuration.GetConnectionString("DefaultConnection"),
+                   sqlServerOptions => sqlServerOptions.EnableRetryOnFailure());
             });
             return services;
-        }
-
-        public static async Task SeedRolesData(this IServiceCollection services)
-        {
-            using var scope = services.BuildServiceProvider().CreateScope();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-            string[] roles = { "Admin", "Client", "Courier" };
-
-            foreach (var role in roles)
-            {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
         }
     }
 }

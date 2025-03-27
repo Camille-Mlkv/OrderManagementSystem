@@ -27,7 +27,7 @@ namespace UserService.BusinessLogic.Implementations.Services
             var claimList = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
-                new Claim(JwtRegisteredClaimNames.Sub,user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub,user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Name,user.UserName),
                 new Claim(ClaimTypes.Name, user.UserName),
             };
