@@ -121,5 +121,16 @@ namespace UserService.DataAccess.Implementations.Repositories
 
             return resetResult;
         }
+
+        public async Task<string> GetUserEmailById(string userId, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var email = user!.Email;
+
+            return email!;
+        }
     }
 }

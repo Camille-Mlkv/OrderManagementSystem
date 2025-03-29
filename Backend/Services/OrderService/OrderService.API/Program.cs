@@ -65,6 +65,8 @@ builder.Services.AddSwaggerGen(option =>
 LoggingConfiguration.ConfigureLogging(builder.Configuration);
 builder.Host.UseSerilog();
 
+builder.Services.ConfigureRabbitMQ(builder.Configuration);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

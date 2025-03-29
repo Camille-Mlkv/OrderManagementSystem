@@ -4,7 +4,8 @@ using MongoDB.Driver;
 using OrderService.Application.Specifications.Repositories;
 using OrderService.Application.Specifications.Services;
 using OrderService.Infrastructure.Implementations.Repositories;
-using OrderService.Infrastructure.Implementations.Services;
+using OrderService.Infrastructure.Implementations.Services.Stripe;
+using OrderService.Infrastructure.Options;
 
 namespace OrderService.Infrastructure.DI
 {
@@ -21,7 +22,7 @@ namespace OrderService.Infrastructure.DI
 
             services.AddScoped<IOrderRepository, OrderRepository>();
 
-            services.Configure<StripeSettings>(configuration.GetSection("StripeSettings"));
+            services.Configure<StripeOptions>(configuration.GetSection("StripeSettings"));
 
             services.AddScoped<IPaymentService, StripePaymentService>();
         }

@@ -7,6 +7,8 @@ using AutoMapper;
 using OrderService.Application.Utilities;
 using OrderService.Application.Exceptions;
 using MealService.GrpcServer;
+using OrderService.Application.Specifications.Services;
+using OrderService.Application.DTOs.Order;
 
 namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
 {
@@ -17,19 +19,22 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
         private readonly OrderNumberGenerator _orderNumberGenerator;
         private readonly CartService.GrpcServer.CartService.CartServiceClient _cartClient;
         private readonly MealService.GrpcServer.MealService.MealServiceClient _mealClient;
+        private readonly IMessageService _messageService;
 
         public CreateOrderHandler(
             IOrderRepository orderRepository, 
             IMapper mapper, 
             OrderNumberGenerator orderNumberGenerator,
             CartService.GrpcServer.CartService.CartServiceClient cartClient,
-            MealService.GrpcServer.MealService.MealServiceClient mealClient)
+            MealService.GrpcServer.MealService.MealServiceClient mealClient,
+            IMessageService rabbitMQService)
         {
             _orderRepository = orderRepository;
             _mapper = mapper;
             _orderNumberGenerator = orderNumberGenerator;
             _cartClient = cartClient;
             _mealClient = mealClient;
+            _messageService = rabbitMQService;
         }
 
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -76,6 +81,15 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
             order.CalculateTotalPrice();
 
             await _orderRepository.CreateAsync(order, cancellationToken);
+
+            var orderStatus = new OrderStatusDto
+            {
+                UserId = order.ClientId,
+                OrderNumber = order.OrderNumber,
+                OrderStatus = order.Status.Name.ToString(),
+            };
+
+            await _messageService.PublishAsync(orderStatus);
 
             // after the order is created, cart is cleared
             var cartClearRequest = new CartService.GrpcServer.ClearCartRequest() { UserId = clientId };

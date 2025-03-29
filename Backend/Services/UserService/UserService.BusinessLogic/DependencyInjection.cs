@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using UserService.BusinessLogic.Specifications.Services;
 using UserService.BusinessLogic.Implementations.Services;
-using UserService.BusinessLogic.MappingProfiles;
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using UserService.BusinessLogic.BackgroundServices;
 
 namespace UserService.BusinessLogic
 {
@@ -20,7 +20,9 @@ namespace UserService.BusinessLogic
 
             services.AddScoped<IAccountService, AccountService>();
             
-            services.AddAutoMapper(typeof(UserProfile));
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            services.AddHostedService<OrderStatusEmailService>();
         }
 
         public static void AddValidation(this IServiceCollection services)

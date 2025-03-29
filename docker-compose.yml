@@ -22,6 +22,8 @@ services:
         condition: service_started
       elasticsearch:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
 
   userservice.api:
     image: ${DOCKER_REGISTRY-}userserviceapi
@@ -258,6 +260,22 @@ services:
     depends_on:
       - elasticsearch
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - ${RABBITMQ_PORTS}
+      - ${RABBITMQWEB_PORTS}
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+
 volumes:
   mongo-data:
     driver: local
@@ -268,5 +286,7 @@ volumes:
   redis-insight:
     driver: local
   elasticsearch-data:
+  rabbitmq_data:
+  rabbitmq_logs:
 
 
