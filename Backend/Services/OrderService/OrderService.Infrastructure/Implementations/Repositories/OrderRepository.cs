@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using OrderService.Application.Specifications.Repositories;
 using OrderService.Domain.Entities;
 using System.Linq.Expressions;
@@ -21,7 +22,7 @@ namespace OrderService.Infrastructure.Implementations.Repositories
 
         public async Task<List<Order>> GetListAsync(Expression<Func<Order, bool>> filter, CancellationToken cancellationToken)
         {
-            return await _ordersCollection.Find(filter).ToListAsync();
+            return await _ordersCollection.Find(filter).ToListAsync(cancellationToken);
         }
 
         public async Task CreateAsync(Order order, CancellationToken cancellationToken)

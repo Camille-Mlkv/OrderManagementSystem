@@ -115,9 +115,8 @@ namespace OrderService.API.Controllers
 
         [Authorize(Policy = "Admin")]
         [HttpPatch("{courierId:guid}/status/out-for-delivery")]
-        public async Task<IActionResult> UpdateOrdersWithOutForDeliveryStatus(CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateOrdersWithOutForDeliveryStatus(Guid courierId, CancellationToken cancellationToken)
         {
-            var courierId = GetUserId();
             await _mediator.Send(new UpdateOrdersWithOutForDeliveryStatusCommand(courierId), cancellationToken);
 
             _logger.LogInformation($"Courier {courierId} orders status set to out for delivery.");
