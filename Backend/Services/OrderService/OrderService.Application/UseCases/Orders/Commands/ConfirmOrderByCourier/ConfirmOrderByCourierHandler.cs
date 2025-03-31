@@ -27,6 +27,11 @@ namespace OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByCourie
                 throw new NotFoundException($"Order with Id {request.OrderId} not found.");
             }
 
+            if (order.Status.Name != StatusName.OutForDelivery)
+            {
+                throw new BadRequestException("Bad request.", "This order can't be confirmed as it's not delivered yet.");
+            }
+
             order.ConfirmedByCourier = true;
 
             if (order.ConfirmedByClient && order.ConfirmedByCourier)

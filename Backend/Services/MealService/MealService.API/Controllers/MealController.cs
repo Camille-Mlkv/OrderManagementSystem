@@ -7,7 +7,6 @@ using MealService.Application.UseCases.Meals.Queries.GetMealById;
 using MealService.Application.UseCases.Meals.Queries.GetMealsByCuisine;
 using MealService.Application.UseCases.Meals.Queries.GetMealsByName;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealService.API.Controllers
@@ -65,7 +64,6 @@ namespace MealService.API.Controllers
             return Ok(meals);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateMeal([FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
         {
@@ -81,7 +79,6 @@ namespace MealService.API.Controllers
             return CreatedAtAction(nameof(CreateMeal), new { id = newMeal.Id }, newMeal);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpDelete("{mealId}")]
         public async Task<IActionResult> DeleteMeal(Guid mealId, CancellationToken cancellationToken)
         {
@@ -92,18 +89,17 @@ namespace MealService.API.Controllers
             return StatusCode(204);
         }
 
-        [Authorize(Policy = "Admin")]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMeal(Guid id, [FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
+        [HttpPut("{mealId}")]
+        public async Task<IActionResult> UpdateMeal(Guid mealId, [FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
         {
             if (imageFile != null)
             {
                 await ProcessImageFileAsync(imageFile, meal, cancellationToken);
             }
 
-            var updatedMeal = await _mediator.Send(new UpdateMealCommand(id, meal), cancellationToken);
+            var updatedMeal = await _mediator.Send(new UpdateMealCommand(mealId, meal), cancellationToken);
 
-            _logger.LogInformation($"Meal {id} updated.");
+            _logger.LogInformation($"Meal {mealId} updated.");
 
             return Ok(updatedMeal);
         }

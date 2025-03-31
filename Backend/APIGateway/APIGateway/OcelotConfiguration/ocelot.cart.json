@@ -1,0 +1,84 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/cart",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartservice.api",
+          "Port": 5014
+        }
+      ],
+      "UpstreamPathTemplate": "/cart",
+      "UpstreamHttpMethod": [ "GET", "POST", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Client"
+      },
+      "SwaggerKey": "Cart"
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/{mealId}/increase",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartservice.api",
+          "Port": 5014
+        }
+      ],
+      "UpstreamPathTemplate": "/cart/{mealId}/increase",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Client"
+      },
+      "SwaggerKey": "Cart"
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/{mealId}/decrease",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartservice.api",
+          "Port": 5014
+        }
+      ],
+      "UpstreamPathTemplate": "/cart/{mealId}/decrease",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Client"
+      },
+      "SwaggerKey": "Cart"
+    },
+    {
+      "DownstreamPathTemplate": "/api/cart/{mealId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "cartservice.api",
+          "Port": 5014
+        }
+      ],
+      "UpstreamPathTemplate": "/cart/{mealId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Client"
+      },
+      "SwaggerKey": "Cart"
+    }
+  ]
+}

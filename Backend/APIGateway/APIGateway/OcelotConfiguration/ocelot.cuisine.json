@@ -1,0 +1,71 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/cuisines",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/cuisines",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/cuisines",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/cuisines",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/cuisines/{cuisineId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/cuisines/{cuisineId}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/cuisines/name/{name}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/cuisines/name/{name}",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "SwaggerKey": "Meal"
+    }
+  ]
+}

@@ -19,7 +19,7 @@ namespace OrderService.API.Controllers
             _logger = logger;
         }
 
-        [Authorize(Policy = "Client")]
+        //[Authorize(Policy = "Client")]
         [HttpPost]
         public async Task<IActionResult> CreateCheckoutSession(Guid orderId, CancellationToken cancellationToken)
         {

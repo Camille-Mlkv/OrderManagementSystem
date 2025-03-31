@@ -31,7 +31,8 @@ COPY ${CERT_PATH} /https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
 ENV ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
 
-ARG MEALSERVICE_PORT
-EXPOSE ${MEALSERVICE_PORT}
+#ARG MEALSERVICE_PORT
+#EXPOSE ${MEALSERVICE_PORT}
+EXPOSE 5003 5013
 
 ENTRYPOINT ["dotnet", "MealService.API.dll"]

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace CartService.Application.Validators
 {
-    public class CartItemValidator: AbstractValidator<CartItemDto>
+    public class CartItemValidator: AbstractValidator<CartItemRequestDto>
     {
         public CartItemValidator()
         {

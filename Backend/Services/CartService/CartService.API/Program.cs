@@ -64,8 +64,6 @@ if (app.Environment.IsDevelopment())
     await DatabaseInitializer.InitializeHangfireDbAsync(scope.ServiceProvider);
 }
 
-app.UseHttpsRedirection();
-
 var options = new DashboardOptions()
 {
     Authorization = [new HangfireDashboardAuthFilter()]

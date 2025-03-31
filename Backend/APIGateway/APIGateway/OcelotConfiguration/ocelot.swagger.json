@@ -1,0 +1,44 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "User",
+      "Config": [
+        {
+          "Name": "Users API",
+          "Version": "v1",
+          "Url": "http://userservice.api:5012/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Meal",
+      "Config": [
+        {
+          "Name": "Meals API",
+          "Version": "v1",
+          "Url": "http://mealservice.api:5013/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Cart",
+      "Config": [
+        {
+          "Name": "Cart API",
+          "Version": "v1",
+          "Url": "http://cartservice.api:5014/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "Order",
+      "Config": [
+        {
+          "Name": "Orders API",
+          "Version": "v1",
+          "Url": "http://orderservice.api:5011/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}

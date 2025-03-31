@@ -5,7 +5,6 @@ using MealService.Application.UseCases.Categories.Commands.UpdateCategory;
 using MealService.Application.UseCases.Categories.Queries.GetCategories;
 using MealService.Application.UseCases.Categories.Queries.GetCategoriesByName;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealService.API.Controllers
@@ -43,7 +42,6 @@ namespace MealService.API.Controllers
             return Ok(categories);
         }
 
-        [Authorize(Policy ="Admin")]
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
@@ -54,7 +52,6 @@ namespace MealService.API.Controllers
             return CreatedAtAction(nameof(AddCategory), new { id = newCategory.Id }, newCategory);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCategory(Guid id, [FromBody] CategoryRequestDto category,CancellationToken cancellationToken)
         {
@@ -65,7 +62,6 @@ namespace MealService.API.Controllers
             return Ok(updatedCategory);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(Guid id, CancellationToken cancellationToken)
         {
