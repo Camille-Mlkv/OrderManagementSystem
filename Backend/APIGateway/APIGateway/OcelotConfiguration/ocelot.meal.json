@@ -1,0 +1,96 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/meals",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/meals",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/meals/{mealId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/meals/{cuisineId}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/meals/{mealId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/meals/{mealId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/meals/name/{name}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/meals/name/{name}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/meals/cuisine/{cuisineId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/meals/cuisine/{cuisineId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/meals/cuisine/{cuisineId}/filtered",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/meals/cuisine/{cuisineId}/filtered",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Meal"
+    }
+  ]
+}

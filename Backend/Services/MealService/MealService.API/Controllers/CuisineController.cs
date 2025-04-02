@@ -5,7 +5,6 @@ using MealService.Application.UseCases.Cuisines.Commands.UpdateCuisine;
 using MealService.Application.UseCases.Cuisines.Queries.GetCuisines;
 using MealService.Application.UseCases.Cuisines.Queries.GetCuisinesByName;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealService.API.Controllers
@@ -43,7 +42,6 @@ namespace MealService.API.Controllers
             return Ok(cuisines);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateCuisine([FromForm] CuisineRequestDto cuisine, IFormFile? imageFile, CancellationToken cancellationToken)
         {
@@ -59,7 +57,6 @@ namespace MealService.API.Controllers
             return CreatedAtAction(nameof(CreateCuisine), new { id = newCuisine.Id }, newCuisine);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPut("{cuisineId}")]
         public async Task<IActionResult> UpdateCuisine(Guid cuisineId, [FromForm] CuisineRequestDto cuisine, IFormFile? imageFile, CancellationToken cancellationToken)
         {
@@ -75,7 +72,6 @@ namespace MealService.API.Controllers
             return Ok(updatedCuisine);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpDelete("{cuisineId}")]
         public async Task<IActionResult> DeleteCuisine(Guid cuisineId, CancellationToken cancellationToken)
         {

@@ -1,0 +1,108 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/account/users/{userName}/confirmation-email",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/account/users/{userName}/confirmation-email",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/account/users/{userName}/email/confirmed",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/account/users/{userName}/email/confirmed",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/account/users/{userName}/password-email",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/account/users/{userName}/password-email",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/account/users/{userName}/reset-code",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/account/users/{userName}/reset-code",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/account/password/reset",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/account/password/reset",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/signup",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/signup",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/signin",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/signin",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/refresh",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/refresh",
+      "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "User"
+    }
+  ]
+}

@@ -4,7 +4,6 @@ using MealService.Application.UseCases.Tags.Commands.DeleteTag;
 using MealService.Application.UseCases.Tags.Commands.UpdateTag;
 using MealService.Application.UseCases.Tags.Queries.GetTags;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MealService.API.Controllers
@@ -32,7 +31,6 @@ namespace MealService.API.Controllers
             return Ok(tags);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateTag([FromForm] TagRequestDto tag, CancellationToken cancellationToken)
         {
@@ -43,7 +41,6 @@ namespace MealService.API.Controllers
             return CreatedAtAction(nameof(CreateTag), new { id = newTag.Id }, newTag);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPut("{tagId}")]
         public async Task<IActionResult> UpdateTag(Guid tagId, [FromForm] TagRequestDto tag, CancellationToken cancellationToken)
         {
@@ -54,9 +51,8 @@ namespace MealService.API.Controllers
             return Ok(updatedTag);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpDelete("{tagId}")]
-        public async Task<IActionResult> DeleteMeal(Guid tagId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteTag(Guid tagId, CancellationToken cancellationToken)
         {
             await _mediator.Send(new DeleteTagCommand(tagId), cancellationToken);
 

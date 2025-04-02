@@ -1,0 +1,57 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/tags/{tagId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/tags/{tagId}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Meal"
+    }
+  ]
+}

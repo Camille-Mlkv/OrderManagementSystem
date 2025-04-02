@@ -11,6 +11,8 @@ namespace OrderService.Infrastructure.Configuration
         {
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
+            BsonSerializer.RegisterSerializer(new NullableSerializer<Guid>(new GuidSerializer(GuidRepresentation.Standard)));
+
             var pack = new ConventionPack
             {
                 new EnumRepresentationConvention(BsonType.String)

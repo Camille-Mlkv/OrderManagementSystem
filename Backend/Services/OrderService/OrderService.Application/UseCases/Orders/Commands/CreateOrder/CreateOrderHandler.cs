@@ -7,6 +7,8 @@ using AutoMapper;
 using OrderService.Application.Utilities;
 using OrderService.Application.Exceptions;
 using MealService.GrpcServer;
+using OrderService.Application.Specifications.Services;
+using OrderService.Application.DTOs.Order;
 
 namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
 {

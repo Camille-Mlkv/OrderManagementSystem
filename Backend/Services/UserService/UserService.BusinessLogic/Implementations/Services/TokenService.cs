@@ -29,10 +29,10 @@ namespace UserService.BusinessLogic.Implementations.Services
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub,user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Name,user.UserName),
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
-            claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+            claimList.AddRange(roles.Select(role => new Claim("Role", role)));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

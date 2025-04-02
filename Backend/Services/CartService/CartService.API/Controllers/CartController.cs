@@ -7,7 +7,6 @@ using CartService.Application.UseCases.Commands.DeleteItemFromCart;
 using CartService.Application.UseCases.Commands.IncreaseItemQuantity;
 using CartService.Application.UseCases.Queries.GetItemsFromCart;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -15,7 +14,6 @@ namespace CartService.API.Controllers
 {
     [ApiController]
     [Route("api/cart")]
-    [Authorize(Policy = "Client")]
     public class CartController : ControllerBase
     {
         private readonly IMediator _mediator;

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UserService.BusinessLogic.DTOs.Requests;
 using UserService.BusinessLogic.Specifications.Services;
 
@@ -38,7 +37,6 @@ namespace UserService.API.Controllers
         }
 
         [HttpPost("refresh")]
-        [Authorize]
         public async Task<IActionResult> RefreshAccessToken([FromBody] RefreshAccessTokenRequest request, CancellationToken cancellationToken)
         {
             var response=await _authService.RefreshAccessTokenAsync(request, cancellationToken);
@@ -49,7 +47,6 @@ namespace UserService.API.Controllers
         }
 
         [HttpDelete("revoke")]
-        [Authorize]
         public async Task<IActionResult> RevokeRefreshToken(string username, CancellationToken cancellationToken)
         {
             await _authService.RevokeRefreshTokenAsync(username, cancellationToken);

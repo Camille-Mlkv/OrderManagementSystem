@@ -10,18 +10,22 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_HTTPS_PORTS=${ORDERSERVICE_PORT}
+      - ASPNETCORE_HTTPS_PORTS=5001
+      - ASPNETCORE_HTTP_PORTS=5011
       - CONNECTIONSTRINGS__MONGODB=${MONGO_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/OrderService/OrderService.API/Dockerfile
     ports:
-      - ${ORDERSERVICE_PORT}:${ORDERSERVICE_PORT}
+      - 5001:5001
+      - 5011:5011
     depends_on:
       mongo:
         condition: service_started
       elasticsearch:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
 
   userservice.api:
     image: ${DOCKER_REGISTRY-}userserviceapi
@@ -32,13 +36,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_HTTPS_PORTS=${USERSERVICE_PORT}
+      - ASPNETCORE_HTTPS_PORTS=5002
+      - ASPNETCORE_HTTP_PORTS=5012
       - CONNECTIONSTRINGS__DEFAULTCONNECTION=${USERSERVICE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/UserService/UserService.API/Dockerfile
     ports:
-      - "${USERSERVICE_PORT}:${USERSERVICE_PORT}"
+      - 5012:5012
+      - 5002:5002
     depends_on:
       mssql:
         condition: service_started
@@ -54,13 +60,15 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_HTTPS_PORTS=${MEALSERVICE_PORT}
+      - ASPNETCORE_HTTPS_PORTS=5003
+      - ASPNETCORE_HTTP_PORTS=5013
       - CONNECTIONSTRINGS__DEFAULTCONNECTION=${MEALSERVICE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/MealService/MealService.API/Dockerfile
     ports:
-      - "${MEALSERVICE_PORT}:${MEALSERVICE_PORT}"
+      - 5013:5013
+      - 5003:5003
     depends_on:
       mssql:
         condition: service_started
@@ -76,14 +84,16 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
-      - ASPNETCORE_HTTPS_PORTS=${CARTSERVICE_PORT}
+      - ASPNETCORE_HTTPS_PORTS=5004
+      - ASPNETCORE_HTTP_PORTS=5014
       - CONNECTIONSTRINGS__REDIS=${REDIS_CONNECTION}
       - CONNECTIONSTRINGS__HANGFIRE=${HANGFIRE_CONNECTION}
     build:
       context: .
       dockerfile: Backend/Services/CartService/CartService.API/Dockerfile
     ports:
-      - "${CARTSERVICE_PORT}:${CARTSERVICE_PORT}"
+      - 5014:5014
+      - 5004:5004
     depends_on:
       mssql:
         condition: service_started
@@ -91,7 +101,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_started
-
 
   userservice.grpc:
     image: ${DOCKER_REGISTRY-}userservicegrpc
@@ -258,6 +267,40 @@ services:
     depends_on:
       - elasticsearch
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - ${RABBITMQ_PORTS}
+      - ${RABBITMQWEB_PORTS}
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - rabbitmq_logs:/var/log/rabbitmq
+
+  apigateway:
+    image: ${DOCKER_REGISTRY-}apigateway
+    container_name: apigateway
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+      - ASPNETCORE_HTTPS_PORTS=${APIGATEWAY_PORT}
+    build:
+      context: .
+      dockerfile: Backend/APIGateway/APIGateway/Dockerfile
+    ports:
+      - ${APIGATEWAY_PORT}:${APIGATEWAY_PORT}
+    depends_on:
+      - userservice.api
+
 volumes:
   mongo-data:
     driver: local
@@ -268,5 +311,7 @@ volumes:
   redis-insight:
     driver: local
   elasticsearch-data:
+  rabbitmq_data:
+  rabbitmq_logs:
 
 

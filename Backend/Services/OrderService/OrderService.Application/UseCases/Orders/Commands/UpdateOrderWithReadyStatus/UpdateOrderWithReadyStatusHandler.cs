@@ -1,6 +1,8 @@
 ﻿using MediatR;
+using OrderService.Application.DTOs.Order;
 using OrderService.Application.Exceptions;
 using OrderService.Application.Specifications.Repositories;
+using OrderService.Application.Specifications.Services;
 using OrderService.Domain.Enums;
 
 namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithReadyStatus
@@ -8,10 +10,12 @@ namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithReady
     public class UpdateOrderWithReadyStatusHandler : IRequestHandler<UpdateOrderWithReadyStatusCommand>
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IMessageService _messageService;
 
-        public UpdateOrderWithReadyStatusHandler(IOrderRepository orderRepository)
+        public UpdateOrderWithReadyStatusHandler(IOrderRepository orderRepository, IMessageService messageService)
         {
             _orderRepository = orderRepository;
+            _messageService = messageService;
         }
 
         public async Task Handle(UpdateOrderWithReadyStatusCommand request, CancellationToken cancellationToken)
@@ -31,6 +35,15 @@ namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithReady
             order.Status.Name = StatusName.ReadyForDelivery;
 
             await _orderRepository.UpdateAsync(order, cancellationToken);
+
+            var orderStatus = new OrderStatusDto
+            {
+                UserId = order.ClientId,
+                OrderNumber = order.OrderNumber,
+                OrderStatus = order.Status.Name.ToString(),
+            };
+
+            await _messageService.PublishAsync(orderStatus);
         }
     }
 }

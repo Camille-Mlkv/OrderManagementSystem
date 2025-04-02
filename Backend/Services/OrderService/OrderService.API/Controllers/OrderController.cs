@@ -1,5 +1,4 @@
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.DTOs.Address;
 using OrderService.Application.Exceptions;
@@ -34,7 +33,6 @@ namespace OrderService.API.Controllers
             _logger = logger;
         }
 
-        [Authorize(Policy = "Client")]
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] AddressDto address, CancellationToken cancellationToken)
         {
@@ -46,7 +44,6 @@ namespace OrderService.API.Controllers
             return Ok(orderId);
         }
 
-        [Authorize(Policy = "Client")]
         [HttpDelete("{orderId}")]
         public async Task<IActionResult> DeletePendingOrder(Guid orderId, CancellationToken cancellationToken)
         {
@@ -57,7 +54,6 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpGet("{orderId}")]
         public async Task<IActionResult> GetOrderById(Guid orderId, CancellationToken cancellationToken)
         {
@@ -68,7 +64,6 @@ namespace OrderService.API.Controllers
             return Ok(order);
         }
 
-        [Authorize(Policy = "Client")]
         [HttpGet("client/status-{status}")]
         public async Task<IActionResult> GetClientOrdersByStatus(string status, CancellationToken cancellationToken)
         {
@@ -80,7 +75,6 @@ namespace OrderService.API.Controllers
             return Ok(orders);
         }
 
-        [Authorize(Policy = "Client")]
         [HttpPatch("{orderId:guid}/client-confirmation")]
         public async Task<IActionResult> ConfirmOrderByClient(Guid orderId, CancellationToken cancellationToken)
         {
@@ -91,7 +85,6 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpGet("status-{status}")]
         public async Task<IActionResult> GetOrdersByStatus(string status, CancellationToken cancellationToken)
         {
@@ -102,7 +95,6 @@ namespace OrderService.API.Controllers
             return Ok(orders);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPatch("{orderId:guid}/status/ready")]
         public async Task<IActionResult> UpdateOrderWithReadyStatus(Guid orderId, CancellationToken cancellationToken)
         {
@@ -113,11 +105,9 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPatch("{courierId:guid}/status/out-for-delivery")]
-        public async Task<IActionResult> UpdateOrdersWithOutForDeliveryStatus(CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateOrdersWithOutForDeliveryStatus(Guid courierId, CancellationToken cancellationToken)
         {
-            var courierId = GetUserId();
             await _mediator.Send(new UpdateOrdersWithOutForDeliveryStatusCommand(courierId), cancellationToken);
 
             _logger.LogInformation($"Courier {courierId} orders status set to out for delivery.");
@@ -125,7 +115,6 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "Courier")]
         [HttpGet("opened-orders")]
         public async Task<IActionResult> GetOpenedOrders(CancellationToken cancellationToken)
         {
@@ -136,7 +125,6 @@ namespace OrderService.API.Controllers
             return Ok(orders);
         }
 
-        [Authorize(Policy = "Courier")]
         [HttpPatch("{orderId:guid}/assign-courier")]
         public async Task<IActionResult> UpdateOrderWithCourierId(Guid orderId, CancellationToken cancellationToken)
         {
@@ -148,7 +136,6 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "Courier")]
         [HttpGet("out-for-delivery")]
         public async Task<IActionResult> GetCourierOrders(CancellationToken cancellationToken)
         {
@@ -160,7 +147,6 @@ namespace OrderService.API.Controllers
             return Ok(orders);
         }
 
-        [Authorize(Policy = "Courier")]
         [HttpPatch("{orderId:guid}/courier-confirmation")]
         public async Task<IActionResult> ConfirmOrderByCourier(Guid orderId, CancellationToken cancellationToken)
         {

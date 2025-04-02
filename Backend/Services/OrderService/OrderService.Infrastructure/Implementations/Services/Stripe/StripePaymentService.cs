@@ -4,14 +4,15 @@ using OrderService.Application.DTOs.Payment;
 using OrderService.Application.Specifications.Services;
 using Stripe;
 using Stripe.Checkout;
+using OrderService.Infrastructure.Options;
 
-namespace OrderService.Infrastructure.Implementations.Services
+namespace OrderService.Infrastructure.Implementations.Services.Stripe
 {
-    public class StripePaymentService: IPaymentService
+    public class StripePaymentService : IPaymentService
     {
-        private readonly StripeSettings _stripeSettings;
+        private readonly StripeOptions _stripeSettings;
 
-        public StripePaymentService(IOptions<StripeSettings> stripeSettings, ILogger<StripePaymentService> logger)
+        public StripePaymentService(IOptions<StripeOptions> stripeSettings, ILogger<StripePaymentService> logger)
         {
             _stripeSettings = stripeSettings.Value;
             StripeConfiguration.ApiKey = _stripeSettings.SecretKey;
@@ -62,7 +63,7 @@ namespace OrderService.Infrastructure.Implementations.Services
         public Guid? HandleWebhook(string json, string stripeSignature)
         {
             var endpointSecret = _stripeSettings.WebhookKey;
-            Event stripeEvent =  EventUtility.ConstructEvent(json, stripeSignature, endpointSecret,300,false);
+            Event stripeEvent = EventUtility.ConstructEvent(json, stripeSignature, endpointSecret, 300, false);
 
             if (stripeEvent.Type == "checkout.session.completed")
             {

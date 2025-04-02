@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using MealService.Infrastructure.DI;
-//using MealService.Infrastructure.Data;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,8 +58,6 @@ if (app.Environment.IsDevelopment())
 //{
 //    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider);
 //}
-
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
