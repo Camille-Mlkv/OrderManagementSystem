@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/account/users/{userName}/confirmation-email",
+      "DownstreamPathTemplate": "/api/account/{userName}/confirmation-email",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,12 +9,12 @@
           "Port": 5012
         }
       ],
-      "UpstreamPathTemplate": "/account/users/{userName}/confirmation-email",
+      "UpstreamPathTemplate": "/account/{userName}/confirmation-email",
       "UpstreamHttpMethod": [ "POST" ],
       "SwaggerKey": "User"
     },
     {
-      "DownstreamPathTemplate": "/api/account/users/{userName}/email/confirmed",
+      "DownstreamPathTemplate": "/api/account/{userName}/email/confirmed",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -22,12 +22,12 @@
           "Port": 5012
         }
       ],
-      "UpstreamPathTemplate": "/account/users/{userName}/email/confirmed",
+      "UpstreamPathTemplate": "/account/{userName}/email/confirmed",
       "UpstreamHttpMethod": [ "GET" ],
       "SwaggerKey": "User"
     },
     {
-      "DownstreamPathTemplate": "/api/account/users/{userName}/password-email",
+      "DownstreamPathTemplate": "/api/account/{userName}/password-email",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -35,12 +35,12 @@
           "Port": 5012
         }
       ],
-      "UpstreamPathTemplate": "/account/users/{userName}/password-email",
+      "UpstreamPathTemplate": "/account/{userName}/password-email",
       "UpstreamHttpMethod": [ "POST" ],
       "SwaggerKey": "User"
     },
     {
-      "DownstreamPathTemplate": "/api/account/users/{userName}/reset-code",
+      "DownstreamPathTemplate": "/api/account/{userName}/reset-code",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -48,7 +48,7 @@
           "Port": 5012
         }
       ],
-      "UpstreamPathTemplate": "/account/users/{userName}/reset-code",
+      "UpstreamPathTemplate": "/account/{userName}/reset-code",
       "UpstreamHttpMethod": [ "GET" ],
       "SwaggerKey": "User"
     },
@@ -102,6 +102,19 @@
       ],
       "UpstreamPathTemplate": "/auth/refresh",
       "UpstreamHttpMethod": [ "POST" ],
+      "SwaggerKey": "User"
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/roles",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/roles",
+      "UpstreamHttpMethod": [ "GET" ],
       "SwaggerKey": "User"
     }
   ]

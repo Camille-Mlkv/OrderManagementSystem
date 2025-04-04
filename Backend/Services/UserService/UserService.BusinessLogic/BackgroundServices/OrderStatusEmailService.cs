@@ -66,7 +66,7 @@ namespace UserService.BusinessLogic.BackgroundServices
 
                 var subject = $"Order {orderStatusDto.OrderNumber} status update";
                 var emailBody = $"Dear customer, your order {orderStatusDto.OrderNumber} obtained new status: {orderStatusDto.OrderStatus}.";
-                var emailAddress = await unitOfWork.UserRepository.GetUserEmailById(orderStatusDto.UserId.ToString(), eventArgs.CancellationToken);
+                var emailAddress = await unitOfWork.UserRepository.GetUserEmailByIdAsync(orderStatusDto.UserId.ToString(), eventArgs.CancellationToken);
 
                 await emailService.SendEmailAsync(emailAddress, subject, emailBody, eventArgs.CancellationToken);
 

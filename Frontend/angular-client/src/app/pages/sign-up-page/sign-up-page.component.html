@@ -1,0 +1,69 @@
+<div class="container mt-5">
+    <div class="mb-4 h2 text-success text-center">
+      Sign Up
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <input class="form-control bg-body-secondary" placeholder="Name" formControlName="name">
+        <div class="error-feedback" *ngIf="hasDisplayableError('name') && form.controls['name'].hasError('required')">
+          Please enter your full name.
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <input class="form-control bg-body-secondary" placeholder="Email" formControlName="email">
+        <div class="error-feedback" *ngIf="hasDisplayableError('email')">
+          <div *ngIf="form.controls['email'].hasError('required')">
+            Please enter your email address.
+          </div>
+          <div *ngIf="form.controls['email'].hasError('email')">
+            Please enter a valid email address.
+          </div>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <input class="form-control bg-body-secondary" placeholder="Phone number" formControlName="phoneNumber" required>
+        <div class="error-feedback" *ngIf="hasDisplayableError('phoneNumber')">
+          <div *ngIf="form.controls['phoneNumber'].hasError('required')">
+            Please enter your phone number.
+          </div>
+          <div *ngIf="form.controls['phoneNumber'].hasError('pattern')">
+            Phone number must be between 10 and 15 digits and can include an optional '+' at the beginning.
+          </div>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <input [type]="showPassword ? 'text' : 'password'"  class="form-control bg-body-secondary" placeholder="Password" formControlName="password">
+        <div class="form-check mt-2">
+          <input 
+            type="checkbox" 
+            class="form-check-input" 
+            id="showPassword" 
+            (change)="showPassword = !showPassword">
+          <label class="form-check-label" for="showPassword">Show password</label>
+        </div>
+
+        <div class="error-feedback" *ngIf="hasDisplayableError('password')">
+          <div *ngIf="form.controls['password'].hasError('required')">
+            Please enter your password.
+          </div>
+        </div>
+      </div>
+  
+      <div class="mb-3">
+        <select class="form-control bg-body-secondary" formControlName="role" required>
+          <option value="" disabled>Select Role</option>
+          <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+        </select>
+      </div>
+  
+      <div class="mt-4">
+        <button type="submit" class="btn btn-success w-100 rounded-3">
+          Register
+        </button>
+      </div>
+    </form>
+  </div>
+  

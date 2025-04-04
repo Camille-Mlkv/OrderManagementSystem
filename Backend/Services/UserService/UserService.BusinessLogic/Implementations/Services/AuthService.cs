@@ -131,5 +131,12 @@ namespace UserService.BusinessLogic.Implementations.Services
             await _unitOfWork.UserRepository.UpdateUserAsync(user, cancellationToken);
             await _unitOfWork.SaveAllAsync(cancellationToken);
         }
+
+        public async Task<List<string>> GetRolesAsync(CancellationToken cancellationToken)
+        {
+            var roles = await _unitOfWork.UserRepository.GetRolesAsync(cancellationToken);
+
+            return roles;
+        }
     }
 }

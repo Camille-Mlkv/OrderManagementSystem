@@ -55,5 +55,13 @@ namespace UserService.API.Controllers
 
             return Ok();
         }
+
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetRoles(CancellationToken cancellationToken)
+        {
+            var roles = await _authService.GetRolesAsync(cancellationToken);
+
+            return Ok(roles);
+        }
     }
 }
