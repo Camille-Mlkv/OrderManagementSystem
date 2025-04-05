@@ -34,5 +34,21 @@ export const routes: Routes = [
             )
         },
     },
+    {
+        path: 'forgot-password',
+        loadComponent: () =>{
+            return import('./pages/forgot-password-page/forgot-password-page.component').then(
+                m => m.ForgotPasswordPageComponent
+            )
+        },
+    },
+    { 
+        path: 'reset-password',
+        loadComponent: () =>{
+            return import('./pages/reset-password-page/reset-password-page.component').then(
+                m => m.ResetPasswordPageComponent
+            )
+        },
+    }
 
 ];

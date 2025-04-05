@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../services/account.service';
-import { Router } from '@angular/router';
+import { emailValidator } from '../../utilities/validators/email.validator';
+import { phoneValidator } from '../../utilities/validators/phone.validator';
+import { SignUpRequest } from '../../models/signup-request.model';
 
 @Component({
   selector: 'app-sign-up-page',
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './sign-up-page.component.html',
-  styleUrl: './sign-up-page.component.css'
+  styles: ``
 })
 export class SignUpPageComponent implements OnInit {
    form: FormGroup;
-   errors: any = {};
    roles: any = [];
    isSubmitted: boolean = false;
    showPassword: boolean = false;
@@ -29,31 +30,36 @@ export class SignUpPageComponent implements OnInit {
     });
   }
 
-  constructor(private formBuilder: FormBuilder, 
+  constructor(
+    private formBuilder: FormBuilder, 
     private authService: AuthService,
     private accountService: AccountService, 
-    private toastr: ToastrService,
-    private router: Router)
-  {
-    this.form = this.formBuilder.group({
+    private toastr: ToastrService)
+    {
+      this.form = this.buildForm();
+    }
+
+  private buildForm(): FormGroup {
+    return this.formBuilder.group({
       name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)]],
-      password: ['', [Validators.required]],
+      email: ['', [Validators.required, emailValidator]],
+      phoneNumber: ['', [Validators.required, phoneValidator]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
       role: ['', Validators.required]
     });
   }
 
   onSubmit() {
+    this.isSubmitted = true;
     if (this.form.valid) {
       const userData = this.form.value;
       this.registerUser(userData);
     }
   }
 
-  registerUser(userData: any): void {
+  private registerUser(userData: SignUpRequest): void {
     this.authService.createUser(userData).subscribe({
-      next: (result) => {
+      next: () => {
         this.toastr.success('Registration successful');
         this.sendConfirmationEmail(userData.email);
       },
@@ -68,7 +74,7 @@ export class SignUpPageComponent implements OnInit {
     });
   }
 
-  sendConfirmationEmail(email: string): void {
+  private sendConfirmationEmail(email: string): void {
     this.accountService.sendConfirmationEmail(email).subscribe({
       next: () => {
         this.toastr.success('Confirmation email sent to your email address');
@@ -81,8 +87,7 @@ export class SignUpPageComponent implements OnInit {
 
   hasDisplayableError(controlName: string): Boolean {
     const control = this.form.get(controlName);
-    return Boolean(control?.invalid) &&
-      (this.isSubmitted || Boolean(control?.touched)|| Boolean(control?.dirty))
+    return !!control && control.invalid && this.isSubmitted;
   }
   
 }

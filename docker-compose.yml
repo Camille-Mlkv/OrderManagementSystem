@@ -293,11 +293,13 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
       - ASPNETCORE_HTTPS_PORTS=${APIGATEWAY_PORT}
+      - ASPNETCORE_HTTP_PORTS=5010
     build:
       context: .
       dockerfile: Backend/APIGateway/APIGateway/Dockerfile
     ports:
       - ${APIGATEWAY_PORT}:${APIGATEWAY_PORT}
+      - 5010:5010
     depends_on:
       - userservice.api
 

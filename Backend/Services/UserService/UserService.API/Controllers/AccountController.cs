@@ -41,7 +41,7 @@ namespace UserService.API.Controllers
         [HttpPost("{userName}/password-email")]
         public async Task<IActionResult> ForgotPassword(string userName, CancellationToken cancellationToken)
         {
-            var callBack = Url.Action("GetPasswordResetCode", "Account", new { userName }, Request.Scheme);
+            var callBack = $"http://localhost:4200/reset-password?userName={userName}";
 
             await _accountService.ForgotPasswordAsync(callBack!,userName, cancellationToken);
 
