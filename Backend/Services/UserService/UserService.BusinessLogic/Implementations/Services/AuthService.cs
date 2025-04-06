@@ -48,12 +48,12 @@ namespace UserService.BusinessLogic.Implementations.Services
 
             if (user is null || !await _unitOfWork.UserRepository.CheckPasswordAsync(user, request.Password, cancellationToken))
             {
-                throw new UnauthorizedException("Cannot sign in.","Wrong credentials.");
+                throw new NotFoundException("Cannot sign in.","Wrong credentials.");
             }
 
             if (!user.EmailConfirmed)
             {
-                throw new UnauthorizedException("Cannot sign in.", " Account is not confirmed.");
+                throw new BadRequestException("Cannot sign in.", " Account is not confirmed.");
             }
 
             cancellationToken.ThrowIfCancellationRequested();

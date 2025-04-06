@@ -24,12 +24,15 @@ export class AuthService {
   signIn(credentials: SignInRequest): Observable<SignInResponse>{
     const url = this.baseURL+'/signin';
 
-    return this.httpClient.post<SignInResponse>(url, credentials)
-    .pipe(map(response => {
-      this.cookieService.set('accessToken', response.accessToken, {expires: 7, path: '/' });
-      this.cookieService.set('refreshToken', response.refreshToken, { expires: 7, path: '/' });
-      return response;
-    }))
+    return this.httpClient.post<SignInResponse>(url, credentials).pipe(
+      map((response) => {
+        if (response?.accessToken && response?.refreshToken) {
+          this.cookieService.set('accessToken', response.accessToken, { expires: 7, path: '/' });
+          this.cookieService.set('refreshToken', response.refreshToken, { expires: 7, path: '/' });
+        }
+        return response;
+      })
+    );
   }
 
   refreshAccessToken(): Observable<SignInResponse> {
@@ -86,5 +89,11 @@ export class AuthService {
     } catch {
       return null;
     }
+  }
+
+  getTokens(): { accessToken: string | null, refreshToken: string | null } {
+    const accessToken = this.cookieService.get('accessToken');
+    const refreshToken = this.cookieService.get('refreshToken');
+    return { accessToken, refreshToken };
   }
 }
