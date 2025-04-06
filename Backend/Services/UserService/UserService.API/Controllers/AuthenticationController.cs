@@ -31,7 +31,7 @@ namespace UserService.API.Controllers
         {
             var response=await _authService.SignInAsync(request, cancellationToken);
 
-            _logger.LogInformation($"User {request.UserName} successfully logged in.");
+            _logger.LogInformation($"User {request.Email} successfully logged in.");
 
             return Ok(response);
         }
@@ -39,7 +39,7 @@ namespace UserService.API.Controllers
         [HttpPost("refresh")]
         public async Task<IActionResult> RefreshAccessToken([FromBody] RefreshAccessTokenRequest request, CancellationToken cancellationToken)
         {
-            var response=await _authService.RefreshAccessTokenAsync(request, cancellationToken);
+            var response =await _authService.RefreshAccessTokenAsync(request, cancellationToken);
 
             _logger.LogInformation($"Access token for refresh token {request.RefreshToken} is refreshed.");
 

@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { AccountService } from '../../services/account.service';
 import { emailValidator } from '../../utilities/validators/email.validator';
 import { phoneValidator } from '../../utilities/validators/phone.validator';
-import { SignUpRequest } from '../../models/signup-request.model';
+import { SignUpRequest } from '../../models/signup-request';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -58,7 +58,7 @@ export class SignUpPageComponent implements OnInit {
   }
 
   private registerUser(userData: SignUpRequest): void {
-    this.authService.createUser(userData).subscribe({
+    this.authService.signUp(userData).subscribe({
       next: () => {
         this.toastr.success('Registration successful');
         this.sendConfirmationEmail(userData.email);

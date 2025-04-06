@@ -1,18 +1,90 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SignUpRequest } from '../models/signup-request';
+import { SignInRequest } from '../models/signin-request';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { SignInResponse } from '../models/sign-in-response';
+import {CookieService} from 'ngx-cookie-service';
+import {jwtDecode} from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private cookieService: CookieService) { }
+
   baseURL = 'http://localhost:5010/auth';
 
-  createUser(formData:any){
-    return this.httpClient.post(this.baseURL+'/signup',formData);
+  signUp(credentials: SignUpRequest){
+    const url = this.baseURL+'/signup';
+
+    return this.httpClient.post(url, credentials);
+  }
+
+  signIn(credentials: SignInRequest): Observable<SignInResponse>{
+    const url = this.baseURL+'/signin';
+
+    return this.httpClient.post<SignInResponse>(url, credentials)
+    .pipe(map(response => {
+      this.cookieService.set('accessToken', response.accessToken, {expires: 7, path: '/' });
+      this.cookieService.set('refreshToken', response.refreshToken, { expires: 7, path: '/' });
+      return response;
+    }))
+  }
+
+  refreshAccessToken(): Observable<SignInResponse> {
+    const url = this.baseURL + '/refresh';
+
+    const refreshToken = this.cookieService.get('refreshToken');
+    const accessToken = this.cookieService.get('accessToken');
+  
+    return this.httpClient.post<SignInResponse>(url, {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    })
+    .pipe(
+      map(response => {
+        this.cookieService.set('accessToken', response.accessToken, {expires: 7, path: '/' });
+        this.cookieService.set('refreshToken', response.refreshToken, { expires: 7, path: '/' });
+        return response;
+      }),
+      catchError(error => {
+        console.error('Error during token refresh:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  logout(){
+    this.cookieService.delete('accessToken', '/');
+    this.cookieService.delete('refreshToken', '/');
   }
 
   retrieveRoles(){
     return this.httpClient.get<string[]>(this.baseURL + '/roles');
+  }
+
+  getUserRole(): {role: string } | null {
+    const token = this.cookieService.get('accessToken');
+    if (!token) return null;
+  
+    try {
+      const decoded: any = jwtDecode(token);
+      return {role: decoded.Role};
+    } catch {
+      return null;
+    }
+  }
+
+  getUserId(): {id: string } | null {
+    const token = this.cookieService.get('accessToken');
+    if (!token) return null;
+  
+    try {
+      const decoded: any = jwtDecode(token);
+      return {id: decoded.sub};
+    } catch {
+      return null;
+    }
   }
 }

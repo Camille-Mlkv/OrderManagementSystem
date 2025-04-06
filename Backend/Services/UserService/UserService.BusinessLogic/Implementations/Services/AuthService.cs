@@ -44,7 +44,7 @@ namespace UserService.BusinessLogic.Implementations.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(request.UserName, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(request.Email, cancellationToken);
 
             if (user is null || !await _unitOfWork.UserRepository.CheckPasswordAsync(user, request.Password, cancellationToken))
             {
@@ -73,9 +73,8 @@ namespace UserService.BusinessLogic.Implementations.Services
 
             LoginResponse loginResponse = new()
             {
-                User = _mapper.Map<User>(user),
                 AccessToken = accessToken,
-                Expiration = expiry
+                RefreshToken = user.RefreshToken,
             };
 
             return loginResponse;
@@ -101,13 +100,12 @@ namespace UserService.BusinessLogic.Implementations.Services
 
             var roles = await _unitOfWork.UserRepository.GetUserRolesAsync(user, cancellationToken);
 
-            var accessToken = _tokenService.GenerateAccessToken(user, roles);
+            var accessTokenData = _tokenService.GenerateAccessToken(user, roles);
 
             LoginResponse loginResponseDTO = new()
             {
-                User = _mapper.Map<User>(user),
-                AccessToken = accessToken.AccessToken,
-                Expiration = accessToken.Expiry,
+                AccessToken = accessTokenData.AccessToken,
+                RefreshToken = user.RefreshToken,
             };
 
             return loginResponseDTO;

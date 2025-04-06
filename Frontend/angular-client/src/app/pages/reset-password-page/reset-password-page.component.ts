@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordMatchValidator } from '../../utilities/validators/password.match.validator';
-import { ResetPasswordRequest } from '../../models/reset-password-request.model';
+import { ResetPasswordRequest } from '../../models/reset-password-request';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reset-password-page',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './reset-password-page.component.html',
-  styleUrl: './reset-password-page.component.css'
+  styles: ``
 })
 export class ResetPasswordPageComponent implements OnInit {
   form: FormGroup;
@@ -26,7 +26,8 @@ export class ResetPasswordPageComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private accountService: AccountService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router,
   ) 
   {
     this.form = this.formBuilder.group(
@@ -73,7 +74,7 @@ export class ResetPasswordPageComponent implements OnInit {
 
   sendResetRequest(data: ResetPasswordRequest) {
     this.accountService.resetPassword(data).subscribe({
-      next: () => this.toastr.success('Password reset successfully'),
+      next: () => this.router.navigate(['/password-reset-confirmation']),
       error: () => this.toastr.error('Password reset failed')
     });
   }

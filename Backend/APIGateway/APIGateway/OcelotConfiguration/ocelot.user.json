@@ -105,6 +105,19 @@
       "SwaggerKey": "User"
     },
     {
+      "DownstreamPathTemplate": "/api/auth/revoke",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/auth/revoke",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "SwaggerKey": "User"
+    },
+    {
       "DownstreamPathTemplate": "/api/auth/roles",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
