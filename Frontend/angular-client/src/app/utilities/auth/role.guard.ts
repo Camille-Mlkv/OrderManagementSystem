@@ -7,14 +7,14 @@ export const RoleGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const expectedRoles = route.data['roles'] as string[];
-  const user = authService.getUserRole(); 
+  const role = authService.getClaim<string>('Role');
 
-  if (!user) {
+  if (!role) {
     router.navigate(['/sign-in']);
     return false;
   }
 
-  if (expectedRoles && !expectedRoles.includes(user.role)) {
+  if (expectedRoles && !expectedRoles.includes(role)) {
     router.navigate(['/sign-in']);
     return false;
   }

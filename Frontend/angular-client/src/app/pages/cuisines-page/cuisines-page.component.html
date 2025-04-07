@@ -1,0 +1,17 @@
+<div class="container">
+    <h1 class="main-title">Explore our cuisines</h1>
+    <div class="cuisines-grid">
+      <div class="cuisine-card" *ngFor="let cuisine of cuisines" 
+      (click)="navigateToCuisine(cuisine)">
+        <img
+          [src]="transformImage(cuisine.imageUrl)"
+          alt="{{ cuisine.name }}"
+          class="cuisine-image"
+        />
+        <div class="cuisine-name">
+          {{ cuisine.name }}
+        </div>
+      </div>
+    </div>
+</div>
+  

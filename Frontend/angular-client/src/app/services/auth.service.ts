@@ -2,10 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { SignUpRequest } from '../models/signup-request';
 import { SignInRequest } from '../models/signin-request';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, Subject, throwError } from 'rxjs';
 import { SignInResponse } from '../models/sign-in-response';
 import {CookieService} from 'ngx-cookie-service';
 import {jwtDecode} from 'jwt-decode';
+import { access } from 'fs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,13 @@ import {jwtDecode} from 'jwt-decode';
 export class AuthService {
   constructor(private httpClient: HttpClient, private cookieService: CookieService) { }
 
-  baseURL = 'http://localhost:5010/auth';
+  private baseURL = 'http://localhost:5010/auth';
+  private authChangeSub = new Subject<boolean>()
+  authChanged = this.authChangeSub.asObservable();
+
+  sendAuthStateChangeNotification = (isAuthenticated: boolean) => {
+    this.authChangeSub.next(isAuthenticated);
+  }
 
   signUp(credentials: SignUpRequest){
     const url = this.baseURL+'/signup';
@@ -67,25 +74,13 @@ export class AuthService {
     return this.httpClient.get<string[]>(this.baseURL + '/roles');
   }
 
-  getUserRole(): {role: string } | null {
+  getClaim<T>(claimName: string): T | null {
     const token = this.cookieService.get('accessToken');
     if (!token) return null;
   
     try {
       const decoded: any = jwtDecode(token);
-      return {role: decoded.Role};
-    } catch {
-      return null;
-    }
-  }
-
-  getUserId(): {id: string } | null {
-    const token = this.cookieService.get('accessToken');
-    if (!token) return null;
-  
-    try {
-      const decoded: any = jwtDecode(token);
-      return {id: decoded.sub};
+      return decoded[claimName] || null;
     } catch {
       return null;
     }
@@ -95,5 +90,10 @@ export class AuthService {
     const accessToken = this.cookieService.get('accessToken');
     const refreshToken = this.cookieService.get('refreshToken');
     return { accessToken, refreshToken };
+  }
+
+  isAuthenticated(): boolean {
+    const { accessToken, refreshToken } = this.getTokens();
+    return !!accessToken && !!refreshToken;
   }
 }

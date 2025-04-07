@@ -3,12 +3,20 @@
     <a routerLink="/" class="logo-link">OMS</a>
   </div>
   <div class="buttons">
-    <ul>
+    <ul *ngIf='!isUserAuthenticated'>
       <li>
         <a routerLink="/sign-up" class="btn">Sign Up</a>
       </li>
       <li>
         <a routerLink="/sign-in" class="btn">Sign In</a>
+      </li>
+    </ul>
+    <ul *ngIf='isUserAuthenticated' style="display: flex; align-items: center;">
+      <li style="color: white;">
+        Hello, {{ userName }}
+      </li>
+      <li>
+        <a (click)="onLogout()" class="btn" style="cursor: pointer;">Log out</a>
       </li>
     </ul>
   </div>

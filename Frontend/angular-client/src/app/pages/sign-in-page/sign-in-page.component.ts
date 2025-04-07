@@ -5,11 +5,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { emailValidator } from '../../utilities/validators/email.validator';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in-page',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
   templateUrl: './sign-in-page.component.html',
   styles: ``
 })
@@ -40,7 +40,8 @@ export class SignInPageComponent {
   private signIn(credentials: SignInRequest): void {
     this.authService.signIn(credentials).subscribe({
       next: () => {
-        this.toastr.success('Sign in successful');
+        this.authService.sendAuthStateChangeNotification(true);
+        this.router.navigate(['']);
       },
       error: (error) => {
         const errorMessage = error.error?.Message || 'An unexpected error occurred';
