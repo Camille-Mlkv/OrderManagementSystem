@@ -1,4 +1,5 @@
-﻿using MealService.Domain.Entities;
+﻿using MealService.Application.DTOs;
+using MealService.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace MealService.Application.Specifications.Repositories
@@ -18,7 +19,7 @@ namespace MealService.Application.Specifications.Repositories
         Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken,
             params Expression<Func<T, object>>[]? includesProperties);
 
-        Task<List<T>> GetPagedListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken, Expression<Func<T, bool>>? filter = null);
+        Task<PagedList<T>> GetPagedListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken, Expression<Func<T, bool>>? filter = null);
 
         Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
 

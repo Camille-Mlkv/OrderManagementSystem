@@ -12,7 +12,7 @@ import { Cuisine } from '../../models/cuisine';
   styleUrl: './cuisines-page.component.css'
 })
 export class CuisinesPageComponent implements OnInit {
-  cuisines:  Cuisine[] = [];;
+  cuisines:  Cuisine[] = [];
   constructor(private cuisineService: CuisineService, private router: Router){}
 
   ngOnInit(): void {
@@ -26,7 +26,6 @@ export class CuisinesPageComponent implements OnInit {
   }
 
   navigateToCuisine(cuisine: any) {
-    this.router.navigate(['/sign-in' ]); // navigate to meals page with cuisine.id
+    this.router.navigate(['/meals', cuisine.id]);
   }
-
 }

@@ -22,15 +22,14 @@
 .cuisine-card {
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
     width: 100%;
     max-width: 300px; 
     cursor: pointer;
 }
   
 .cuisine-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: scale(1.01)
 }
   
 .cuisine-image {

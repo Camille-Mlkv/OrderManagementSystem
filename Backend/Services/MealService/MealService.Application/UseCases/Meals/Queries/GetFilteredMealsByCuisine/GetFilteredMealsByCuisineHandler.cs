@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using LinqKit;
+using MealService.Application.DTOs;
 using MealService.Application.DTOs.Meals;
 using MealService.Application.Exceptions;
 using MealService.Application.Specifications;
@@ -8,7 +9,7 @@ using MediatR;
 
 namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisine
 {
-    public class GetFilteredMealsByCuisineHandler : IRequestHandler<GetFilteredMealsByCuisineQuery, List<MealDto>>
+    public class GetFilteredMealsByCuisineHandler : IRequestHandler<GetFilteredMealsByCuisineQuery, PagedList<MealDto>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -19,7 +20,7 @@ namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisi
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<MealDto>> Handle(GetFilteredMealsByCuisineQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<MealDto>> Handle(GetFilteredMealsByCuisineQuery request, CancellationToken cancellationToken)
         {
             if (request.PageNo < 1 || request.PageSize < 1)
             {
@@ -64,16 +65,20 @@ namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisi
                 predicate = predicate.And(m => m.Calories >= filter.MinCalories);
             }
 
-            var meals = await _unitOfWork.MealRepository.GetPagedListAsync(
+            var mealsList = await _unitOfWork.MealRepository.GetPagedListAsync(
                 request.PageNo,
                 request.PageSize,
                 cancellationToken,
                 predicate
             );
 
-            var mealDtos = _mapper.Map<List<MealDto>>(meals);
+            var mealDtos = _mapper.Map<List<MealDto>>(mealsList.Items);
 
-            return mealDtos;
+            return new PagedList<MealDto>
+            {
+                Items = mealDtos,
+                TotalCount = mealsList.TotalCount
+            };
         }
     }
 }

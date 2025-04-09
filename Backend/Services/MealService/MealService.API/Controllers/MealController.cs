@@ -25,9 +25,14 @@ namespace MealService.API.Controllers
         }
 
         [HttpGet("cuisine/{cuisineId}")]
-        public async Task<IActionResult> GetMealsByCuisine(Guid cuisineId, bool? isAvailable, int pageNo=1,int pageSize=3)
+        public async Task<IActionResult> GetMealsByCuisine(Guid cuisineId,
+                                                           bool? isAvailable, 
+                                                           CancellationToken cancellationToken,
+                                                           int pageNo=1,
+                                                           int pageSize=3)
         {
-            var meals = await _mediator.Send(new GetMealsByCuisineQuery(cuisineId, pageNo, pageSize, isAvailable));
+            var meals = await _mediator.Send(new 
+               GetMealsByCuisineQuery(cuisineId, pageNo, pageSize, isAvailable), cancellationToken);
 
             _logger.LogInformation($"Meals retrieved.");
 
@@ -35,9 +40,14 @@ namespace MealService.API.Controllers
         }
 
         [HttpGet("cuisine/{cuisineId}/filtered")]
-        public async Task<IActionResult> GetFilteredMealsByCuisine(Guid cuisineId,[FromQuery] MealFilterDto filter,int pageNo=1,int pageSize=3)
+        public async Task<IActionResult> GetFilteredMealsByCuisine(Guid cuisineId,
+                                                                   [FromQuery] MealFilterDto filter,
+                                                                   CancellationToken cancellationToken,
+                                                                   int pageNo=1, 
+                                                                   int pageSize=3)
         {
-            var meals = await _mediator.Send(new GetFilteredMealsByCuisineQuery(cuisineId, filter, pageNo, pageSize));
+            var meals = await _mediator.Send(new 
+               GetFilteredMealsByCuisineQuery(cuisineId, filter, pageNo, pageSize), cancellationToken);
 
             _logger.LogInformation($"Filtered meals retrieved.");
 
@@ -45,9 +55,9 @@ namespace MealService.API.Controllers
         }
 
         [HttpGet("{mealId}")]
-        public async Task<IActionResult> GetMealById(Guid mealId)
+        public async Task<IActionResult> GetMealById(Guid mealId, CancellationToken cancellationToken)
         {
-            var mealDto = await _mediator.Send(new GetMealByIdQuery(mealId));
+            var mealDto = await _mediator.Send(new GetMealByIdQuery(mealId), cancellationToken);
 
             _logger.LogInformation($"Data for meal {mealId} is loaded.");
 
@@ -55,9 +65,9 @@ namespace MealService.API.Controllers
         }
 
         [HttpGet("name/{name}")]
-        public async Task<IActionResult> GetMealsByName(string name)
+        public async Task<IActionResult> GetMealsByName(string name, CancellationToken cancellationToken)
         {
-            var meals = await _mediator.Send(new GetMealsByNameQuery(name));
+            var meals = await _mediator.Send(new GetMealsByNameQuery(name), cancellationToken);
 
             _logger.LogInformation($"Meals retrieved by name {name}.");
 
@@ -65,7 +75,9 @@ namespace MealService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMeal([FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateMeal([FromForm] MealRequestDto meal, 
+                                                    IFormFile? imageFile, 
+                                                    CancellationToken cancellationToken)
         {
             if (imageFile != null)
             {
@@ -90,7 +102,10 @@ namespace MealService.API.Controllers
         }
 
         [HttpPut("{mealId}")]
-        public async Task<IActionResult> UpdateMeal(Guid mealId, [FromForm] MealRequestDto meal, IFormFile? imageFile, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateMeal(Guid mealId, 
+                                                    [FromForm] MealRequestDto meal, 
+                                                    IFormFile? imageFile, 
+                                                    CancellationToken cancellationToken)
         {
             if (imageFile != null)
             {

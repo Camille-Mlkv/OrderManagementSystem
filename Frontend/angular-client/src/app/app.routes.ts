@@ -9,6 +9,7 @@ import { ResetPasswordPageComponent } from './pages/reset-password-page/reset-pa
 import { RoleGuard } from './utilities/auth/role.guard';
 import { Role } from './models/role';
 import { CuisinesPageComponent } from './pages/cuisines-page/cuisines-page.component';
+import { MealsPageComponent } from './pages/meals-page/meals-page.component';
 
 export const routes: Routes = [
     {path:"", component: HomePageComponent, pathMatch:"full"},
@@ -18,5 +19,6 @@ export const routes: Routes = [
     {path: "forgot-password", component: ForgotPasswordPageComponent},
     {path: "reset-password", component: ResetPasswordPageComponent},
     {path:"password-reset-confirmation", component: PasswordResetConfirmationPageComponent},
-    {path:"cuisines", component: CuisinesPageComponent}
+    {path:"cuisines", component: CuisinesPageComponent},
+    { path: "meals/:cuisineId",component: MealsPageComponent}
 ];

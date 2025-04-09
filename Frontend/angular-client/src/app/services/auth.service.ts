@@ -6,17 +6,17 @@ import { catchError, map, Observable, Subject, throwError } from 'rxjs';
 import { SignInResponse } from '../models/sign-in-response';
 import {CookieService} from 'ngx-cookie-service';
 import {jwtDecode} from 'jwt-decode';
-import { access } from 'fs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient, private cookieService: CookieService) { }
-
-  private baseURL = 'http://localhost:5010/auth';
+  private baseURL = `${environment.apiUrl}/auth`;
   private authChangeSub = new Subject<boolean>()
   authChanged = this.authChangeSub.asObservable();
+  
+  constructor(private httpClient: HttpClient, private cookieService: CookieService) { }
 
   sendAuthStateChangeNotification = (isAuthenticated: boolean) => {
     this.authChangeSub.next(isAuthenticated);
