@@ -1,0 +1,48 @@
+.container {
+    margin: 0 auto;
+    padding: 40px;
+    text-align: center;
+}
+  
+h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+  
+p {
+    font-size: 20px;
+    margin: 5px 0;
+}
+  
+.tags {
+    margin-top: 20px;
+}
+  
+.tag {
+    display: inline-block;
+    background-color: #ebf7f8;
+    color: #00796b;
+    border-radius: 15px;
+    padding: 6px 12px;
+    margin: 4px;
+    font-size: 14px;
+    cursor: help;
+    transition: background-color 0.2s ease;
+}
+  
+.tag:hover {
+    background-color: #baf1d8;
+}
+  
+
+.back-button {
+    color: #2d8655;
+    text-decoration: none;
+    background-color: #f0ede4;
+    border: 2px solid #2d8655;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 8px 16px;
+    margin-top: 16px;
+}

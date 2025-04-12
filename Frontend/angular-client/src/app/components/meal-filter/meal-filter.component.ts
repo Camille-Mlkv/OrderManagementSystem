@@ -6,6 +6,9 @@ import { TagService } from '../../services/tag.service';
 import { MealFilterDto } from '../../models/meal-filter';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Cuisine } from '../../models/cuisine';
+import { CuisineService } from '../../services/cuisine.service';
+import { AuthContext } from '../../auth/auth-context';
 
 @Component({
   selector: 'app-meal-filter',
@@ -14,8 +17,11 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './meal-filter.component.css'
 })
 export class MealFilterComponent implements OnInit {
+  isAvailable: boolean | null = null;
+  cuisines: Cuisine[]=[];
   categories: Category[] = [];
   tags: Tag[] = [];
+  selectedCuisine: string = '';
   selectedCategory: string = '';
   selectedTags: string[] = [];
   minPrice: number | null = null;
@@ -27,16 +33,21 @@ export class MealFilterComponent implements OnInit {
 
   constructor(
     private categoryService: CategoryService,
-    private tagService: TagService
+    private tagService: TagService,
+    private cuisineService: CuisineService,
+    public authContext: AuthContext
   ) {}
 
   ngOnInit(): void {
     this.categoryService.getCategories().subscribe(categories => this.categories = categories);
     this.tagService.getTags().subscribe(tags => this.tags = tags);
+    this.cuisineService.getCuisines().subscribe(cuisines => this.cuisines = cuisines);
   }
 
   applyFilters(): void {
     const filter: MealFilterDto = {
+      IsAvailable: this.isAvailable ? this.isAvailable : null,
+      CuisineId: this.selectedCuisine ?  this.selectedCuisine : null,
       CategoryId: this.selectedCategory ? this.selectedCategory : null,
       TagIds: this.selectedTags.length > 0 ? this.selectedTags : [],
       MinPrice: this.minPrice,
@@ -49,7 +60,9 @@ export class MealFilterComponent implements OnInit {
   }
 
   resetFilters(): void {
+    this.isAvailable = null;
     this.selectedCategory = '';
+    this.selectedCuisine = '';
     this.selectedTags = [];
     this.minPrice = null;
     this.maxPrice = null;

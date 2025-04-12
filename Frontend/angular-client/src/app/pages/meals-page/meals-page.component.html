@@ -2,12 +2,11 @@
     <app-meal-filter (filterChanged)="onFilterChanged($event)"></app-meal-filter>
   
     <div class="meals-grid">
-      <div class="meal-card" *ngFor="let meal of meals">
+      <div class="meal-card" *ngFor="let meal of meals" (click)="goToMealInfo(meal.id)">
         <img [src]="transformImage(meal.imageUrl)" alt="{{ meal.name }}" class="meal-image" />
   
         <div class="meal-content">
           <h3>{{ meal.name }}</h3>
-          <p>{{ meal.description }}</p>
           <p><strong>{{ meal.price}} $</strong></p>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { Tag } from "./tag";
+
 export interface Meal {
     id: string;
     name: string;
@@ -8,5 +10,5 @@ export interface Meal {
     imageUrl: string;
     categoryId: string;
     cuisineId: string;
-    tags: { name: string }[];
+    tags: Tag[];
 }

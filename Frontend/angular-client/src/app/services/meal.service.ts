@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { PagedList } from '../models/paged-list';
 import { MealFilterDto } from '../models/meal-filter';
 import { environment } from '../../environments/environment';
+import { MealRequest } from '../models/meal-request';
 
 @Injectable({
   providedIn: 'root'
@@ -12,23 +13,9 @@ import { environment } from '../../environments/environment';
 export class MealService {
   private baseURL = `${environment.apiUrl}/meals`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private httpClient: HttpClient) {}
 
-  getMealsByCuisine(
-    cuisineId: string,
-    pageNo: number,
-    pageSize: number,
-  ): Observable<PagedList<Meal>> 
-  {
-    let params = new HttpParams()
-      .set('pageNo', pageNo)
-      .set('pageSize', pageSize);
-
-    return this.http.get<PagedList<Meal>>(`${this.baseURL}/cuisine/${cuisineId}`, { params });
-  }
-
-  getFilteredMealsByCuisine(
-    cuisineId: string,
+  getFilteredMeals(
     pageNo = 1,
     pageSize = 3,
     filter: MealFilterDto){
@@ -37,6 +24,12 @@ export class MealService {
     .set('pageNo', pageNo.toString())
     .set('pageSize', pageSize.toString());
 
+    if(filter.IsAvailable !== null){
+      params = params.set('IsAvailable', filter.IsAvailable);
+    }
+    if (filter.CuisineId) {
+      params = params.set('CuisineId', filter.CuisineId);
+    }
     if (filter.CategoryId) {
       params = params.set('CategoryId', filter.CategoryId);
     }
@@ -56,6 +49,19 @@ export class MealService {
       params = params.set('MaxCalories', filter.MaxCalories.toString());
     }
 
-    return this.http.get<PagedList<Meal>>(`${this.baseURL}/cuisine/${cuisineId}/filtered`, { params });
+    return this.httpClient.get<PagedList<Meal>>(`${this.baseURL}`, { params });
   }
+
+  getMealInfoById(id: string): Observable<Meal>{
+    return this.httpClient.get<Meal>(`${this.baseURL}/${id}`);
+  }
+
+  createMeal(meal: MealRequest): Observable<any>{
+    return this.httpClient.post<Meal>(this.baseURL, meal);
+  }
+
+  updateMeal(id: string, meal: MealRequest):Observable<any>{
+    return this.httpClient.put<Meal>(`${this.baseURL}/${id}`, meal);
+  }
+
 }

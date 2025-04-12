@@ -6,7 +6,7 @@ import {
   HttpHandlerFn
 } from '@angular/common/http';
 import { catchError, of, switchMap, throwError } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
 

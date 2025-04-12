@@ -22,6 +22,8 @@ export class MealsPageComponent implements OnInit {
   pageSize: number = 3;
 
   filter: MealFilterDto = {
+    IsAvailable: true,
+    CuisineId: null,
     CategoryId: null,
     TagIds: [],
     MinPrice: null,
@@ -37,11 +39,14 @@ export class MealsPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.cuisineId = this.route.snapshot.paramMap.get('cuisineId')!;
+    this.filter.CuisineId = this.cuisineId;
+    this.filter.IsAvailable = true;
+
     this.loadMeals();
   }
 
   loadMeals(): void {
-    this.mealService.getFilteredMealsByCuisine(this.cuisineId, this.currentPage, this.pageSize, this.filter).subscribe((mealsList: PagedList<Meal>) => {
+    this.mealService.getFilteredMeals(this.currentPage, this.pageSize, this.filter).subscribe((mealsList: PagedList<Meal>) => {
       this.meals = mealsList.items; 
       this.totalPages = Math.ceil(mealsList.totalCount / this.pageSize);
     });
@@ -57,6 +62,9 @@ export class MealsPageComponent implements OnInit {
   }
 
   onFilterChanged(filter: MealFilterDto): void {
+    filter.IsAvailable = true;
+    filter.CuisineId = this.cuisineId;
+    
     this.filter = filter; 
     this.currentPage = 1; 
     this.loadMeals();
@@ -64,5 +72,9 @@ export class MealsPageComponent implements OnInit {
 
   onBack(){
     this.router.navigate(['/cuisines']);
+  }
+
+  goToMealInfo(id: string): void {
+    this.router.navigate(['/meal',id]);
   }
 }

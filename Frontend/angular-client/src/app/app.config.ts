@@ -7,7 +7,7 @@ import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi 
 
 import { ToastrModule  } from 'ngx-toastr';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { authInterceptor } from './utilities/auth/auth-interceptor';
+import { authInterceptor } from './auth/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), 

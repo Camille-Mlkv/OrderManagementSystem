@@ -28,8 +28,8 @@ namespace UserService.BusinessLogic.Implementations.Services
             {
                 new Claim(JwtRegisteredClaimNames.Email,user.Email),
                 new Claim(JwtRegisteredClaimNames.Sub,user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Name,user.Name),
-                //new Claim(ClaimTypes.Name, user.UserName)
             };
 
             claimList.AddRange(roles.Select(role => new Claim("Role", role)));

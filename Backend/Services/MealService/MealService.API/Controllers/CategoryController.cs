@@ -4,6 +4,7 @@ using MealService.Application.UseCases.Categories.Commands.DeleteCategory;
 using MealService.Application.UseCases.Categories.Commands.UpdateCategory;
 using MealService.Application.UseCases.Categories.Queries.GetCategories;
 using MealService.Application.UseCases.Categories.Queries.GetCategoriesByName;
+using MealService.Application.UseCases.Categories.Queries.GetCategoryById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,16 @@ namespace MealService.API.Controllers
             _logger.LogInformation($"Categories retrieved by name {name}.");
 
             return Ok(categories);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCategoryById(Guid id, CancellationToken cancellationToken)
+        {
+            var category = await _mediator.Send(new GetCategoryByIdQuery(id), cancellationToken);
+
+            _logger.LogInformation($"Category with id {id} retrieved.");
+
+            return Ok(category);
         }
 
         [HttpPost]

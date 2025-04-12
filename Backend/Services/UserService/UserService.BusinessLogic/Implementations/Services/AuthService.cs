@@ -6,6 +6,7 @@ using UserService.BusinessLogic.DTOs.Responses;
 using UserService.BusinessLogic.DTOs;
 using AutoMapper;
 using UserService.BusinessLogic.Exceptions;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace UserService.BusinessLogic.Implementations.Services
 {
@@ -83,6 +84,12 @@ namespace UserService.BusinessLogic.Implementations.Services
         public async Task<LoginResponse> RefreshAccessTokenAsync(RefreshAccessTokenRequest request, CancellationToken cancellationToken)
         {
             var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
+            //var emailClaim = principal?.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
+
+            //if (string.IsNullOrEmpty(emailClaim))
+            //{
+            //    throw new BadRequestException("Access token not refreshed.", "Old access token is invalid.");
+            //}
             if (principal?.Identity?.Name is null)
             {
                 throw new BadRequestException("Access token not refreshed.", "Old access token is invalid.");

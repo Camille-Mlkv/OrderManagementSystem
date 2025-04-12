@@ -1,26 +1,29 @@
-﻿using AutoMapper;
-using LinqKit;
+﻿using MealService.Application.DTOs.Meals;
 using MealService.Application.DTOs;
-using MealService.Application.DTOs.Meals;
-using MealService.Application.Exceptions;
-using MealService.Application.Specifications;
-using MealService.Domain.Entities;
 using MediatR;
+using AutoMapper;
+using MealService.Application.Specifications;
+using LinqKit;
+using MealService.Application.Exceptions;
+using MealService.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
-namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisine
+namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMeals
 {
-    public class GetFilteredMealsByCuisineHandler : IRequestHandler<GetFilteredMealsByCuisineQuery, PagedList<MealDto>>
+    public class GetFilteredMealsHandler : IRequestHandler<GetFilteredMealsQuery, PagedList<MealDto>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<GetFilteredMealsHandler> _logger;
 
-        public GetFilteredMealsByCuisineHandler(IMapper mapper, IUnitOfWork unitOfWork)
+        public GetFilteredMealsHandler(IMapper mapper, IUnitOfWork unitOfWork, ILogger<GetFilteredMealsHandler> logger)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
-        public async Task<PagedList<MealDto>> Handle(GetFilteredMealsByCuisineQuery request, CancellationToken cancellationToken)
+        public async Task<PagedList<MealDto>> Handle(GetFilteredMealsQuery request, CancellationToken cancellationToken)
         {
             if (request.PageNo < 1 || request.PageSize < 1)
             {
@@ -28,11 +31,17 @@ namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMealsByCuisi
             }
 
             var filter = request.Filter;
-            var predicate = PredicateBuilder.New<Meal>(m => m.CuisineId == request.CuisineId);
+            var predicate = PredicateBuilder.New<Meal>(true);
 
             if (filter.IsAvailable.HasValue)
             {
                 predicate = predicate.And(m => m.IsAvailable == filter.IsAvailable);
+                _logger.LogInformation("Is available if");
+            }
+
+            if (filter.CuisineId.HasValue)
+            {
+                predicate = predicate.And(m => m.CuisineId == filter.CuisineId);
             }
 
             if (filter.CategoryId.HasValue)

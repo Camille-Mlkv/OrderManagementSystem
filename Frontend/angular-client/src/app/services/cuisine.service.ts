@@ -15,4 +15,8 @@ export class CuisineService {
   getCuisines(): Observable<Cuisine[]> {
     return this.httpClient.get<Cuisine[]>(this.baseURL);
   }
+
+  getCuisineById(id: string): Observable<Cuisine>{
+    return this.httpClient.get<Cuisine>(`${this.baseURL}/${id}`)
+  }
 }

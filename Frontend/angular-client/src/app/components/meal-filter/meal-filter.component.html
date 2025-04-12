@@ -1,4 +1,13 @@
 <div class="meal-filters">
+
+  <div  *ngIf='authContext.isAdmin' class="filter-section">
+    <label for="cuisine">Cuisine</label>
+    <select id="cuisine" [(ngModel)]="selectedCuisine">
+      <option value="">All</option>
+      <option *ngFor="let cuisine of cuisines" [value]="cuisine.id">{{ cuisine.name }}</option>
+    </select>
+  </div>
+
   <div class="filter-section">
     <label for="category">Category</label>
     <select id="category" [(ngModel)]="selectedCategory">
@@ -28,6 +37,13 @@
 
     <label for="maxPrice" style="margin-top: 0.5rem;">Max Price</label>
     <input type="number" id="maxPrice" [(ngModel)]="maxPrice" />
+  </div>
+
+  <div *ngIf="authContext.isAdmin" class="filter-section" style="justify-content: center;">
+    <label class="checkbox-label">
+      <input type="checkbox" [(ngModel)]="isAvailable"/>
+      Only available meals
+    </label>
   </div>
 
   <div class="filter-section filter-actions">

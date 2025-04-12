@@ -1,0 +1,56 @@
+<div class="container">
+  <h2>Meal Catalog</h2>
+  <app-meal-filter (filterChanged)="onFilterChanged($event)"></app-meal-filter>
+
+  <div class="create-meal-button">
+    <button [routerLink]="['/create-meal']" class="btn btn-primary">Create Meal</button>
+  </div>
+
+    <table class="meals-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price ($)</th>
+          <th>Calories</th>
+          <th>Availability</th> 
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let meal of meals" (click)="OnMealInfo(meal.id)">
+          <td>{{ meal.name }}</td>
+          <td>{{ meal.price }}</td>
+          <td>{{ meal.calories }}</td>
+          <td>
+            <i *ngIf="meal.isAvailable" class="fa fa-check-circle" style="color: green;"></i>
+            <i *ngIf="!meal.isAvailable" class="fa fa-times-circle" style="color: red;"></i>
+          </td>
+          <td>
+            <button [routerLink]="['/update-meal', meal.id]" class="btn btn-warning">
+              <i class="fa fa-edit"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="pagination">
+      <button 
+        (click)="changePage(currentPage - 1)" 
+        [disabled]="currentPage === 1" 
+        class="pagination-button">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+  
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+  
+      <button 
+        (click)="changePage(currentPage + 1)" 
+        [disabled]="currentPage === totalPages" 
+        class="pagination-button">
+        <i class="fa fa-chevron-right"></i>
+      </button>
+    </div>
+  
+  </div>
+  

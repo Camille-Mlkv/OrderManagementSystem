@@ -37,3 +37,28 @@
 .btn:hover {
   background-color: #d6d1c3;
 }
+
+.menu {
+  display: flex;
+  margin-right: auto;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 5px 10px;
+}
+
+.menu a:hover {
+  background-color: #d6d1c3;
+  border-radius: 5px;
+}
+
+.main-content {
+  margin-top: 60px;
+  padding: 20px;
+  flex: 1;
+}
