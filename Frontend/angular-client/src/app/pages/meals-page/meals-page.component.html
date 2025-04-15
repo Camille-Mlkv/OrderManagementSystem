@@ -9,9 +9,14 @@
           <h3>{{ meal.name }}</h3>
           <p><strong>{{ meal.price}} $</strong></p>
         </div>
+
+        <button *ngIf="authContext.isClient" class="add-to-cart-button" (click)="onAddItem(meal); $event.stopPropagation()" >
+          <i class="fas fa-cart-plus"></i>
+        </button>
+
       </div>
     </div>
-  
+
     <div class="pagination">
         <button 
           (click)="currentPage > 1 && changePage(currentPage - 1)" 

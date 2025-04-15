@@ -7,6 +7,10 @@
       <a routerLink="/meals-table">Meals Management</a>
       <a routerLink="/orders-table">Orders Management</a>
     </div>
+    <div *ngIf="authContext.isClient">
+      <a routerLink="/cart">Cart</a>
+      <a routerLink="/cuisines">Catalog</a>
+    </div>
   </nav>
   <div class="buttons">
     <ul *ngIf='!authContext.isAuthenticated'>

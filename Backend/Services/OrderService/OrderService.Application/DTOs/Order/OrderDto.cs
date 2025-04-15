@@ -1,5 +1,4 @@
-﻿using OrderService.Application.DTOs.Address;
-using OrderService.Application.DTOs.Meal;
+﻿using OrderService.Application.DTOs.Meal;
 
 namespace OrderService.Application.DTOs.Order
 {
@@ -10,7 +9,7 @@ namespace OrderService.Application.DTOs.Order
         public Guid ClientId { get; set; }
         public Guid? CourierId { get; set; }
         public string Status { get; set; }
-        public AddressDto Address { get; set; } = new();
+        public string Address { get; set; }
         public List<OrderMealDto> Meals { get; set; } = new();
         public decimal TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; }

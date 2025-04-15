@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Application.DTOs.Address;
 using OrderService.Application.Exceptions;
 using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByClient;
 using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByCourier;
@@ -15,6 +14,7 @@ using OrderService.Application.UseCases.Orders.Queries.GetOpenedOrders;
 using OrderService.Application.UseCases.Orders.Queries.GetOrderById;
 using OrderService.Application.UseCases.Orders.Queries.GetOrdersByStatus;
 using System.Security.Claims;
+using OrderService.Application.DTOs.Order;
 
 namespace OrderService.API.Controllers
 {
@@ -34,10 +34,10 @@ namespace OrderService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] AddressDto address, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateOrder([FromBody] OrderRequestDto orderRequest, CancellationToken cancellationToken)
         {
             var clientId = GetUserId();
-            var orderId = await _mediator.Send(new CreateOrderCommand(clientId, address),cancellationToken);
+            var orderId = await _mediator.Send(new CreateOrderCommand(clientId, orderRequest.Address),cancellationToken);
 
             _logger.LogInformation($"Order {orderId} was created.");
 

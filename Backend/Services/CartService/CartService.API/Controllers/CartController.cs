@@ -5,6 +5,7 @@ using CartService.Application.UseCases.Commands.ClearCart;
 using CartService.Application.UseCases.Commands.DecreaseItemQuantity;
 using CartService.Application.UseCases.Commands.DeleteItemFromCart;
 using CartService.Application.UseCases.Commands.IncreaseItemQuantity;
+using CartService.Application.UseCases.Commands.UpdateItemQuantity;
 using CartService.Application.UseCases.Queries.GetItemsFromCart;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -49,24 +50,13 @@ namespace CartService.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("{mealId:Guid}/increase")]
-        public async Task<IActionResult> IncreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
+        [HttpPut]
+        public async Task<IActionResult> UpdateItemQuantity([FromBody] CartItemDto cartItem, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-            await _mediator.Send(new IncreaseItemQuantityCommand(userId, mealId), cancellationToken);
+            await _mediator.Send(new UpdateItemQuantityCommand(userId, cartItem), cancellationToken);
 
-            _logger.LogInformation($"Amount is increased for item {mealId} in cart {userId}.");
-
-            return NoContent();
-        }
-
-        [HttpPost("{mealId:Guid}/decrease")]
-        public async Task<IActionResult> DecreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
-        {
-            var userId = GetUserId();
-            await _mediator.Send(new DecreaseItemQuantityCommand(userId, mealId), cancellationToken);
-
-            _logger.LogInformation($"Amount is decreased for item {mealId} in cart {userId}.");
+            _logger.LogInformation($"Amount is updated for item {cartItem.MealId} in cart {userId}.");
 
             return NoContent();
         }
@@ -83,7 +73,7 @@ namespace CartService.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> CLearCart(CancellationToken cancellationToken)
+        public async Task<IActionResult> ClearCart(CancellationToken cancellationToken)
         {
             var userId = GetUserId();
             await _mediator.Send(new ClearCartCommand(userId), cancellationToken);

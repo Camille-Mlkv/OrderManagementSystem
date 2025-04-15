@@ -14,6 +14,10 @@ import { MealInfoPageComponent } from './pages/meal-info-page/meal-info-page.com
 import { CreateMealPageComponent } from './pages/admin/create-meal-page/create-meal-page.component';
 import { MealsTablePageComponent } from './pages/admin/meals-table-page/meals-table-page.component';
 import { UpdateMealPageComponent } from './pages/admin/update-meal-page/update-meal-page.component';
+import { CartPageComponent } from './pages/client/cart-page/cart-page.component';
+import { CreateOrderPageComponent } from './pages/client/create-order-page/create-order-page.component';
+import { PayOrCancelOrderPageComponent } from './pages/client/pay-or-cancel-order-page/pay-or-cancel-order-page.component';
+import { PaymentConfirmationPageComponent } from './pages/client/payment-confirmation-page/payment-confirmation-page.component';
 
 export const routes: Routes = [
     {path: "", component: HomePageComponent, pathMatch:"full"},
@@ -29,4 +33,8 @@ export const routes: Routes = [
     {path: "meals-table", component: MealsTablePageComponent, canActivate: [RoleGuard], data: { roles: [Role.Admin]}},
     {path: "create-meal", component: CreateMealPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Admin]}},
     {path: "update-meal/:id", component: UpdateMealPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Admin]}},
+    {path: "cart", component: CartPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
+    {path: "create-order", component: CreateOrderPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
+    {path: "pay-or-cancel/:id", component: PayOrCancelOrderPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
+    {path: "payment-confirmation", component: PaymentConfirmationPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}}
 ];

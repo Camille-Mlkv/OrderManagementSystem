@@ -1,0 +1,41 @@
+<div class="cart-page">
+    <div *ngIf="cartItems.length === 0">Your cart is empty.</div>
+  
+    <div *ngFor="let item of cartItems" class="cart-item">
+      
+      <div class="cart-item-content" [class.unavailable]="!item.meal.isAvailable">
+        <a [routerLink]="['/meal', item.meal.id]" class="clickable-cart-info">
+          <img [src]="item.meal.imageUrl" alt="{{ item.meal.name }}" class="cart-meal-img" />
+          <div class="cart-info">
+            <h4>{{ item.meal.name }}</h4>
+            <p>{{ item.meal.price | currency }}</p>
+          </div>
+        </a>
+  
+        <div class="quantity-controls">
+          <button class="quantity-button" (click)="decreaseQuantity(item)" [disabled]="item.quantity === 1">−</button>
+          <span>{{ item.quantity }}</span>
+          <button class="quantity-button" (click)="increaseQuantity(item)">+</button>
+  
+        </div>
+      </div>
+
+      <div class="quantity-controls">
+        <button (click)="deleteItemFromCart(item)" class="delete-item-button">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="cart-total">
+      <p><strong>Total: {{ getTotalSum() | currency }}</strong></p>
+    </div>
+  
+    <div *ngIf="cartItems.length !== 0" class="cart-actions">
+      <button (click)="clearCart()" class="clear-cart-button">Clear Cart</button>
+      <button (click) ="goToCreateOrder()" class="checkout-button" [disabled]="hasUnavailableMeals">Checkout</button>
+    </div>
+
+  </div>
+  

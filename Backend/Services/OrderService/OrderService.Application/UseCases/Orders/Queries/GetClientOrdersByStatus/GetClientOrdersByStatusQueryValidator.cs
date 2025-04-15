@@ -7,7 +7,7 @@ namespace OrderService.Application.UseCases.Orders.Queries.GetClientOrdersByStat
     {
         public GetClientOrdersByStatusQueryValidator()
         {
-            RuleFor(x => x.Status).SetValidator(new OrderStatusValidator());
+            RuleFor(x => x.Status).MustBeAValidOrderStatus();
         }
     }
 }

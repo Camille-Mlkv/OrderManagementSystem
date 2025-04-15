@@ -1,3 +1,4 @@
+import { CartService } from './../../services/cart.service';
 import { Component, OnInit } from '@angular/core';
 import { MealService } from '../../services/meal.service';
 import { Meal } from '../../models/meal';
@@ -6,6 +7,9 @@ import { PagedList } from '../../models/paged-list';
 import { CommonModule } from '@angular/common';
 import { MealFilterDto } from '../../models/meal-filter';
 import { MealFilterComponent } from "../../components/meal-filter/meal-filter.component";
+import { AuthContext } from '../../auth/auth-context';
+import { CartItem } from '../../models/cart-item';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-meals-page',
@@ -33,9 +37,12 @@ export class MealsPageComponent implements OnInit {
   };
 
   constructor(
-    private mealService: MealService,  
+    public authContext: AuthContext,
+    private mealService: MealService,
+    private cartService: CartService,  
     private route: ActivatedRoute,
-    private router: Router){}
+    private router: Router,
+    private toastr: ToastrService){}
 
   ngOnInit(): void {
     this.cuisineId = this.route.snapshot.paramMap.get('cuisineId')!;
@@ -76,5 +83,12 @@ export class MealsPageComponent implements OnInit {
 
   goToMealInfo(id: string): void {
     this.router.navigate(['/meal',id]);
+  }
+
+  onAddItem(meal: Meal){
+    const newItem: CartItem = { mealId: meal.id, quantity: 1 };
+    this.cartService.addToCart(newItem).subscribe(() => {
+      this.toastr.success('Item added to cart!');
+    });
   }
 }

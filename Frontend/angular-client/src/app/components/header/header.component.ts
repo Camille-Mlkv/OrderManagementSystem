@@ -1,9 +1,7 @@
-import { isMainModule } from '@angular/ssr/node';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { Role } from '../../models/role';
 import { AuthContext } from '../../auth/auth-context';
 
 @Component({

@@ -1,0 +1,51 @@
+.order-details{
+  max-width: 600px;
+  margin: 48px auto;
+  padding: 32px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+  
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+  
+.cancel-button {
+    background-color: #ef4444;
+}
+  
+.pay-button {
+    background-color: #10b981;
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 25px;
+}
+  
+.step-number {
+    background-color: #2d8655;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 16px;
+}

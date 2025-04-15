@@ -7,8 +7,6 @@ using AutoMapper;
 using OrderService.Application.Utilities;
 using OrderService.Application.Exceptions;
 using MealService.GrpcServer;
-using OrderService.Application.Specifications.Services;
-using OrderService.Application.DTOs.Order;
 
 namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
 {
@@ -62,15 +60,13 @@ namespace OrderService.Application.UseCases.Orders.Commands.CreateOrder
                 });
             }
 
-            var address = _mapper.Map<Address>(request.Address);
-
             var order = new Order
             {
                 Id = Guid.NewGuid(),
                 OrderNumber = _orderNumberGenerator.GenerateOrderNumber(),
                 ClientId = request.ClientId,
                 Status = new Status { Name = StatusName.Pending },
-                Address = address,
+                Address = request.Address,
                 Meals = orderMeals,
                 CreatedAt = DateTime.UtcNow
             };

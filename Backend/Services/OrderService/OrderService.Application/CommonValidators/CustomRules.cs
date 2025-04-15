@@ -3,12 +3,11 @@ using OrderService.Domain.Enums;
 
 namespace OrderService.Application.CommonValidators
 {
-    public class OrderStatusValidator : AbstractValidator<string>
+    public static class CustomRules
     {
-        public OrderStatusValidator()
+        public static IRuleBuilderOptions<T, string> MustBeAValidOrderStatus<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
-            RuleFor(status => status)
-                .Must(status => Enum.TryParse(typeof(StatusName), status, true, out _))
+            return ruleBuilder.Must(status => Enum.TryParse(typeof(StatusName), status, true, out _))
                 .WithMessage("Invalid status: specify either InProgress, ReadyForDelivery, OutForDelivery or Delivered.");
         }
     }
