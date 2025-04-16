@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OrderRequest } from '../models/order-request';
-import { OrderDetails } from '../models/order-details';
+import { OrderDto } from '../models/order-dto';
 import { PaymentResult } from '../models/payment-result';
 
 @Injectable({
@@ -18,8 +18,8 @@ export class OrderService {
     return this.httpClient.post<string>(this.baseURL,order);
   }
 
-  getOrderById(orderId: string): Observable<OrderDetails> {
-    return this.httpClient.get<OrderDetails>(`${this.baseURL}/${orderId}`);
+  getOrderById(orderId: string): Observable<OrderDto> {
+    return this.httpClient.get<OrderDto>(`${this.baseURL}/${orderId}`);
   }
 
   cancelOrder(orderId: string): Observable<void> {
@@ -29,5 +29,9 @@ export class OrderService {
   createCheckoutSession(orderId: string): Observable<PaymentResult> {
     const url = `${environment.apiUrl}/payments?orderId=${orderId}`;
     return this.httpClient.post<PaymentResult>(url, {});
+  }
+
+  getClientOrdersByStatus(status: string) {
+    return this.httpClient.get<OrderDto[]>(`${this.baseURL}/client/status-${status}`);
   }
 }

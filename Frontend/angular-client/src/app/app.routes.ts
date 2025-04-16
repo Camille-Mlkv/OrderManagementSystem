@@ -18,6 +18,7 @@ import { CartPageComponent } from './pages/client/cart-page/cart-page.component'
 import { CreateOrderPageComponent } from './pages/client/create-order-page/create-order-page.component';
 import { PayOrCancelOrderPageComponent } from './pages/client/pay-or-cancel-order-page/pay-or-cancel-order-page.component';
 import { PaymentConfirmationPageComponent } from './pages/client/payment-confirmation-page/payment-confirmation-page.component';
+import { OrderListComponent } from './pages/client/order-list/order-list.component';
 
 export const routes: Routes = [
     {path: "", component: HomePageComponent, pathMatch:"full"},
@@ -36,5 +37,6 @@ export const routes: Routes = [
     {path: "cart", component: CartPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
     {path: "create-order", component: CreateOrderPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
     {path: "pay-or-cancel/:id", component: PayOrCancelOrderPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
-    {path: "payment-confirmation", component: PaymentConfirmationPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}}
+    {path: "payment-confirmation", component: PaymentConfirmationPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
+    {path: "client/orders", component: OrderListComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}}
 ];

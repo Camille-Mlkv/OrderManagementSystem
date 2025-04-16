@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderDetails } from '../../../models/order-details';
+import { OrderDto } from '../../../models/order-dto';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../../services/order.service';
 import { CommonModule } from '@angular/common';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './pay-or-cancel-order-page.component.css'
 })
 export class PayOrCancelOrderPageComponent implements OnInit {
-  order: OrderDetails | null = null;
+  order: OrderDto | null = null;
 
   constructor(
     private route: ActivatedRoute,

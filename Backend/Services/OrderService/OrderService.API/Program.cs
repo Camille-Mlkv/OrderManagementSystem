@@ -5,20 +5,9 @@ using Microsoft.OpenApi.Models;
 using OrderService.API.Middleware;
 using OrderService.Infrastructure.DI;
 using Serilog;
+using OrderService.Infrastructure.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-        }
-    );
-});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -67,6 +56,8 @@ builder.Host.UseSerilog();
 
 builder.Services.ConfigureRabbitMQ(builder.Configuration);
 
+builder.Services.ConfigureSignalR();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -75,10 +66,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(builder =>
+{
+    builder.WithOrigins("http://localhost:4200")
+    .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<OrderHub>("/hubs/order");
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

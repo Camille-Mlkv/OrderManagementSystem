@@ -1,11 +1,12 @@
 import { MealInOrder } from "./meal-in-order";
+import { OrderStatus } from "./order-status";
 
-export interface OrderDetails{
+export interface OrderDto{
     id: string;
     orderNumber: string;
     clientId: string;
     courierId: string | null;
-    status: string;
+    status: OrderStatus;
     address: string;
     meals: MealInOrder[];
     totalPrice: number;

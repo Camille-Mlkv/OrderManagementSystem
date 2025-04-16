@@ -15,12 +15,16 @@ export const authInterceptor: HttpInterceptorFn = (request: HttpRequest<any>, ne
   const router = inject(Router);
 
   const { accessToken, refreshToken } = authService.getTokens();
+  const isAuthenticated = authService.isAuthenticated();
 
-  request = request.clone({
-    setHeaders: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
+
+  if (isAuthenticated) {
+    request = request.clone({
+      setHeaders: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+  }
   
   return next(request).pipe(
     catchError((error: HttpErrorResponse) => {
