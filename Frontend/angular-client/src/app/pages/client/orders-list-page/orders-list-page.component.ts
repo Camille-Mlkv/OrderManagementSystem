@@ -5,13 +5,14 @@ import { OrderSignalrService } from '../../../services/order-signalr.service';
 import { OrderService } from '../../../services/order.service';
 import { CommonModule } from '@angular/common';
 import { OrderStatus } from '../../../models/order-status';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-order-list',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './order-list.component.html',
-  styleUrl: './order-list.component.css'
+  imports: [CommonModule, RouterModule],
+  templateUrl: './orders-list-page.component.html',
+  styleUrl: './orders-list-page.component.css'
 })
 export class OrderListComponent implements OnInit, OnDestroy {
   ordersByStatus: { [key in OrderStatus]: OrderDto[] } = {
@@ -69,8 +70,18 @@ export class OrderListComponent implements OnInit, OnDestroy {
       this.ordersByStatus[status] = this.ordersByStatus[status].filter(o => o.id !== order.id);
     });
 
-    this.ordersByStatus[order.status].unshift(order);
+    const updatedOrder: OrderDto = { ...order };
+    this.ordersByStatus[order.status].unshift(updatedOrder);
   }
 
-  
+  confirmDelivery(order: OrderDto){
+    if (confirm(`Are you sure you want to confirm delivery for order #${order.orderNumber}?`)) {
+      this.orderService.confirmOrderByClient(order.id).subscribe({
+        next: () => {
+          console.log(`Order #${order.orderNumber} delivery confirmed`);
+        },
+        error: (err) => console.error('Failed to confirm delivery:', err)
+      });
+    }
+  }
 }

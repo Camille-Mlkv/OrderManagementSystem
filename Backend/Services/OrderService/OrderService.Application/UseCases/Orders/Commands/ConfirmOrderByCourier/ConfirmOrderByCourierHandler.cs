@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using OrderService.Application.DTOs.Order;
 using OrderService.Application.Exceptions;
 using OrderService.Application.Specifications.Repositories;
@@ -11,11 +12,19 @@ namespace OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByCourie
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMessageService _messageService;
+        private readonly IOrderNotificationService _notifier;
+        private readonly IMapper _mapper;
 
-        public ConfirmOrderByCourierHandler(IOrderRepository orderRepository, IMessageService messageService)
+        public ConfirmOrderByCourierHandler(
+           IOrderRepository orderRepository, 
+           IMessageService messageService,
+           IOrderNotificationService notifier,
+           IMapper mapper)
         {
             _orderRepository = orderRepository;
             _messageService = messageService;
+            _notifier = notifier;
+            _mapper = mapper;
         }
 
         public async Task Handle(ConfirmOrderByCourierCommand request, CancellationToken cancellationToken)
@@ -50,6 +59,9 @@ namespace OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByCourie
             }
 
             await _orderRepository.UpdateAsync(order, cancellationToken);
+
+            var orderDto = _mapper.Map<OrderDto>(order);
+            await _notifier.NotifyOrderUpdatedAsync(orderDto);
         }
     }
 }

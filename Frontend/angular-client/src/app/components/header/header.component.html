@@ -8,8 +8,13 @@
       <a routerLink="/orders-table">Orders Management</a>
     </div>
     <div *ngIf="authContext.isClient">
-      <a routerLink="/cart">Cart</a>
       <a routerLink="/cuisines">Catalog</a>
+      <a routerLink="/cart">Cart</a>
+      <a routerLink="/client-orders">My orders</a>
+    </div>
+    <div *ngIf="authContext.isCourier">
+      <a routerLink="/opened-orders">Opened orders</a>
+      <a routerLink="/courier-orders">Current orders</a>
     </div>
   </nav>
   <div class="buttons">

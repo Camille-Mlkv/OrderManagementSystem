@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using OrderService.Application.CommonValidators;
+using OrderService.Application.Validators;
 
 namespace OrderService.Application.UseCases.Orders.Queries.GetOrdersByStatus
 {

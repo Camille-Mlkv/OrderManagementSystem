@@ -3,5 +3,5 @@ using OrderService.Application.DTOs.Order;
 
 namespace OrderService.Application.UseCases.Orders.Queries.GetCourierOrders
 {
-    public record GetCourierOrdersQuery(Guid CourierId): IRequest<List<OrderDto>>;
+    public record GetCourierOrdersByStatusQuery(Guid CourierId, string Status): IRequest<List<OrderDto>>;
 }

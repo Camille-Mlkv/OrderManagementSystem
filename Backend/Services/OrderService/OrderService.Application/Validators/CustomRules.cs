@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using OrderService.Domain.Enums;
 
-namespace OrderService.Application.CommonValidators
+namespace OrderService.Application.Validators
 {
     public static class CustomRules
     {

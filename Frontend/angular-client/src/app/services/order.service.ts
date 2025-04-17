@@ -34,4 +34,24 @@ export class OrderService {
   getClientOrdersByStatus(status: string) {
     return this.httpClient.get<OrderDto[]>(`${this.baseURL}/client/status-${status}`);
   }
+
+  getOpenedOrders(){
+    return this.httpClient.get<OrderDto[]>(`${this.baseURL}/opened-orders`);
+  }
+
+  assignCourier(orderId: string){
+    return this.httpClient.patch(`${this.baseURL}/${orderId}/assign-courier`, {});
+  }
+
+  getCourierOrdersByStatus(status: string){
+    return this.httpClient.get<OrderDto[]>(`${this.baseURL}/courier/status-${status}`);
+  }
+
+  confirmOrderByClient(orderId: string){
+    return this.httpClient.patch(`${this.baseURL}/${orderId}/client-confirmation`, {});
+  }
+
+  confirmOrderByCourier(orderId: string){
+    return this.httpClient.patch(`${this.baseURL}/${orderId}/courier-confirmation`, {});
+  }
 }

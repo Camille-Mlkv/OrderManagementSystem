@@ -136,11 +136,11 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("out-for-delivery")]
-        public async Task<IActionResult> GetCourierOrders(CancellationToken cancellationToken)
+        [HttpGet("courier/status-{status}")]
+        public async Task<IActionResult> GetCourierOrders(string status, CancellationToken cancellationToken)
         {
             var courierId = GetUserId();
-            var orders = await _mediator.Send(new GetCourierOrdersQuery(courierId), cancellationToken);
+            var orders = await _mediator.Send(new GetCourierOrdersByStatusQuery(courierId, status), cancellationToken);
 
             _logger.LogInformation($"Courier {courierId} orders retrieved.");
 

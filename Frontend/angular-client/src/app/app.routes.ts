@@ -18,7 +18,10 @@ import { CartPageComponent } from './pages/client/cart-page/cart-page.component'
 import { CreateOrderPageComponent } from './pages/client/create-order-page/create-order-page.component';
 import { PayOrCancelOrderPageComponent } from './pages/client/pay-or-cancel-order-page/pay-or-cancel-order-page.component';
 import { PaymentConfirmationPageComponent } from './pages/client/payment-confirmation-page/payment-confirmation-page.component';
-import { OrderListComponent } from './pages/client/order-list/order-list.component';
+import { OrderListComponent } from './pages/client/orders-list-page/orders-list-page.component';
+import { OpenedOrdersPageComponent } from './pages/courier/opened-orders-page/opened-orders-page.component';
+import { CourierOrdersPageComponent } from './pages/courier/courier-orders-page/courier-orders-page.component';
+import { OrderInfoComponent } from './components/order-info/order-info.component';
 
 export const routes: Routes = [
     {path: "", component: HomePageComponent, pathMatch:"full"},
@@ -38,5 +41,8 @@ export const routes: Routes = [
     {path: "create-order", component: CreateOrderPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
     {path: "pay-or-cancel/:id", component: PayOrCancelOrderPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
     {path: "payment-confirmation", component: PaymentConfirmationPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
-    {path: "client/orders", component: OrderListComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}}
+    {path: "client-orders", component: OrderListComponent, canActivate: [RoleGuard], data: { roles: [Role.Client]}},
+    {path: "opened-orders", component: OpenedOrdersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Courier]}},
+    {path: "courier-orders", component: CourierOrdersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Courier]}},
+    {path: "order-info/:id", component: OrderInfoComponent, canActivate: [RoleGuard], data: { roles: [Role.Courier, Role.Client, Role.Admin]}},
 ];

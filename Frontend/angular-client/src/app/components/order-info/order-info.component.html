@@ -1,0 +1,15 @@
+<div *ngIf="order" class="order-details">
+    <h2>Order #{{ order.orderNumber }}</h2>
+    <p><strong>Status:</strong> {{ order.status }}</p>
+    <p><strong>Address:</strong> {{ order.address }}</p>
+    <p><strong>Created:</strong> {{ order.createdAt | date:'medium' }}</p>
+    <p><strong>Total:</strong> {{ order.totalPrice }}$</p>
+  
+    <h3>Meals</h3>
+    <ul>
+      <li *ngFor="let meal of order.meals">
+        {{ meal.name }} - {{ meal.price }}$ (x{{ meal.portionsAmount }})
+      </li>
+    </ul>
+
+</div>

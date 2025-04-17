@@ -11,5 +11,7 @@ export interface OrderDto{
     meals: MealInOrder[];
     totalPrice: number;
     createdAt: string;
+    confirmedByClient: boolean;
+    confirmedByCourier: boolean;
     deliveryDate: string | null;
 }

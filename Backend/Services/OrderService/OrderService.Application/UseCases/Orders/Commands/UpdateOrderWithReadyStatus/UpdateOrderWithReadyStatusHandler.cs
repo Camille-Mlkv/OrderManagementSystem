@@ -15,8 +15,11 @@ namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithReady
         private readonly IOrderNotificationService _notifier;
         private readonly IMapper _mapper;
 
-        public UpdateOrderWithReadyStatusHandler(IOrderRepository orderRepository, IMessageService messageService, IOrderNotificationService notifier, 
-            IMapper mapper)
+        public UpdateOrderWithReadyStatusHandler(
+           IOrderRepository orderRepository, 
+           IMessageService messageService, 
+           IOrderNotificationService notifier, 
+           IMapper mapper)
         {
             _orderRepository = orderRepository;
             _messageService = messageService;

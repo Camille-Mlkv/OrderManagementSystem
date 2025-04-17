@@ -138,7 +138,7 @@
       "SwaggerKey": "Order"
     },
     {
-      "DownstreamPathTemplate": "/api/orders/{courierId}/status/out-for-delivery",
+      "DownstreamPathTemplate": "/api/orders/courier/status-{status}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -146,14 +146,14 @@
           "Port": 5011
         }
       ],
-      "UpstreamPathTemplate": "/orders/{courierId}/status/out-for-delivery",
-      "UpstreamHttpMethod": [ "PATCH" ],
+      "UpstreamPathTemplate": "/orders/courier/status-{status}",
+      "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": "Admin"
+        "Role": "Courier"
       },
       "SwaggerKey": "Order"
     },
