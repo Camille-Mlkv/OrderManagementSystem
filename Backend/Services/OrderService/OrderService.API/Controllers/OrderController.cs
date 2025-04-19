@@ -15,6 +15,8 @@ using OrderService.Application.UseCases.Orders.Queries.GetOrderById;
 using OrderService.Application.UseCases.Orders.Queries.GetOrdersByStatus;
 using System.Security.Claims;
 using OrderService.Application.DTOs.Order;
+using Stripe.Climate;
+using OrderService.Application.UseCases.Orders.Queries.GetDeliveredOrdersByDate;
 
 namespace OrderService.API.Controllers
 {
@@ -115,6 +117,38 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("courier/{courierId}/status-{status}")]
+        public async Task<IActionResult> GetCourierOrders(Guid courierId, string status, CancellationToken cancellationToken)
+        {
+            var orders = await _mediator.Send(new GetCourierOrdersByStatusQuery(courierId, status), cancellationToken);
+
+            _logger.LogInformation($"Courier {courierId} orders retrieved.");
+
+            return Ok(orders);
+        }
+
+        [HttpGet("delivered")]
+        public async Task<IActionResult> GetDeliveredOrders(
+           [FromQuery] DateTime from, 
+           [FromQuery] DateTime to,
+           CancellationToken cancellationToken)
+        {
+            var orders = await _mediator.Send(new GetDeliveredOrdersByDateQuery(from, to), cancellationToken);
+
+            return Ok(orders);
+        }
+
+        [HttpGet("courier/status-{status}")]
+        public async Task<IActionResult> GetCourierOrders(string status, CancellationToken cancellationToken)
+        {
+            var courierId = GetUserId();
+            var orders = await _mediator.Send(new GetCourierOrdersByStatusQuery(courierId, status), cancellationToken);
+
+            _logger.LogInformation($"Courier {courierId} orders retrieved.");
+
+            return Ok(orders);
+        }
+
         [HttpGet("opened-orders")]
         public async Task<IActionResult> GetOpenedOrders(CancellationToken cancellationToken)
         {
@@ -134,17 +168,6 @@ namespace OrderService.API.Controllers
             _logger.LogInformation($"Order {orderId} taken by courier {courierId}.");
 
             return NoContent();
-        }
-
-        [HttpGet("courier/status-{status}")]
-        public async Task<IActionResult> GetCourierOrders(string status, CancellationToken cancellationToken)
-        {
-            var courierId = GetUserId();
-            var orders = await _mediator.Send(new GetCourierOrdersByStatusQuery(courierId, status), cancellationToken);
-
-            _logger.LogInformation($"Courier {courierId} orders retrieved.");
-
-            return Ok(orders);
         }
 
         [HttpPatch("{orderId:guid}/courier-confirmation")]

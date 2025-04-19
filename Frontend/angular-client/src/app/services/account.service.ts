@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ResetPasswordRequest } from '../models/reset-password-request';
 import { environment } from '../../environments/environment';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -41,5 +42,9 @@ export class AccountService {
     };
 
     return this.httpClient.post<void>(url, body);
+  }
+
+  getUsersByRole(role: string){
+    return this.httpClient.get<User[]>(`${this.baseURL}/users/${role}`);
   }
 }

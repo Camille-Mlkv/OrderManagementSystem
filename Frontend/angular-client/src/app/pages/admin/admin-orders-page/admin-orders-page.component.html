@@ -1,0 +1,18 @@
+<div class="order-status-container">
+    <div class="status-column" *ngFor="let status of orderStatuses">
+      <h3>{{ status }}</h3>
+      <div *ngFor="let order of ordersByStatus[status]" class="order-card" [routerLink]="['/order-info', order.id]">
+        <p><strong>Order #{{ order.orderNumber }}</strong></p>
+        <p>Total: {{ order.totalPrice }} $</p>
+        <p>Created: {{ order.createdAt | date:'short' }}</p>
+
+        <ng-container *ngIf="order.status === 'InProgress'">
+          <div class="confirmation-section" [routerLink]="null">
+            <button (click)="markOrderAsReady(order); $event.stopPropagation()">READY</button>
+          </div>
+        </ng-container>
+  
+      </div>
+    </div>
+  </div>
+  

@@ -22,6 +22,10 @@ import { OrderListComponent } from './pages/client/orders-list-page/orders-list-
 import { OpenedOrdersPageComponent } from './pages/courier/opened-orders-page/opened-orders-page.component';
 import { CourierOrdersPageComponent } from './pages/courier/courier-orders-page/courier-orders-page.component';
 import { OrderInfoComponent } from './components/order-info/order-info.component';
+import { AdminOrdersPageComponent } from './pages/admin/admin-orders-page/admin-orders-page.component';
+import { CouriersPageComponent } from './pages/admin/couriers-page/couriers-page.component';
+import { CourierReadyOrdersPageComponent } from './pages/admin/courier-ready-orders-page/courier-ready-orders-page.component';
+import { DeliveredOrdersPageComponent } from './pages/admin/delivered-orders-page/delivered-orders-page.component';
 
 export const routes: Routes = [
     {path: "", component: HomePageComponent, pathMatch:"full"},
@@ -45,4 +49,8 @@ export const routes: Routes = [
     {path: "opened-orders", component: OpenedOrdersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Courier]}},
     {path: "courier-orders", component: CourierOrdersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Courier]}},
     {path: "order-info/:id", component: OrderInfoComponent, canActivate: [RoleGuard], data: { roles: [Role.Courier, Role.Client, Role.Admin]}},
+    {path: "admin-orders", component: AdminOrdersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Admin]}},
+    {path: "couriers", component: CouriersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Admin]}},
+    {path: "courier-ready-orders/:id", component: CourierReadyOrdersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Admin]}},
+    {path: "delivered-orders", component: DeliveredOrdersPageComponent, canActivate: [RoleGuard], data: { roles: [Role.Admin]}},
 ];

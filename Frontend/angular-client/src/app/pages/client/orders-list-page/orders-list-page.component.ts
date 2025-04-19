@@ -38,17 +38,13 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadAllOrders();
-
-    this.ngZone.runOutsideAngular(() => {
-      this.signalrService.startConnection();
-      this.signalrSubscription = this.signalrService.orderUpdated$.subscribe(order => {
-        if (order) {
-          this.ngZone.run(() => {
-            console.log('Received updated order with status:', order.status);
-            this.moveOrderToNewStatus(order);
-          });
-        }
-      });
+    this.signalrService.startConnection();
+  
+    this.signalrSubscription = this.signalrService.orderUpdated$.subscribe(order => {
+      if (order) {
+        console.log('Received updated order with status:', order.status);
+        this.moveOrderToNewStatus(order);
+      }
     });
   }
 

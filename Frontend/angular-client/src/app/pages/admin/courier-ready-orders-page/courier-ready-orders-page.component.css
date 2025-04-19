@@ -1,6 +1,6 @@
 .order-status-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     padding: 20px;
   }
@@ -26,15 +26,12 @@
     cursor: pointer;
   }
 
-  .confirmation-section {
-    margin-top: 10px;
-  }
-  .confirmation-section button {
-    padding: 4px 10px;
+  button {
     background-color: #2d8655;
     color: white;
     border: none;
+    padding: 10px 20px;
     border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
   }
-  
-  

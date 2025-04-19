@@ -1,0 +1,28 @@
+<div class="date-filter">
+    <label>
+      From:
+      <input type="date" [(ngModel)]="fromDate" max="{{ today }}">
+    </label>
+  
+    <label>
+      To:
+      <input type="date" [(ngModel)]="toDate" [max]="today">
+    </label>
+  
+    <button (click)="fetchOrders()" [disabled]="!isDateRangeValid">Load Orders</button>
+</div>
+  
+<div *ngIf="!isDateRangeValid && fromDate && toDate" class="error">
+    "From" date must be earlier than or equal to "To" date.
+</div>
+  
+<div *ngIf="orders.length === 0 && isDateRangeValid">
+    No orders found for the selected date range.
+</div>
+  
+<div *ngFor="let order of orders" class="order-card">
+    <p><strong>Order #{{ order.orderNumber }}</strong></p>
+    <p>Total: {{ order.totalPrice }} $</p>
+    <p>Delivered: {{ order.deliveryDate | date: 'short' }}</p>
+</div>
+  

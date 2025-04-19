@@ -1,0 +1,22 @@
+<div class="couriers-container">
+    <h2>Couriers</h2>
+  
+    <input
+      type="text"
+      [formControl]="searchControl"
+      placeholder="Search by email"
+      class="search-input"
+    />
+  
+    <div class="couriers-list">
+      <div
+        class="courier-item"
+        *ngFor="let courier of filteredCouriers"
+        [routerLink]="['/courier-ready-orders', courier.id]"
+      >
+        <strong>{{ courier.name }}</strong> - {{ courier.email }}
+      </div>
+    </div>
+  </div>
+  
+  

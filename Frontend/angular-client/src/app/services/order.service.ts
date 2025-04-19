@@ -54,4 +54,26 @@ export class OrderService {
   confirmOrderByCourier(orderId: string){
     return this.httpClient.patch(`${this.baseURL}/${orderId}/courier-confirmation`, {});
   }
+
+  getOrdersByStatus(status: string){
+    return this.httpClient.get<OrderDto[]>(`${this.baseURL}/status-${status}`);
+  }
+
+  updateOrderWithReadyStatus(orderId: string){
+    return this.httpClient.patch(`${this.baseURL}/${orderId}/status/ready`, {});
+  }
+
+  getCourierOrdersForAdmin(courierId: string, status: string){
+    return this.httpClient.get<OrderDto[]>(`${this.baseURL}/courier/${courierId}/status-${status}`);
+  }
+
+  updateOrdersWithOutForDeliveryStatus(courierId: string){
+    return this.httpClient.patch(`${this.baseURL}/${courierId}/status/out-for-delivery`, {});
+  }
+
+  getDeliveredOrdersByDate(from: string, to: string){
+    return this.httpClient.get<OrderDto[]>(`${this.baseURL}/delivered`, {
+      params: { from, to }
+    });
+  }
 }

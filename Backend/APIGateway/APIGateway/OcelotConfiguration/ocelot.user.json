@@ -66,6 +66,19 @@
       "SwaggerKey": "User"
     },
     {
+      "DownstreamPathTemplate": "/api/account/users/{role}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "userservice.api",
+          "Port": 5012
+        }
+      ],
+      "UpstreamPathTemplate": "/account/users/{role}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "User"
+    },
+    {
       "DownstreamPathTemplate": "/api/auth/signup",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

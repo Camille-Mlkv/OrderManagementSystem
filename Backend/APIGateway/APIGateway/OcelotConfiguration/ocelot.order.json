@@ -138,6 +138,66 @@
       "SwaggerKey": "Order"
     },
     {
+      "DownstreamPathTemplate": "/api/orders/{courierId}/status/out-for-delivery",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/{courierId}/status/out-for-delivery",
+      "UpstreamHttpMethod": [ "PATCH" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Order"
+    },
+    {
+      "DownstreamPathTemplate": "/api/orders/courier/{courierId}/status-{status}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/courier/{courierId}/status-{status}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Order"
+    },
+    {
+      "DownstreamPathTemplate": "/api/orders/delivered",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/delivered",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Order"
+    },
+    {
       "DownstreamPathTemplate": "/api/orders/courier/status-{status}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

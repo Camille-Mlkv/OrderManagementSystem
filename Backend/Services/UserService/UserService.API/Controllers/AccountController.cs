@@ -70,5 +70,12 @@ namespace UserService.API.Controllers
             return Ok();
         }
 
+        [HttpGet("users/{role}")]
+        public async Task<IActionResult> GetUsersByRole(string role, CancellationToken cancellationToken)
+        {
+            var users = await _accountService.GetUsersByRoleAsync(role, cancellationToken);
+
+            return Ok(users);
+        }
     }
 }

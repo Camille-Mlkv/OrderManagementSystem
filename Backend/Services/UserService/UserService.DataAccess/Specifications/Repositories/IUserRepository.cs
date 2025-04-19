@@ -34,5 +34,7 @@ namespace UserService.DataAccess.Specifications.Repositories
         Task<string> GetUserEmailByIdAsync(string userId, CancellationToken cancellationToken);
 
         Task<List<string>> GetRolesAsync(CancellationToken cancellationToken);
+
+        Task<List<ApplicationUser>> GetUsersByRoleAsync(string role, CancellationToken cancellationToken);
     }
 }

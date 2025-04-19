@@ -5,7 +5,14 @@
   <nav class="menu">
     <div *ngIf="authContext.isAdmin">
       <a routerLink="/meals-table">Meals Management</a>
-      <a routerLink="/orders-table">Orders Management</a>
+      <a routerLink="/couriers">Couriers</a>
+      <div class="dropdown">
+        <button class="dropbtn">Orders Management ▾</button>
+        <div class="dropdown-content">
+          <a routerLink="/admin-orders">Active Orders</a>
+          <a routerLink="/delivered-orders">Delivered Orders</a>
+        </div>
+      </div>
     </div>
     <div *ngIf="authContext.isClient">
       <a routerLink="/cuisines">Catalog</a>

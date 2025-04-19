@@ -142,5 +142,12 @@ namespace UserService.DataAccess.Implementations.Repositories
 
             return roles!;
         }
+
+        public async Task<List<ApplicationUser>> GetUsersByRoleAsync(string role, CancellationToken cancellationToken)
+        {
+            var users = (await _userManager.GetUsersInRoleAsync(role)).ToList();
+
+            return users;
+        }
     }
 }

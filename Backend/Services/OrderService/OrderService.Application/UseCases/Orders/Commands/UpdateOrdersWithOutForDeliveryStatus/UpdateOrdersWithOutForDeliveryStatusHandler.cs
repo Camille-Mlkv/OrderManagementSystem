@@ -4,7 +4,7 @@ using OrderService.Application.Specifications.Repositories;
 using OrderService.Application.Specifications.Services;
 using OrderService.Domain.Enums;
 using OrderService.Application.Exceptions;
-using OrderService.Domain.Entities;
+using AutoMapper;
 
 namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrdersWithOutForDeliveryStatus
 {
@@ -12,11 +12,19 @@ namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrdersWithOutF
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IMessageService _messageService;
+        private readonly IOrderNotificationService _notifier;
+        private readonly IMapper _mapper;
 
-        public UpdateOrdersWithOutForDeliveryStatusHandler(IOrderRepository orderRepository, IMessageService messageService)
+        public UpdateOrdersWithOutForDeliveryStatusHandler(
+           IOrderRepository orderRepository, 
+           IMessageService messageService,
+           IOrderNotificationService notifier,
+           IMapper mapper)
         {
             _orderRepository = orderRepository;
             _messageService = messageService;
+            _notifier = notifier;
+            _mapper = mapper;
         }
 
         public async Task Handle(UpdateOrdersWithOutForDeliveryStatusCommand request, CancellationToken cancellationToken)
@@ -44,6 +52,9 @@ namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrdersWithOutF
                 };
 
                 await _messageService.PublishAsync(orderStatus);
+
+                var orderDto = _mapper.Map<OrderDto>(order);
+                await _notifier.NotifyOrderUpdatedAsync(orderDto);
             }
         }
     }
