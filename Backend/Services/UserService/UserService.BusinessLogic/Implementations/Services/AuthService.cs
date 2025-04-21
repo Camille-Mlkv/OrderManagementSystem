@@ -84,12 +84,6 @@ namespace UserService.BusinessLogic.Implementations.Services
         public async Task<LoginResponse> RefreshAccessTokenAsync(RefreshAccessTokenRequest request, CancellationToken cancellationToken)
         {
             var principal = _tokenService.GetPrincipalFromExpiredToken(request.AccessToken);
-            //var emailClaim = principal?.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
-
-            //if (string.IsNullOrEmpty(emailClaim))
-            //{
-            //    throw new BadRequestException("Access token not refreshed.", "Old access token is invalid.");
-            //}
             if (principal?.Identity?.Name is null)
             {
                 throw new BadRequestException("Access token not refreshed.", "Old access token is invalid.");
