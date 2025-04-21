@@ -1,22 +1,22 @@
-﻿using CartService.Application.Exceptions;
+﻿using CartService.Application.Specifications.Jobs;
 using CartService.Application.Specifications;
-using CartService.Application.Specifications.Jobs;
 using MediatR;
+using CartService.Application.Exceptions;
 
-namespace CartService.Application.UseCases.Commands.IncreaseItemQuantity
+namespace CartService.Application.UseCases.Commands.UpdateItemQuantity
 {
-    public class IncreaseItemQuantityHandler : IRequestHandler<IncreaseItemQuantityCommand>
+    public class UpdateItemQuantityHandler : IRequestHandler<UpdateItemQuantityCommand>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICartJobService _jobService;
 
-        public IncreaseItemQuantityHandler(IUnitOfWork unitOfWork, ICartJobService jobService)
+        public UpdateItemQuantityHandler(IUnitOfWork unitOfWork, ICartJobService jobService)
         {
             _unitOfWork = unitOfWork;
             _jobService = jobService;
         }
 
-        public async Task Handle(IncreaseItemQuantityCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateItemQuantityCommand request, CancellationToken cancellationToken)
         {
             var cart = await _unitOfWork.CartRepository.GetCartAsync(request.UserId, cancellationToken);
 
@@ -25,14 +25,14 @@ namespace CartService.Application.UseCases.Commands.IncreaseItemQuantity
                 throw new BadRequestException("Bad request.", "Cart is empty.");
             }
 
-            var existingItem = cart.GetItemById(request.MealId);
+            var existingItem = cart.GetItemById(request.Item.MealId);
 
             if (existingItem is null)
             {
-                throw new NotFoundException("Item not found", $"Meal {request.MealId} not found in user {request.UserId} cart.");
+                throw new NotFoundException("Item not found", $"Meal {request.Item.MealId} not found in user {request.UserId} cart.");
             }
 
-            existingItem.Quantity += 1;
+            existingItem.Quantity = request.Item.Quantity;
             await _unitOfWork.CartRepository.SaveCartAsync(cart, cancellationToken);
 
             await _jobService.DeleteJobAsync(request.UserId, cancellationToken);

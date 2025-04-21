@@ -2,9 +2,8 @@ using CartService.Application.DTOs;
 using CartService.Application.Exceptions;
 using CartService.Application.UseCases.Commands.AddItemToCart;
 using CartService.Application.UseCases.Commands.ClearCart;
-using CartService.Application.UseCases.Commands.DecreaseItemQuantity;
 using CartService.Application.UseCases.Commands.DeleteItemFromCart;
-using CartService.Application.UseCases.Commands.IncreaseItemQuantity;
+using CartService.Application.UseCases.Commands.UpdateItemQuantity;
 using CartService.Application.UseCases.Queries.GetItemsFromCart;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -49,24 +48,11 @@ namespace CartService.API.Controllers
             return NoContent();
         }
 
-        [HttpPost("{mealId:Guid}/increase")]
-        public async Task<IActionResult> IncreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
+        [HttpPut]
+        public async Task<IActionResult> UpdateItemQuantity([FromBody] CartItemDto cartItem, CancellationToken cancellationToken)
         {
             var userId = GetUserId();
-            await _mediator.Send(new IncreaseItemQuantityCommand(userId, mealId), cancellationToken);
-
-            _logger.LogInformation($"Amount is increased for item {mealId} in cart {userId}.");
-
-            return NoContent();
-        }
-
-        [HttpPost("{mealId:Guid}/decrease")]
-        public async Task<IActionResult> DecreaseItemQuantity([FromRoute] Guid mealId, CancellationToken cancellationToken)
-        {
-            var userId = GetUserId();
-            await _mediator.Send(new DecreaseItemQuantityCommand(userId, mealId), cancellationToken);
-
-            _logger.LogInformation($"Amount is decreased for item {mealId} in cart {userId}.");
+            await _mediator.Send(new UpdateItemQuantityCommand(userId, cartItem), cancellationToken);
 
             return NoContent();
         }
