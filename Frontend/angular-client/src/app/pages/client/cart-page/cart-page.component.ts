@@ -1,8 +1,8 @@
-import { CartItem } from './../../../models/cart-item';
+import { CartItem } from '../../../models/cart/cart-item';
 import { Component } from '@angular/core';
 import { CartService } from '../../../services/cart.service';
 import { MealService } from '../../../services/meal.service';
-import { CartDisplayItem } from '../../../models/cart-display-item';
+import { CartDisplayItem } from '../../../models/cart/cart-display-item';
 import { forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';

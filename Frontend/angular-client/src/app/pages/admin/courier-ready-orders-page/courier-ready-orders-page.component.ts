@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { OrderStatus } from '../../../models/order-status';
-import { OrderDto } from '../../../models/order-dto';
+import { OrderStatus } from '../../../models/order/order-status';
+import { OrderDto } from '../../../models/order/order-dto';
 import { Subscription } from 'rxjs';
 import { OrderService } from '../../../services/order.service';
 import { OrderSignalrService } from '../../../services/order-signalr.service';
@@ -38,13 +38,13 @@ export class CourierReadyOrdersPageComponent {
     this.courierId = this.route.snapshot.paramMap.get('id') ?? '';
     this.loadAllOrders();
 
-      this.signalrService.startConnection();
-      this.signalrSubscription = this.signalrService.orderUpdated$.subscribe(order => {
-        if (order) {
-          console.log('Received updated order with status:', order.status);
-          this.moveOrderToNewStatus(order);
-        }
-      });
+    this.signalrService.startConnection();
+    this.signalrSubscription = this.signalrService.orderUpdated$.subscribe(order => {
+      if (order) {
+        console.log('Received updated order with status:', order.status);
+        this.moveOrderToNewStatus(order);
+      }
+    });
   }
 
   ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderDto } from '../../../models/order-dto';
+import { OrderDto } from '../../../models/order/order-dto';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { OrderService } from '../../../services/order.service';
 import { CommonModule } from '@angular/common';

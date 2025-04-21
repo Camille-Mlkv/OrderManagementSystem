@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { OrderDto } from '../models/order-dto';
+import { OrderDto } from '../models/order/order-dto';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({

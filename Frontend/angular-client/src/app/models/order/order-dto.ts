@@ -1,4 +1,4 @@
-import { MealInOrder } from "./meal-in-order";
+import { MealInOrder } from "../meal/meal-in-order";
 import { OrderStatus } from "./order-status";
 
 export interface OrderDto{

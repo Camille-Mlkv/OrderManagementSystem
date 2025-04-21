@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SignUpRequest } from '../models/signup-request';
-import { SignInRequest } from '../models/signin-request';
+import { SignUpRequest } from '../models/auth/signup-request';
+import { SignInRequest } from '../models/auth/signin-request';
 import { catchError, map, Observable, Subject, throwError } from 'rxjs';
-import { SignInResponse } from '../models/sign-in-response';
+import { SignInResponse } from '../models/auth/sign-in-response';
 import {CookieService} from 'ngx-cookie-service';
 import {jwtDecode} from 'jwt-decode';
 import { environment } from '../../environments/environment';

@@ -1,14 +1,14 @@
-import { CartService } from './../../services/cart.service';
+import { CartService } from '.././../../services/cart.service';
 import { Component, OnInit } from '@angular/core';
-import { MealService } from '../../services/meal.service';
-import { Meal } from '../../models/meal';
+import { MealService } from '../../../services/meal.service';
+import { Meal } from '../../../models/meal/meal';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PagedList } from '../../models/paged-list';
+import { PagedList } from '../../../models/paged-list';
 import { CommonModule } from '@angular/common';
-import { MealFilterDto } from '../../models/meal-filter';
-import { MealFilterComponent } from "../../components/meal-filter/meal-filter.component";
-import { AuthContext } from '../../auth/auth-context';
-import { CartItem } from '../../models/cart-item';
+import { MealFilterDto } from '../../../models/meal/meal-filter';
+import { MealFilterComponent } from "../../../components/meal-filter/meal-filter.component";
+import { AuthContext } from '../../../auth/auth-context';
+import { CartItem } from '../../../models/cart/cart-item';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

@@ -1,12 +1,12 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Category } from '../../models/category';
-import { Tag } from '../../models/tag';
+import { Category } from '../../models/meal/category';
+import { Tag } from '../../models/meal/tag';
 import { CategoryService } from '../../services/category.service';
 import { TagService } from '../../services/tag.service';
-import { MealFilterDto } from '../../models/meal-filter';
+import { MealFilterDto } from '../../models/meal/meal-filter';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Cuisine } from '../../models/cuisine';
+import { Cuisine } from '../../models/meal/cuisine';
 import { CuisineService } from '../../services/cuisine.service';
 import { AuthContext } from '../../auth/auth-context';
 

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Role } from "../models/role";
+import { Role } from "../models/auth/role";
 import { AuthService } from "../services/auth.service";
 
 @Injectable({ providedIn: 'root' })

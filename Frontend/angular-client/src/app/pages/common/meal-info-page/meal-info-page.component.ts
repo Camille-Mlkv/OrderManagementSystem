@@ -1,10 +1,10 @@
-import { CuisineService } from './../../services/cuisine.service';
+import { CuisineService } from '../../../services/cuisine.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MealService } from '../../services/meal.service';
-import { Meal } from '../../models/meal';
+import { MealService } from '../../../services/meal.service';
+import { Meal } from '../../../models/meal/meal';
 import { CommonModule } from '@angular/common';
-import { CategoryService } from '../../services/category.service';
+import { CategoryService } from '../../../services/category.service';
 import {Location} from '@angular/common';
 
 @Component({

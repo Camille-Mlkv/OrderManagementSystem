@@ -3,11 +3,11 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 import { CategoryService } from '../../services/category.service';
 import { CuisineService } from '../../services/cuisine.service';
 import { TagService } from '../../services/tag.service';
-import { Category } from '../../models/category';
-import { Cuisine } from '../../models/cuisine';
-import { Tag } from '../../models/tag';
+import { Category } from '../../models/meal/category';
+import { Cuisine } from '../../models/meal/cuisine';
+import { Tag } from '../../models/meal/tag';
 import { CommonModule } from '@angular/common';
-import { MealRequest } from '../../models/meal-request';
+import { MealRequest } from '../../models/meal/meal-request';
 
 @Component({
   selector: 'app-meal-form',

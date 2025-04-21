@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { AccountService } from '../../services/account.service';
+import { AccountService } from '../../../services/account.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { emailValidator } from '../../utilities/validators/email.validator';
+import { emailValidator } from '../../../utilities/validators/email.validator';
 import { CommonModule } from '@angular/common';
 
 @Component({

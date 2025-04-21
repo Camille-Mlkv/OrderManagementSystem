@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Meal } from '../../../models/meal';
+import { Meal } from '../../../models/meal/meal';
 import { MealService } from '../../../services/meal.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-import { MealRequest } from '../../../models/meal-request';
+import { MealRequest } from '../../../models/meal/meal-request';
 import { MealFormComponent } from "../../../components/meal-form/meal-form.component";
 
 @Component({

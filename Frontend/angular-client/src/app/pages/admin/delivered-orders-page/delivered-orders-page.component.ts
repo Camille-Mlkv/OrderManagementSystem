@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OrderService } from '../../../services/order.service';
-import { OrderDto } from '../../../models/order-dto';
+import { OrderDto } from '../../../models/order/order-dto';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 

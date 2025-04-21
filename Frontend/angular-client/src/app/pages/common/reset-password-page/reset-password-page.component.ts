@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AccountService } from '../../services/account.service';
+import { AccountService } from '../../../services/account.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { passwordMatchValidator } from '../../utilities/validators/password.match.validator';
-import { ResetPasswordRequest } from '../../models/reset-password-request';
+import { passwordMatchValidator } from '../../../utilities/validators/password.match.validator';
+import { ResetPasswordRequest } from '../../../models/auth/reset-password-request';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

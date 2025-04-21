@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-import { AccountService } from '../../services/account.service';
-import { emailValidator } from '../../utilities/validators/email.validator';
-import { phoneValidator } from '../../utilities/validators/phone.validator';
-import { SignUpRequest } from '../../models/signup-request';
+import { AccountService } from '../../../services/account.service';
+import { emailValidator } from '../../../utilities/validators/email.validator';
+import { phoneValidator } from '../../../utilities/validators/phone.validator';
+import { SignUpRequest } from '../../../models/auth/signup-request';
 
 @Component({
   selector: 'app-sign-up-page',

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Meal } from '../../../models/meal';
+import { Meal } from '../../../models/meal/meal';
 import { PagedList } from '../../../models/paged-list';
 import { MealService } from './../../../services/meal.service';
 import { Component, OnInit } from '@angular/core';
-import { MealFilterDto } from '../../../models/meal-filter';
+import { MealFilterDto } from '../../../models/meal/meal-filter';
 import { MealFilterComponent } from '../../../components/meal-filter/meal-filter.component';
 import { Router, RouterModule } from '@angular/router';
 

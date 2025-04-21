@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { OrderDto } from '../../models/order-dto';
+import { OrderDto } from '../../models/order/order-dto';
 import { ActivatedRoute } from '@angular/router';
 import { OrderService } from '../../services/order.service';
 

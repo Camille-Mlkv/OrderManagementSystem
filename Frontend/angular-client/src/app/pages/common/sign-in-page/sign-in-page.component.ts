@@ -1,9 +1,9 @@
-import { SignInRequest } from '../../models/signin-request';
+import { SignInRequest } from '../../../models/auth/signin-request';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { emailValidator } from '../../utilities/validators/email.validator';
-import { AuthService } from '../../services/auth.service';
+import { emailValidator } from '../../../utilities/validators/email.validator';
+import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router, RouterModule } from '@angular/router';
 

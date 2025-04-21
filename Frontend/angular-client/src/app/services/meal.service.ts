@@ -1,11 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Meal } from '../models/meal';
+import { Meal } from '../models/meal/meal';
 import { Observable } from 'rxjs';
 import { PagedList } from '../models/paged-list';
-import { MealFilterDto } from '../models/meal-filter';
+import { MealFilterDto } from '../models/meal/meal-filter';
 import { environment } from '../../environments/environment';
-import { MealRequest } from '../models/meal-request';
+import { MealRequest } from '../models/meal/meal-request';
 
 @Injectable({
   providedIn: 'root'

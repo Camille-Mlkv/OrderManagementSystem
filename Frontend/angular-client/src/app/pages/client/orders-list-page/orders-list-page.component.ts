@@ -1,10 +1,10 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { OrderDto } from '../../../models/order-dto';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { OrderDto } from '../../../models/order/order-dto';
 import { Subscription } from 'rxjs';
 import { OrderSignalrService } from '../../../services/order-signalr.service';
 import { OrderService } from '../../../services/order.service';
 import { CommonModule } from '@angular/common';
-import { OrderStatus } from '../../../models/order-status';
+import { OrderStatus } from '../../../models/order/order-status';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -32,8 +32,7 @@ export class OrderListComponent implements OnInit, OnDestroy {
 
   constructor(
     private orderService: OrderService,
-    private signalrService: OrderSignalrService,
-    private ngZone: NgZone
+    private signalrService: OrderSignalrService
   ) {}
 
   ngOnInit(): void {

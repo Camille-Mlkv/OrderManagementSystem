@@ -1,11 +1,11 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { OrderDto } from '../../../models/order-dto';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { OrderDto } from '../../../models/order/order-dto';
 import { Subscription } from 'rxjs';
 import { OrderService } from '../../../services/order.service';
 import { OrderSignalrService } from '../../../services/order-signalr.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { OrderStatus } from '../../../models/order-status';
+import { OrderStatus } from '../../../models/order/order-status';
 
 @Component({
   selector: 'app-courier-orders-page',
@@ -28,23 +28,18 @@ export class CourierOrdersPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private orderService: OrderService,
-    private signalrService: OrderSignalrService,
-    private ngZone: NgZone
+    private signalrService: OrderSignalrService
   ) {}
 
   ngOnInit(): void {
     this.loadAllOrders();
 
-    this.ngZone.runOutsideAngular(() => {
-      this.signalrService.startConnection();
-      this.signalrSubscription = this.signalrService.orderUpdated$.subscribe(order => {
-        if (order) {
-          this.ngZone.run(() => {
-            console.log('Received updated order with status:', order.status);
-            this.moveOrderToNewStatus(order);
-          });
-        }
-      });
+    this.signalrService.startConnection();
+    this.signalrSubscription = this.signalrService.orderUpdated$.subscribe(order => {
+      if (order) {
+          console.log('Received updated order with status:', order.status);
+          this.moveOrderToNewStatus(order);
+      }
     });
   }
 

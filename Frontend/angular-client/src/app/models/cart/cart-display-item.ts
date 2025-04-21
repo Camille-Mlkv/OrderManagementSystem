@@ -1,4 +1,4 @@
-import { Meal } from "./meal";
+import { Meal } from "../meal/meal"
 
 export interface CartDisplayItem {
     meal: Meal;

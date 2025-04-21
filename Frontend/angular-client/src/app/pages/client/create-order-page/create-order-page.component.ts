@@ -13,8 +13,7 @@ import {
 } from '@angular/forms';
 import { OrderService } from '../../../services/order.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
-import { OrderRequest } from '../../../models/order-request';
+import { OrderRequest } from '../../../models/order/order-request';
 
 @Component({
   selector: 'app-create-order-page',
@@ -34,8 +33,7 @@ export class CreateOrderPageComponent implements OnInit{
   constructor(
     private ngZone: NgZone, 
     private orderService: OrderService,
-    private router: Router,
-    private toastr: ToastrService) {}
+    private router: Router) {}
 
   ngOnInit() {}
 

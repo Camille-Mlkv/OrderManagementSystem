@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MealService } from '../../../services/meal.service';
 import { CommonModule } from '@angular/common';
-import { MealRequest } from '../../../models/meal-request';
+import { MealRequest } from '../../../models/meal/meal-request';
 import { ToastrService } from 'ngx-toastr';
 import { MealFormComponent } from "../../../components/meal-form/meal-form.component";
 import { Router, RouterModule } from '@angular/router';

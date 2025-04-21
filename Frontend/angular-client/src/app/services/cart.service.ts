@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CartItem } from '../models/cart-item';
+import { CartItem } from '../models/cart/cart-item';
 
 @Injectable({
   providedIn: 'root'

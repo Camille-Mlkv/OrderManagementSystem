@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CuisineService } from '../../services/cuisine.service';
+import { CuisineService } from '../../../services/cuisine.service';
 import { CommonModule } from '@angular/common';
-import { Cuisine } from '../../models/cuisine';
+import { Cuisine } from '../../../models/meal/cuisine';
 
 
 @Component({
