@@ -69,7 +69,7 @@ namespace CartService.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> CLearCart(CancellationToken cancellationToken)
+        public async Task<IActionResult> ClearCart(CancellationToken cancellationToken)
         {
             var userId = GetUserId();
             await _mediator.Send(new ClearCartCommand(userId), cancellationToken);
