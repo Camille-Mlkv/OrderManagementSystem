@@ -9,6 +9,11 @@ namespace CartService.Infrastructure.Implementations.Repositories
     {
         private readonly IDatabase _database;
 
+        public CartRepository(IDatabase database)
+        {
+            _database = database;
+        }
+
         public CartRepository(IConnectionMultiplexer connectionMultiplexer)
         {
             _database = connectionMultiplexer.GetDatabase();

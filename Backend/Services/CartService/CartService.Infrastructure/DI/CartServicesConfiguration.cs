@@ -1,7 +1,7 @@
 ﻿using CartService.Application.Specifications.Jobs;
 using CartService.Application.Specifications.Repositories;
 using CartService.Application.Specifications;
-using CartService.Infrastructure.Implementations.Jobs;
+using CartService.Infrastructure.Implementations.Hangfire;
 using CartService.Infrastructure.Implementations.Repositories;
 using CartService.Infrastructure.Implementations;
 using Microsoft.Extensions.Configuration;
@@ -19,11 +19,11 @@ namespace CartService.Infrastructure.DI
             services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString!));
 
             services.AddScoped<ICartRepository, CartRepository>();
-
             services.AddScoped<IJobRepository, CartJobRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+            services.AddScoped<ICartJobClient, CartJobClient>();
             services.AddScoped<ICartJobService, CartJobService>();
         }
     }

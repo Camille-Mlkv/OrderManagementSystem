@@ -1,21 +1,22 @@
 ﻿using CartService.Application.Specifications;
 using CartService.Application.Specifications.Jobs;
-using Hangfire;
 
-namespace CartService.Infrastructure.Implementations.Jobs
+namespace CartService.Infrastructure.Implementations.Hangfire
 {
     public class CartJobService: ICartJobService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ICartJobClient _jobClient;
 
-        public CartJobService(IUnitOfWork unitOfWork)
+        public CartJobService(IUnitOfWork unitOfWork, ICartJobClient jobClient)
         {
             _unitOfWork = unitOfWork;
+            _jobClient = jobClient;
         }
 
         public async Task ScheduleJobAsync(Guid userId, CancellationToken cancellationToken)
         {
-            var newJobId = BackgroundJob.Schedule(
+            var newJobId = _jobClient.Schedule(
                () => ExecuteJobAsync(userId),
                TimeSpan.FromHours(3));
 
@@ -42,7 +43,7 @@ namespace CartService.Infrastructure.Implementations.Jobs
 
             if (!string.IsNullOrEmpty(jobId))
             {
-                BackgroundJob.Delete(jobId);
+                _jobClient.Delete(jobId);
 
                 await _unitOfWork.CartJobRepository.DeleteJobIdAsync(userId, cancellationToken);
             }

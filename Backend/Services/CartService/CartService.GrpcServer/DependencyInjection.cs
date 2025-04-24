@@ -4,7 +4,7 @@ using CartService.Infrastructure.Implementations.Repositories;
 using CartService.Infrastructure.Implementations;
 using StackExchange.Redis;
 using CartService.Application.Specifications.Jobs;
-using CartService.Infrastructure.Implementations.Jobs;
+using CartService.Infrastructure.Implementations.Hangfire;
 using CartService.Infrastructure.Data;
 using Hangfire;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +29,7 @@ namespace CartService.GrpcServer
             services.AddHangfireServer();
 
             services.AddScoped<ICartJobService, CartJobService>();
+            services.AddScoped<ICartJobClient, CartJobClient>();
         }
     }
 }
