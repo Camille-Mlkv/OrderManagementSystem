@@ -10,6 +10,7 @@ import { MealFilterComponent } from "../../../components/meal-filter/meal-filter
 import { AuthContext } from '../../../auth/auth-context';
 import { CartItem } from '../../../models/cart/cart-item';
 import { ToastrService } from 'ngx-toastr';
+import { MealQueryParams } from '../../../models/meal/meal-query-params';
 
 @Component({
   selector: 'app-meals-page',
@@ -53,7 +54,13 @@ export class MealsPageComponent implements OnInit {
   }
 
   loadMeals(): void {
-    this.mealService.getFilteredMeals(this.currentPage, this.pageSize, this.filter).subscribe((mealsList: PagedList<Meal>) => {
+    const queryParams: MealQueryParams = {
+      pageNo: this.currentPage,
+      pageSize: this.pageSize,
+      ...this.filter
+    };
+    
+    this.mealService.getFilteredMeals(queryParams).subscribe((mealsList: PagedList<Meal>) => {
       this.meals = mealsList.items; 
       this.totalPages = Math.ceil(mealsList.totalCount / this.pageSize);
     });

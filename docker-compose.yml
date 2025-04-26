@@ -307,6 +307,8 @@ services:
     build:
       context: ./Frontend/angular-client 
       dockerfile: Dockerfile
+      args:
+        - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY}
     ports:
       - 4200:80
     env_file:

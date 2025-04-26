@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { OrderDto } from '../models/order/order-dto';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class OrderSignalrService {
 
   public startConnection(): void {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:5011/hubs/order',{
+      .withUrl(`${environment.apiUrl}/hubs/order`,{
         skipNegotiation: true, 
         transport: signalR.HttpTransportType.WebSockets
       }) 

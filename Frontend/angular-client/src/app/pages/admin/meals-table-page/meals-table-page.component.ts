@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { MealFilterDto } from '../../../models/meal/meal-filter';
 import { MealFilterComponent } from '../../../components/meal-filter/meal-filter.component';
 import { Router, RouterModule } from '@angular/router';
+import { MealQueryParams } from '../../../models/meal/meal-query-params';
 
 @Component({
   selector: 'app-meals-table-page',
@@ -37,7 +38,13 @@ export class MealsTablePageComponent implements OnInit {
   }
 
   loadMeals(): void {
-    this.mealService.getFilteredMeals(this.currentPage, this.pageSize, this.filter).subscribe((mealsList: PagedList<Meal>) => {
+    const queryParams: MealQueryParams = {
+      pageNo: this.currentPage,
+      pageSize: this.pageSize,
+      ...this.filter
+    };
+    
+    this.mealService.getFilteredMeals(queryParams).subscribe((mealsList: PagedList<Meal>) => {
       this.meals = mealsList.items;
       this.totalPages = Math.ceil(mealsList.totalCount / this.pageSize);
     });

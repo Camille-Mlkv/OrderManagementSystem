@@ -309,6 +309,36 @@
       "UpstreamPathTemplate": "/payments/webhook",
       "UpstreamHttpMethod": [ "POST" ],
       "SwaggerKey": "Order"
+    },
+    {
+      "DownstreamPathTemplate": "/hubs/",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/hubs/",
+      "QoSOptions": {
+        "TimeoutValue": 320000
+      },
+      "Priority": 50
+    },
+    {
+      "DownstreamPathTemplate": "/hubs/order",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/hubs/order",
+      "QoSOptions": {
+        "TimeoutValue": 320000
+      },
+      "Priority": 50
     }
   ]
 }
