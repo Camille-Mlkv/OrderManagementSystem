@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\cart.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\cart.proto" GrpcServices="Both" />
   </ItemGroup>
 
   <ItemGroup>

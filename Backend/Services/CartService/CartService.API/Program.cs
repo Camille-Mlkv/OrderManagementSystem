@@ -11,6 +11,9 @@ using CartService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .AddJsonFile($"appsettings.test.json", optional: true);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -60,8 +63,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    using var scope = app.Services.CreateScope();
-    await DatabaseInitializer.InitializeHangfireDbAsync(scope.ServiceProvider);
+    //using var scope = app.Services.CreateScope();
+    //await DatabaseInitializer.InitializeHangfireDbAsync(scope.ServiceProvider);
 }
 
 var options = new DashboardOptions()
@@ -81,3 +84,5 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }
