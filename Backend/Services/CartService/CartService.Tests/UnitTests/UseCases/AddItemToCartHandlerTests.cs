@@ -20,6 +20,9 @@ namespace CartService.Tests.UnitTests.UseCases
         private readonly Mock<ICartJobService> _jobServiceMock;
         private readonly Mock<MealService.GrpcServer.MealService.MealServiceClient> _grpcClientMock;
 
+        private readonly Guid _userId;
+        private readonly Guid _mealId;
+
         public AddItemToCartHandlerTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -27,6 +30,8 @@ namespace CartService.Tests.UnitTests.UseCases
             _mapperMock = new Mock<IMapper>();
             _jobServiceMock = new Mock<ICartJobService>();
             _grpcClientMock = new Mock<MealService.GrpcServer.MealService.MealServiceClient>();
+            _userId = Guid.NewGuid();
+            _mealId = Guid.NewGuid();
 
             _unitOfWorkMock.Setup(u => u.CartRepository).Returns(_cartRepoMock.Object);
         }
@@ -35,28 +40,25 @@ namespace CartService.Tests.UnitTests.UseCases
         public async Task Handle_Should_AddItemToCart_And_ScheduleJob()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var mealId = Guid.Parse("22222222-2222-2222-2222-222222222222");
-
             var command = new AddItemToCartCommand(
-                userId,
+                _userId,
                 new CartItemRequestDto
                 {
-                    MealId = mealId,
+                    MealId = _mealId,
                     Quantity = 1
                 }
             );
 
             var mealReply = new GetMealByIdReply
             {
-                MealId = mealId.ToString(),
+                MealId = _mealId.ToString(),
                 Name = "Test Meal",
                 Price = 10.0
             };
 
             _grpcClientMock
                .Setup(client => client.GetMealByIdAsync(
-                   It.Is<GetMealByIdRequest>(r => r.MealId == mealId.ToString()),
+                   It.Is<GetMealByIdRequest>(r => r.MealId == _mealId.ToString()),
                    null,
                    null,
                    It.IsAny<CancellationToken>()))
@@ -64,17 +66,17 @@ namespace CartService.Tests.UnitTests.UseCases
 
             var existingCart = new Cart
             {
-                UserId = userId,
+                UserId = _userId,
                 Items = new List<CartItem>()
             };
 
             _cartRepoMock
-               .Setup(repo => repo.GetCartAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(repo => repo.GetCartAsync(_userId, It.IsAny<CancellationToken>()))
                .ReturnsAsync(existingCart);
 
             var mappedItem = new CartItem
             {
-                MealId = mealId,
+                MealId = _mealId,
                 Quantity = 1
             };
 
@@ -94,39 +96,36 @@ namespace CartService.Tests.UnitTests.UseCases
 
             // Assert
             _cartRepoMock.Verify(r => r.SaveCartAsync(
-               It.Is<Cart>(c => c.UserId == userId && c.Items.Contains(mappedItem)),
+               It.Is<Cart>(c => c.UserId == _userId && c.Items.Contains(mappedItem)),
                It.IsAny<CancellationToken>()), Times.Once);
 
-            _jobServiceMock.Verify(j => j.DeleteJobAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
-            _jobServiceMock.Verify(j => j.ScheduleJobAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+            _jobServiceMock.Verify(j => j.DeleteJobAsync(_userId, It.IsAny<CancellationToken>()), Times.Once);
+            _jobServiceMock.Verify(j => j.ScheduleJobAsync(_userId, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
         public async Task Handle_ShouldIncreaseQuantity_WhenItemAlreadyExistsInCart()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var mealId = Guid.Parse("22222222-2222-2222-2222-222222222222");
-
             var command = new AddItemToCartCommand(
-                userId,
+                _userId,
                 new CartItemRequestDto
                 {
-                    MealId = mealId,
+                    MealId = _mealId,
                     Quantity = 2
                 }
             );
 
             var mealReply = new GetMealByIdReply
             {
-                MealId = mealId.ToString(),
+                MealId = _mealId.ToString(),
                 Name = "Test Meal",
                 Price = 10.0
             };
 
             _grpcClientMock
                .Setup(client => client.GetMealByIdAsync(
-                   It.Is<GetMealByIdRequest>(r => r.MealId == mealId.ToString()),
+                   It.Is<GetMealByIdRequest>(r => r.MealId == _mealId.ToString()),
                    null,
                    null,
                    It.IsAny<CancellationToken>()))
@@ -134,23 +133,23 @@ namespace CartService.Tests.UnitTests.UseCases
 
             var existingCartItem = new CartItem
             {
-                MealId = mealId,
+                MealId = _mealId,
                 Quantity = 3
             };
 
             var existingCart = new Cart
             {
-                UserId = userId,
+                UserId = _userId,
                 Items = new List<CartItem> { existingCartItem }
             };
 
             _cartRepoMock
-               .Setup(repo => repo.GetCartAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(repo => repo.GetCartAsync(_userId, It.IsAny<CancellationToken>()))
                .ReturnsAsync(existingCart);
 
             var mappedItem = new CartItem
             {
-                MealId = mealId,
+                MealId = _mealId,
                 Quantity = 2
             };
 
@@ -172,33 +171,30 @@ namespace CartService.Tests.UnitTests.UseCases
             _cartRepoMock.Verify(r => r.SaveCartAsync(
                It.Is<Cart>(c =>
                    c.Items.Count == 1 &&
-                   c.Items.First().MealId == mealId &&
+                   c.Items.First().MealId == _mealId &&
                    c.Items.First().Quantity == 5),
                It.IsAny<CancellationToken>()), Times.Once);
 
-            _jobServiceMock.Verify(j => j.DeleteJobAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
-            _jobServiceMock.Verify(j => j.ScheduleJobAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+            _jobServiceMock.Verify(j => j.DeleteJobAsync(_userId, It.IsAny<CancellationToken>()), Times.Once);
+            _jobServiceMock.Verify(j => j.ScheduleJobAsync(_userId, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
         public async Task Handle_ShouldThrowNotFoundException_WhenMealNotFound()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var mealId = Guid.Parse("22222222-2222-2222-2222-222222222222");
-
             var command = new AddItemToCartCommand(
-                userId,
+                _userId,
                 new CartItemRequestDto
                 {
-                    MealId = mealId,
+                    MealId = _mealId,
                     Quantity = 1
                 }
             );
 
             _grpcClientMock
                .Setup(client => client.GetMealByIdAsync(
-                   It.Is<GetMealByIdRequest>(r => r.MealId == mealId.ToString()),
+                   It.Is<GetMealByIdRequest>(r => r.MealId == _mealId.ToString()),
                    null,
                    null,
                    It.IsAny<CancellationToken>()))
@@ -216,7 +212,7 @@ namespace CartService.Tests.UnitTests.UseCases
 
             // Assert
             Assert.Equal("Failed to add item to the cart.", exception.Message);
-            Assert.Contains(mealId.ToString(), exception.Details);
+            Assert.Contains(_mealId.ToString(), exception.Details);
         }
     }
 

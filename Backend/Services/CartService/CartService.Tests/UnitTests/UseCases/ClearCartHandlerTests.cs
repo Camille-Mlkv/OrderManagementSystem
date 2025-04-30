@@ -25,7 +25,7 @@ namespace CartService.Tests.UnitTests.UseCases
         public async Task Handle_Should_DeleteCartAndJob()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+            var userId = Guid.NewGuid();
 
             var command = new ClearCartCommand(userId);
 

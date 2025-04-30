@@ -15,6 +15,7 @@ namespace CartService.Tests.UnitTests.UseCases
         private readonly Mock<ICartRepository> _cartRepoMock;
         private readonly Mock<ICartJobService> _jobServiceMock;
         private readonly Mock<IMapper> _mapperMock;
+        private readonly Guid _userId;
 
         public GetItemsFromCartHandlerTests()
         {
@@ -22,6 +23,7 @@ namespace CartService.Tests.UnitTests.UseCases
             _cartRepoMock = new Mock<ICartRepository>();
             _jobServiceMock = new Mock<ICartJobService>();
             _mapperMock = new Mock<IMapper>();
+            _userId = Guid.NewGuid();
 
             _unitOfWorkMock.Setup(u => u.CartRepository).Returns(_cartRepoMock.Object);
         }
@@ -30,13 +32,12 @@ namespace CartService.Tests.UnitTests.UseCases
         public async Task Handle_Should_ReturnCartItems_WhenCartHasItems()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var mealId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+            var mealId = Guid.NewGuid();
 
-            var query = new GetItemsFromCartQuery(userId);
+            var query = new GetItemsFromCartQuery(_userId);
             var cart = new Cart
             {
-                UserId = userId,
+                UserId = _userId,
                 Items = new List<CartItem>
                 {
                     new CartItem { MealId = mealId, Quantity = 2 }
@@ -44,7 +45,7 @@ namespace CartService.Tests.UnitTests.UseCases
             };
 
             _cartRepoMock
-               .Setup(repo => repo.GetCartAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(repo => repo.GetCartAsync(_userId, It.IsAny<CancellationToken>()))
                .ReturnsAsync(cart);
 
             var cartItemDto = new CartItemDto { MealId = mealId, Quantity = 2 };
@@ -68,11 +69,10 @@ namespace CartService.Tests.UnitTests.UseCases
         public async Task Handle_Should_ReturnEmptyList_WhenCartNotFound()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var query = new GetItemsFromCartQuery(userId);
+            var query = new GetItemsFromCartQuery(_userId);
 
             _cartRepoMock
-               .Setup(repo => repo.GetCartAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(repo => repo.GetCartAsync(_userId, It.IsAny<CancellationToken>()))
                .ReturnsAsync(default(Cart));
 
             var handler = new GetItemsFromCartHandler(_unitOfWorkMock.Object, _mapperMock.Object);

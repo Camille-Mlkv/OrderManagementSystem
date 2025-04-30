@@ -21,14 +21,14 @@ namespace CartService.Tests.UnitTests.Controllers
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private readonly Mock<ILogger<CartController>> _loggerMock;
         private readonly CartController _controller;
-
-        private readonly Guid _userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        private readonly Guid _userId;
 
         public CartControllerTests()
         {
             _mediatorMock = new Mock<IMediator>();
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             _loggerMock = new Mock<ILogger<CartController>>();
+            _userId = Guid.NewGuid();
 
             var claims = new List<Claim>
             {
@@ -72,7 +72,7 @@ namespace CartService.Tests.UnitTests.Controllers
             // Arrange
             var cartItem = new CartItemRequestDto
             {
-                MealId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                MealId = Guid.NewGuid(),
                 Quantity = 2
             };
 
@@ -103,7 +103,7 @@ namespace CartService.Tests.UnitTests.Controllers
             // Arrange
             var cartItem = new CartItemDto
             {
-                MealId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                MealId = Guid.NewGuid(),
                 Quantity = 5
             };
 
@@ -130,7 +130,7 @@ namespace CartService.Tests.UnitTests.Controllers
         public async Task DeleteItemFromCart_ShouldSendCommand_AndReturnNoContent()
         {
             // Arrange
-            var mealId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+            var mealId = Guid.NewGuid();
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<DeleteItemFromCartCommand>(), It.IsAny<CancellationToken>()))

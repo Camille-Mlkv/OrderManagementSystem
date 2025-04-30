@@ -12,12 +12,14 @@ namespace CartService.Tests.UnitTests.UseCases
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<ICartRepository> _cartRepoMock;
         private readonly Mock<ICartJobService> _jobServiceMock;
+        private readonly Guid _userId;
 
         public DeleteItemFromCartHandlerTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _cartRepoMock = new Mock<ICartRepository>();
             _jobServiceMock = new Mock<ICartJobService>();
+            _userId = Guid.NewGuid();
 
             _unitOfWorkMock.Setup(u => u.CartRepository).Returns(_cartRepoMock.Object);
         }
@@ -26,14 +28,13 @@ namespace CartService.Tests.UnitTests.UseCases
         public async Task Handle_Should_RemoveItemAndSaveCart_WhenItemExists()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var mealId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+            var mealId = Guid.NewGuid();
 
-            var command = new DeleteItemFromCartCommand(userId, mealId);
+            var command = new DeleteItemFromCartCommand(_userId, mealId);
 
             var cart = new Cart
             {
-                UserId = userId,
+                UserId = _userId,
                 Items = new List<CartItem>
                 {
                     new CartItem { MealId = mealId, Quantity = 1 }
@@ -41,11 +42,11 @@ namespace CartService.Tests.UnitTests.UseCases
             };
 
             _cartRepoMock
-               .Setup(repo => repo.GetCartAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(repo => repo.GetCartAsync(_userId, It.IsAny<CancellationToken>()))
                .ReturnsAsync(cart);
 
             _jobServiceMock
-               .Setup(job => job.DeleteJobAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(job => job.DeleteJobAsync(_userId, It.IsAny<CancellationToken>()))
                .Returns(Task.CompletedTask);
 
             var handler = new DeleteItemFromCartHandler(_unitOfWorkMock.Object, _jobServiceMock.Object);
@@ -56,22 +57,21 @@ namespace CartService.Tests.UnitTests.UseCases
             // Assert
             Assert.DoesNotContain(cart.Items, item => item.MealId == mealId);
 
-            _jobServiceMock.Verify(job => job.DeleteJobAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+            _jobServiceMock.Verify(job => job.DeleteJobAsync(_userId, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
         public async Task Handle_Should_RemoveItemAndSaveCart_WhenOtherItemsExist()
         {
             // Arrange
-            var userId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var mealIdToDelete = Guid.Parse("22222222-2222-2222-2222-222222222222");
-            var otherMealId = Guid.Parse("33333333-3333-3333-3333-333333333333");
+            var mealIdToDelete = Guid.NewGuid();
+            var otherMealId = Guid.NewGuid();
 
-            var command = new DeleteItemFromCartCommand(userId, mealIdToDelete);
+            var command = new DeleteItemFromCartCommand(_userId, mealIdToDelete);
 
             var cart = new Cart
             {
-                UserId = userId,
+                UserId = _userId,
                 Items = new List<CartItem>
                 {
                     new CartItem { MealId = mealIdToDelete, Quantity = 1 },
@@ -80,15 +80,15 @@ namespace CartService.Tests.UnitTests.UseCases
             };
 
             _cartRepoMock
-               .Setup(repo => repo.GetCartAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(repo => repo.GetCartAsync(_userId, It.IsAny<CancellationToken>()))
                .ReturnsAsync(cart);
 
             _jobServiceMock
-               .Setup(job => job.DeleteJobAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(job => job.DeleteJobAsync(_userId, It.IsAny<CancellationToken>()))
                .Returns(Task.CompletedTask);
 
             _jobServiceMock
-               .Setup(job => job.ScheduleJobAsync(userId, It.IsAny<CancellationToken>()))
+               .Setup(job => job.ScheduleJobAsync(_userId, It.IsAny<CancellationToken>()))
                .Returns(Task.CompletedTask);
 
             var handler = new DeleteItemFromCartHandler(_unitOfWorkMock.Object, _jobServiceMock.Object);
@@ -101,11 +101,11 @@ namespace CartService.Tests.UnitTests.UseCases
             Assert.Contains(cart.Items, item => item.MealId == otherMealId);
 
             _cartRepoMock.Verify(repo => repo.SaveCartAsync(
-                It.Is<Cart>(c => c.UserId == userId && c.Items.Count == 1 && c.Items[0].MealId == otherMealId),
+                It.Is<Cart>(c => c.UserId == _userId && c.Items.Count == 1 && c.Items[0].MealId == otherMealId),
                 It.IsAny<CancellationToken>()), Times.Once);
 
-            _jobServiceMock.Verify(job => job.DeleteJobAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
-            _jobServiceMock.Verify(job => job.ScheduleJobAsync(userId, It.IsAny<CancellationToken>()), Times.Once);
+            _jobServiceMock.Verify(job => job.DeleteJobAsync(_userId, It.IsAny<CancellationToken>()), Times.Once);
+            _jobServiceMock.Verify(job => job.ScheduleJobAsync(_userId, It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }
