@@ -63,8 +63,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    //using var scope = app.Services.CreateScope();
-    //await DatabaseInitializer.InitializeHangfireDbAsync(scope.ServiceProvider);
+    using var scope = app.Services.CreateScope();
+    await DatabaseInitializer.InitializeHangfireDbAsync(scope.ServiceProvider);
 }
 
 var options = new DashboardOptions()
