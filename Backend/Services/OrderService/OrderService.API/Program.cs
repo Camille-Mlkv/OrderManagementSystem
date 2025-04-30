@@ -77,6 +77,7 @@ app.UseCors(builder =>
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseWebSockets();
 app.MapControllers();
 
 app.MapHub<OrderHub>("/hubs/order");

@@ -86,7 +86,9 @@ namespace MealService.Application.UseCases.Meals.Queries.GetFilteredMeals
             return new PagedList<MealDto>
             {
                 Items = mealDtos,
-                TotalCount = mealsList.TotalCount
+                TotalCount = mealsList.TotalCount,
+                CurrentPage = request.PageNo,
+                PageSize = request.PageSize,
             };
         }
     }

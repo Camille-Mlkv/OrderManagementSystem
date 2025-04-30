@@ -64,7 +64,9 @@ namespace MealService.Infrastructure.Implementations.Repositories
             return new PagedList<T>
             {
                 Items = items,
-                TotalCount = count
+                TotalCount = count,
+                CurrentPage = pageNumber,
+                PageSize = pageSize
             };
         }
 
