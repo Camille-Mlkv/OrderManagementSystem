@@ -64,7 +64,6 @@ namespace CartService.Tests.IntegrationTests.gRPC
             Assert.Equal(StatusCode.InvalidArgument, ex.StatusCode);
         }
 
-
         [Fact]
         public async Task ClearCart_ValidUserId_DeletesCartAndJob()
         {

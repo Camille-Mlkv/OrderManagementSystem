@@ -55,12 +55,7 @@ namespace CartService.Tests.IntegrationTests.Configuration
             {
                 services.AddGrpc();
 
-                var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IConnectionMultiplexer));
-                if (descriptor != null)
-                {
-                    services.Remove(descriptor);
-                }
-                services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer);
+                ConfigureRedis(services);
 
                 ConfigureHangfire(services);
             });
@@ -98,6 +93,16 @@ namespace CartService.Tests.IntegrationTests.Configuration
 
             await _redisContainer.StopAsync();
             await _redisContainer.DisposeAsync();
+        }
+
+        private void ConfigureRedis(IServiceCollection services)
+        {
+            var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(IConnectionMultiplexer));
+            if (descriptor != null)
+            {
+                services.Remove(descriptor);
+            }
+            services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer);
         }
 
         private void ConfigureHangfire(IServiceCollection services)
