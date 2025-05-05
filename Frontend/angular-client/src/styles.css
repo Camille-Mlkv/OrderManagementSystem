@@ -1,0 +1,13 @@
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+
+body, html {
+  background-color: #f0ede4; 
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+

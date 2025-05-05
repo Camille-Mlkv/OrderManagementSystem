@@ -2,6 +2,7 @@ using Serilog;
 using UserService.API.Middleware;
 using UserService.BusinessLogic;
 using UserService.BusinessLogic.Options;
+using UserService.DataAccess.Data;
 using UserService.DataAccess.DI;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,10 +36,10 @@ if (app.Environment.IsDevelopment())
 }
 
 // use this code to seed the db with sample data
-//using (var scope = app.Services.CreateScope())
-//{
-//    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider);
-//}
+using (var scope = app.Services.CreateScope())
+{
+    await DatabaseInitializer.InitializeAsync(scope.ServiceProvider);
+}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

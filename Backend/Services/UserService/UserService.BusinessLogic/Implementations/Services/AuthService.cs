@@ -6,6 +6,7 @@ using UserService.BusinessLogic.DTOs.Responses;
 using UserService.BusinessLogic.DTOs;
 using AutoMapper;
 using UserService.BusinessLogic.Exceptions;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace UserService.BusinessLogic.Implementations.Services
 {
@@ -44,16 +45,16 @@ namespace UserService.BusinessLogic.Implementations.Services
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(request.UserName, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(request.Email, cancellationToken);
 
             if (user is null || !await _unitOfWork.UserRepository.CheckPasswordAsync(user, request.Password, cancellationToken))
             {
-                throw new UnauthorizedException("Cannot sign in.","Wrong credentials.");
+                throw new NotFoundException("Cannot sign in.","Wrong credentials.");
             }
 
             if (!user.EmailConfirmed)
             {
-                throw new UnauthorizedException("Cannot sign in.", " Account is not confirmed.");
+                throw new BadRequestException("Cannot sign in.", " Account is not confirmed.");
             }
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -73,9 +74,8 @@ namespace UserService.BusinessLogic.Implementations.Services
 
             LoginResponse loginResponse = new()
             {
-                User = _mapper.Map<User>(user),
                 AccessToken = accessToken,
-                Expiration = expiry
+                RefreshToken = user.RefreshToken,
             };
 
             return loginResponse;
@@ -101,13 +101,12 @@ namespace UserService.BusinessLogic.Implementations.Services
 
             var roles = await _unitOfWork.UserRepository.GetUserRolesAsync(user, cancellationToken);
 
-            var accessToken = _tokenService.GenerateAccessToken(user, roles);
+            var accessTokenData = _tokenService.GenerateAccessToken(user, roles);
 
             LoginResponse loginResponseDTO = new()
             {
-                User = _mapper.Map<User>(user),
-                AccessToken = accessToken.AccessToken,
-                Expiration = accessToken.Expiry,
+                AccessToken = accessTokenData.AccessToken,
+                RefreshToken = user.RefreshToken,
             };
 
             return loginResponseDTO;
@@ -130,6 +129,13 @@ namespace UserService.BusinessLogic.Implementations.Services
 
             await _unitOfWork.UserRepository.UpdateUserAsync(user, cancellationToken);
             await _unitOfWork.SaveAllAsync(cancellationToken);
+        }
+
+        public async Task<List<string>> GetRolesAsync(CancellationToken cancellationToken)
+        {
+            var roles = await _unitOfWork.UserRepository.GetRolesAsync(cancellationToken);
+
+            return roles;
         }
     }
 }

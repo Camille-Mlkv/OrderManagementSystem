@@ -54,6 +54,8 @@ namespace CartService.API.Controllers
             var userId = GetUserId();
             await _mediator.Send(new UpdateItemQuantityCommand(userId, cartItem), cancellationToken);
 
+            _logger.LogInformation($"Amount is updated for item {cartItem.MealId} in cart {userId}.");
+
             return NoContent();
         }
 

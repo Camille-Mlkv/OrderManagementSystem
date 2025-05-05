@@ -1,0 +1,10 @@
+<div *ngIf="orders.length === 0" class="no-orders-message">
+  <p>No orders available at the moment.</p>
+</div>
+
+<div *ngFor="let order of orders" class="order-card" [routerLink]="['/order-info', order.id]">
+    <p><strong>Order #{{ order.orderNumber }}</strong></p>
+    <p>Total: {{ order.totalPrice }} $</p>
+    <p>Created: {{ order.createdAt | date:'short' }}</p>
+    <button (click)="onTakeOrder(order.id); $event.stopPropagation()">Take</button>
+</div>

@@ -9,7 +9,7 @@ namespace OrderService.Domain.Entities
         public Guid ClientId { get; set; }
         public Guid? CourierId { get; set; }
         public Status Status { get; set; } = new();
-        public Address Address { get; set; } = new();
+        public string Address { get; set; } 
         public List<OrderMeal> Meals { get; set; } = new();
         public decimal TotalPrice { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

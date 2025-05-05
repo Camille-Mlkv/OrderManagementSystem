@@ -158,6 +158,66 @@
       "SwaggerKey": "Order"
     },
     {
+      "DownstreamPathTemplate": "/api/orders/courier/{courierId}/status-{status}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/courier/{courierId}/status-{status}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Order"
+    },
+    {
+      "DownstreamPathTemplate": "/api/orders/delivered",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/delivered",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "SwaggerKey": "Order"
+    },
+    {
+      "DownstreamPathTemplate": "/api/orders/courier/status-{status}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/courier/status-{status}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Courier"
+      },
+      "SwaggerKey": "Order"
+    },
+    {
       "DownstreamPathTemplate": "/api/orders/opened-orders",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -249,6 +309,36 @@
       "UpstreamPathTemplate": "/payments/webhook",
       "UpstreamHttpMethod": [ "POST" ],
       "SwaggerKey": "Order"
+    },
+    {
+      "DownstreamPathTemplate": "/hubs/",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/hubs/",
+      "QoSOptions": {
+        "TimeoutValue": 320000
+      },
+      "Priority": 50
+    },
+    {
+      "DownstreamPathTemplate": "/hubs/order",
+      "DownstreamScheme": "ws",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orderservice.api",
+          "Port": 5011
+        }
+      ],
+      "UpstreamPathTemplate": "/hubs/order",
+      "QoSOptions": {
+        "TimeoutValue": 320000
+      },
+      "Priority": 50
     }
   ]
 }

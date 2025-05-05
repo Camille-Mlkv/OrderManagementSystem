@@ -1,0 +1,20 @@
+<div class="order-status-container">
+    <div class="status-column" *ngFor="let status of orderStatuses">
+      <h3>{{ status }}</h3>
+      <div *ngIf="status === 'ReadyForDelivery'">
+          <ng-container *ngIf="(ordersByStatus[status]?.length ?? 0) > 0; else noOrders">
+            <button (click)="handleReadyForDelivery()">Out for delivery</button>
+          </ng-container>
+          <ng-template #noOrders>
+            <p>No orders ready for delivery</p>
+          </ng-template>
+      </div>
+
+      <div *ngFor="let order of ordersByStatus[status]" class="order-card" [routerLink]="['/order-info', order.id]">
+        <p><strong>Order #{{ order.orderNumber }}</strong></p>
+        <p>Total: {{ order.totalPrice }} $</p>
+        <p>Created: {{ order.createdAt | date:'short' }}</p>
+      </div>
+    </div>
+</div>
+  

@@ -1,0 +1,29 @@
+.couriers-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .couriers-list {
+    background-color: white;
+    overflow: hidden;
+  }
+  
+  .courier-item {
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+  
+  .courier-item:hover {
+    background-color: #f0f0f0;
+  }
+  

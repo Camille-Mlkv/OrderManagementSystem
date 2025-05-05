@@ -1,0 +1,55 @@
+
+<form [formGroup]="form" class="form-container" (ngSubmit)="onSubmit()">
+    <label>Name:
+        <input formControlName="name"/>
+      </label>
+    
+      <label>Description:
+        <textarea formControlName="description"></textarea>
+      </label>
+    
+      <label>Price:
+        <input type="number" formControlName="price" />
+      </label>
+    
+      <label>Calories:
+        <input type="number" formControlName="calories" />
+      </label>
+    
+      <label class="checkbox-label">
+        <input type="checkbox" formControlName="isAvailable" />
+        Available
+      </label>
+    
+      <label>
+        Category:
+        <select formControlName="categoryId">
+          <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+        </select>
+      </label>
+    
+      <label>
+        Cuisine:
+        <select formControlName="cuisineId">
+          <option *ngFor="let cuisine of cuisines" [value]="cuisine.id">{{ cuisine.name }}</option>
+        </select>
+      </label>
+    
+      <label>
+        Tags:
+        <select formControlName="tagIds" multiple>
+          <option *ngFor="let tag of tags" [value]="tag.id">{{ tag.name }}</option>
+        </select>
+      </label>
+    
+      <div class="file-upload">
+        <input type="file" style="display: none;" #fileInput accept="image/*" (change)="imageSelected($event)" />
+        <button type="button" (click)="fileInput.click()">Select File</button>
+      </div>
+    
+      <div *ngIf="imagePreviewUrl" class="image-preview">
+        <img [src]="imagePreviewUrl" alt="Selected image preview" />
+      </div>
+
+      <button type="submit" [disabled]="form.invalid">Submit</button>
+</form>

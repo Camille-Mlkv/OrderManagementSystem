@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 20px;
+}
+
+.main-title {
+    font-size: 48px;
+    color: #2d8655;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.sub-title {
+    font-size: 32px;
+    color: #000000;
+    margin-bottom: 20px;
+}
+
+.catalog-button {
+    background-color: #2d8655;  
+    color: white;               
+    font-size: 20px;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 4px;     
+}
+
+.catalog-button:hover {
+    background-color: #218838;  
+    cursor: pointer;
+}

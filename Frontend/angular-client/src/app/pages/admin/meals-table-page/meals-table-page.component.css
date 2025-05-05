@@ -1,0 +1,43 @@
+.container {
+    padding: 20px;
+  }
+  
+.meals-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+.meals-table:hover{
+    cursor: pointer;
+}
+  
+.meals-table th,
+.meals-table td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+}
+  
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+  
+.pagination button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    padding: 16px;
+}
+  
+.pagination button:disabled {
+    color: #b6b5b5;
+    cursor: not-allowed;
+}
+  

@@ -1,0 +1,23 @@
+<div *ngIf="meal" class="container">
+    <img [src]="transformImage(meal.imageUrl)" alt="{{ meal.name }}" />
+  
+    <h2>{{ meal.name }}</h2>
+  
+    <p><strong>Cuisine:</strong> {{ cuisineName }}</p>
+    <p><strong>Category:</strong> {{ categoryName }}</p>
+    <p>{{ meal.description }}</p>
+    <p><strong>Price:</strong> {{ meal.price }} $</p>
+    <p><strong>Calories:</strong> {{ meal.calories }}</p>
+  
+    <div class="tags" *ngIf="meal.tags?.length">
+      <span 
+        *ngFor="let tag of meal.tags" 
+        class="tag" 
+        [title]="tag.description">
+        {{ tag.name }}
+      </span>
+    </div>
+
+    <button type="button" class="back-button" (click)="OnPreviousPage()">Back</button>
+  </div>
+  

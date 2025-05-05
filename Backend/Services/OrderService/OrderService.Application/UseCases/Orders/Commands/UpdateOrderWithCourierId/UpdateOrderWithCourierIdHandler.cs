@@ -1,6 +1,9 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
+using OrderService.Application.DTOs.Order;
 using OrderService.Application.Exceptions;
 using OrderService.Application.Specifications.Repositories;
+using OrderService.Application.Specifications.Services;
 using OrderService.Domain.Enums;
 
 namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithCourierId
@@ -8,10 +11,17 @@ namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithCouri
     public class UpdateOrderWithCourierIdHandler : IRequestHandler<UpdateOrderWithCourierIdCommand>
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IOrderNotificationService _notifier;
+        private readonly IMapper _mapper;
 
-        public UpdateOrderWithCourierIdHandler(IOrderRepository orderRepository)
+        public UpdateOrderWithCourierIdHandler(
+           IOrderRepository orderRepository,
+           IOrderNotificationService notifier,
+           IMapper mapper)
         {
             _orderRepository = orderRepository;
+            _notifier = notifier;
+            _mapper = mapper;
         }
 
         public async Task Handle(UpdateOrderWithCourierIdCommand request, CancellationToken cancellationToken)
@@ -31,6 +41,10 @@ namespace OrderService.Application.UseCases.Orders.Commands.UpdateOrderWithCouri
             order.CourierId = request.CourierId;
 
             await _orderRepository.UpdateAsync(order,cancellationToken);
+
+            var orderDto = _mapper.Map<OrderDto>(order);
+
+            await _notifier.NotifyOrderUpdatedAsync(orderDto);
         }
     }
 }

@@ -29,7 +29,7 @@
           "Port": 5013
         }
       ],
-      "UpstreamPathTemplate": "/meals/{cuisineId}",
+      "UpstreamPathTemplate": "/meals/{mealId}",
       "UpstreamHttpMethod": [ "PUT", "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
@@ -67,7 +67,7 @@
       "SwaggerKey": "Meal"
     },
     {
-      "DownstreamPathTemplate": "/api/meals/cuisine/{cuisineId}",
+      "DownstreamPathTemplate": "/api/meals",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -75,20 +75,7 @@
           "Port": 5013
         }
       ],
-      "UpstreamPathTemplate": "/meals/cuisine/{cuisineId}",
-      "UpstreamHttpMethod": [ "GET" ],
-      "SwaggerKey": "Meal"
-    },
-    {
-      "DownstreamPathTemplate": "/api/meals/cuisine/{cuisineId}/filtered",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "mealservice.api",
-          "Port": 5013
-        }
-      ],
-      "UpstreamPathTemplate": "/meals/cuisine/{cuisineId}/filtered",
+      "UpstreamPathTemplate": "/meals",
       "UpstreamHttpMethod": [ "GET" ],
       "SwaggerKey": "Meal"
     }
