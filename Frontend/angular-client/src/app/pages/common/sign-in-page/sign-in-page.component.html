@@ -1,0 +1,36 @@
+<div class="login-page">
+    <div class="container mt-5 d-flex justify-content-center align-items-center">
+      <div class="card p-4" style="max-width: 400px; width: 100%;">
+        <h2 class="mb-4 h2 text-success text-center">Sign in</h2>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+          <div class="mb-3">
+            <input class="form-control" placeholder="Email" formControlName="email" />
+            <div class="error-message" *ngIf="hasDisplayableError('email')">
+              <div *ngIf="form.controls['email'].hasError('required')">Please enter your email address.</div>
+              <div *ngIf="form.controls['email'].hasError('invalidEmail')">Invalid email format.</div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="Password" formControlName="password" />
+            <div class="form-check mt-2">
+              <input type="checkbox" class="form-check-input" id="showPassword" (change)="showPassword = !showPassword" />
+              <label class="form-check-label" for="showPassword">Show password</label>
+            </div>
+    
+            <div class="error-message" *ngIf="hasDisplayableError('password')">
+              <div *ngIf="form.controls['password'].hasError('required')">Please enter your password.</div>
+              <div *ngIf="form.controls['password'].hasError('minlength')">Password minimum length is 8.</div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100 mb-3">Sign in</button>
+          <div class="text-center">
+            <a routerLink="/forgot-password" class="text-muted">Forgot your password?</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

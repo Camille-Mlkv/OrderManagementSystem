@@ -3,6 +3,7 @@
     public class MealFilterDto
     {
         public Guid? CategoryId { get; set; }
+        public Guid? CuisineId {  get; set; }
         public bool? IsAvailable { get; set; }
         public List<Guid> TagIds { get; set; } = new List<Guid>();
         public double? MaxPrice { get; set; }

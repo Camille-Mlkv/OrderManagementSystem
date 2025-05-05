@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using OrderService.Application.DTOs.Address;
 using OrderService.Application.Exceptions;
 using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByClient;
 using OrderService.Application.UseCases.Orders.Commands.ConfirmOrderByCourier;
@@ -15,6 +14,9 @@ using OrderService.Application.UseCases.Orders.Queries.GetOpenedOrders;
 using OrderService.Application.UseCases.Orders.Queries.GetOrderById;
 using OrderService.Application.UseCases.Orders.Queries.GetOrdersByStatus;
 using System.Security.Claims;
+using OrderService.Application.DTOs.Order;
+using Stripe.Climate;
+using OrderService.Application.UseCases.Orders.Queries.GetDeliveredOrdersByDate;
 
 namespace OrderService.API.Controllers
 {
@@ -34,10 +36,10 @@ namespace OrderService.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] AddressDto address, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateOrder([FromBody] OrderRequestDto orderRequest, CancellationToken cancellationToken)
         {
             var clientId = GetUserId();
-            var orderId = await _mediator.Send(new CreateOrderCommand(clientId, address),cancellationToken);
+            var orderId = await _mediator.Send(new CreateOrderCommand(clientId, orderRequest.Address),cancellationToken);
 
             _logger.LogInformation($"Order {orderId} was created.");
 
@@ -115,6 +117,38 @@ namespace OrderService.API.Controllers
             return NoContent();
         }
 
+        [HttpGet("courier/{courierId}/status-{status}")]
+        public async Task<IActionResult> GetCourierOrders(Guid courierId, string status, CancellationToken cancellationToken)
+        {
+            var orders = await _mediator.Send(new GetCourierOrdersByStatusQuery(courierId, status), cancellationToken);
+
+            _logger.LogInformation($"Courier {courierId} orders retrieved.");
+
+            return Ok(orders);
+        }
+
+        [HttpGet("delivered")]
+        public async Task<IActionResult> GetDeliveredOrders(
+           [FromQuery] DateTime from, 
+           [FromQuery] DateTime to,
+           CancellationToken cancellationToken)
+        {
+            var orders = await _mediator.Send(new GetDeliveredOrdersByDateQuery(from, to), cancellationToken);
+
+            return Ok(orders);
+        }
+
+        [HttpGet("courier/status-{status}")]
+        public async Task<IActionResult> GetCourierOrders(string status, CancellationToken cancellationToken)
+        {
+            var courierId = GetUserId();
+            var orders = await _mediator.Send(new GetCourierOrdersByStatusQuery(courierId, status), cancellationToken);
+
+            _logger.LogInformation($"Courier {courierId} orders retrieved.");
+
+            return Ok(orders);
+        }
+
         [HttpGet("opened-orders")]
         public async Task<IActionResult> GetOpenedOrders(CancellationToken cancellationToken)
         {
@@ -134,17 +168,6 @@ namespace OrderService.API.Controllers
             _logger.LogInformation($"Order {orderId} taken by courier {courierId}.");
 
             return NoContent();
-        }
-
-        [HttpGet("out-for-delivery")]
-        public async Task<IActionResult> GetCourierOrders(CancellationToken cancellationToken)
-        {
-            var courierId = GetUserId();
-            var orders = await _mediator.Send(new GetCourierOrdersQuery(courierId), cancellationToken);
-
-            _logger.LogInformation($"Courier {courierId} orders retrieved.");
-
-            return Ok(orders);
         }
 
         [HttpPatch("{orderId:guid}/courier-confirmation")]

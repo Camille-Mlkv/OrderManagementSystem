@@ -1,4 +1,5 @@
-﻿using UserService.BusinessLogic.DTOs.Requests;
+﻿using UserService.BusinessLogic.DTOs;
+using UserService.BusinessLogic.DTOs.Requests;
 
 namespace UserService.BusinessLogic.Specifications.Services
 {
@@ -13,5 +14,7 @@ namespace UserService.BusinessLogic.Specifications.Services
         Task<string> GetPasswordResetCodeAsync(string userName, CancellationToken cancellationToken);
 
         Task ResetPasswordAsync(ResetPasswordRequest request, CancellationToken cancellationToken);
+
+        Task<List<User>> GetUsersByRoleAsync(string role, CancellationToken cancellationToken);
     }
 }

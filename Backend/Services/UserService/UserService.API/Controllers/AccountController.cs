@@ -16,10 +16,10 @@ namespace UserService.API.Controllers
             _logger = logger;
         }
 
-        [HttpPost("users/{userName}/confirmation-email")]
+        [HttpPost("{userName}/confirmation-email")]
         public async Task<IActionResult> SendConfirmationEmail(string userName, CancellationToken cancellationToken)
         {
-            var callBack = Url.Action("ConfirmEmail", "Account", new { userName }, Request.Scheme);
+            var callBack = $"https://localhost:5000/account/{userName}/email/confirmed";
 
             await _accountService.SendConfirmationEmailAsync(callBack!,userName, cancellationToken);
 
@@ -28,20 +28,20 @@ namespace UserService.API.Controllers
             return Ok();
         }
 
-        [HttpGet("users/{userName}/email/confirmed")]
+        [HttpGet("{userName}/email/confirmed")]
         public async Task<IActionResult> ConfirmEmail([FromRoute]string userName, CancellationToken cancellationToken)
         {
             await _accountService.ConfirmEmailAsync(userName, cancellationToken);
 
             _logger.LogInformation($"User {userName} confirmed their account.");
 
-            return Ok("Account is confirmed.");
+            return Redirect("http://localhost:4200/email-confirmed");
         }
 
-        [HttpPost("users/{userName}/password-email")]
+        [HttpPost("{userName}/password-email")]
         public async Task<IActionResult> ForgotPassword(string userName, CancellationToken cancellationToken)
         {
-            var callBack = Url.Action("GetPasswordResetCode", "Account", new { userName }, Request.Scheme);
+            var callBack = $"http://localhost:4200/reset-password?userName={userName}";
 
             await _accountService.ForgotPasswordAsync(callBack!,userName, cancellationToken);
 
@@ -50,7 +50,7 @@ namespace UserService.API.Controllers
             return Ok();
         }
 
-        [HttpGet("users/{userName}/reset-code")]
+        [HttpGet("{userName}/reset-code")]
         public async Task<IActionResult> GetPasswordResetCode([FromRoute]string userName, CancellationToken cancellationToken)
         {
             var resetCode = await _accountService.GetPasswordResetCodeAsync(userName, cancellationToken);
@@ -70,5 +70,12 @@ namespace UserService.API.Controllers
             return Ok();
         }
 
+        [HttpGet("users/{role}")]
+        public async Task<IActionResult> GetUsersByRole(string role, CancellationToken cancellationToken)
+        {
+            var users = await _accountService.GetUsersByRoleAsync(role, cancellationToken);
+
+            return Ok(users);
+        }
     }
 }

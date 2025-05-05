@@ -1,0 +1,47 @@
+<header class="header">
+  <div class="logo">
+    <a routerLink="/" class="logo-link">OMS</a>
+  </div>
+  <nav class="menu">
+    <div *ngIf="authContext.isAdmin">
+      <a routerLink="/meals-table">Meals Management</a>
+      <a routerLink="/couriers">Couriers</a>
+      <div class="dropdown">
+        <button class="dropbtn">Orders Management ▾</button>
+        <div class="dropdown-content">
+          <a routerLink="/admin-orders">Active Orders</a>
+          <a routerLink="/delivered-orders">Delivered Orders</a>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="authContext.isClient">
+      <a routerLink="/cuisines">Catalog</a>
+      <a routerLink="/cart">Cart</a>
+      <a routerLink="/client-orders">My orders</a>
+    </div>
+    <div *ngIf="authContext.isCourier">
+      <a routerLink="/opened-orders">Opened orders</a>
+      <a routerLink="/courier-orders">Current orders</a>
+    </div>
+  </nav>
+  <div class="buttons">
+    <ul *ngIf='!authContext.isAuthenticated'>
+      <li>
+        <a routerLink="/sign-up" class="btn">Sign Up</a>
+      </li>
+      <li>
+        <a routerLink="/sign-in" class="btn">Sign In</a>
+      </li>
+    </ul>
+    <ul *ngIf='authContext.isAuthenticated' style="display: flex; align-items: center;">
+      <li style="color: white;">
+        Hello, {{ authContext.userName }}
+      </li>
+      <li>
+        <a (click)="onLogout()" class="btn" style="cursor: pointer;">Log out</a>
+      </li>
+    </ul>
+  </div>
+</header>
+
+  

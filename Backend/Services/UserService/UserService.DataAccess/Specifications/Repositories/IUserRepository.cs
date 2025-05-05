@@ -31,6 +31,10 @@ namespace UserService.DataAccess.Specifications.Repositories
 
         Task<IdentityResult> ResetPasswordAsync(ApplicationUser user, string resetCode, string newPassword, CancellationToken cancellationToken);
 
-        Task<string> GetUserEmailById(string userId, CancellationToken cancellationToken);
+        Task<string> GetUserEmailByIdAsync(string userId, CancellationToken cancellationToken);
+
+        Task<List<string>> GetRolesAsync(CancellationToken cancellationToken);
+
+        Task<List<ApplicationUser>> GetUsersByRoleAsync(string role, CancellationToken cancellationToken);
     }
 }

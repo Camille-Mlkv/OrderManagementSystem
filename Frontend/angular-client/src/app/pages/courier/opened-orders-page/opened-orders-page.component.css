@@ -1,0 +1,37 @@
+.no-orders-message {
+    text-align: center;
+    padding: 24px;
+    font-size: 16px;
+    color: #666;
+}
+
+.order-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+  }
+
+  .order-card p {
+    margin: 4px 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .order-card strong {
+    color: #222;
+  }
+  
+  .order-card button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #2d8655;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }

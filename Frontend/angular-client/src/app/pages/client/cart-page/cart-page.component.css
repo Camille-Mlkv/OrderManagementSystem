@@ -1,0 +1,125 @@
+.cart-page {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 50px;
+}
+  
+.cart-item {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between; 
+    width: 100%; 
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+.cart-item-content {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  gap: 16px;
+  justify-content: space-between;
+}
+  
+.cart-meal-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+  
+.cart-info {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+}
+  
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 120px;
+    justify-content: flex-end; 
+}
+  
+.quantity-button {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+    background-color: #ffc107;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.quantity-button:disabled {
+    background-color: #ddd; 
+    color: #aaa; 
+    cursor: not-allowed;
+}
+  
+.delete-item-button{
+  background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.cart-total {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.cart-actions {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.clear-cart-button {
+  background-color: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+.checkout-button {
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.checkout-button:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor:help
+}
+
+.clickable-cart-info {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.unavailable {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+

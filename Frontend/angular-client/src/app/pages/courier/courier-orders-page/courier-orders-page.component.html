@@ -1,0 +1,33 @@
+<div class="order-status-container">
+  <div class="status-column" *ngFor="let status of orderStatuses">
+    <h3>{{ status }}</h3>
+    <div *ngFor="let order of ordersByStatus[status]" class="order-card" [routerLink]="['/order-info', order.id]">
+      <p><strong>Order #{{ order.orderNumber }}</strong></p>
+      <p>Total: {{ order.totalPrice }} $</p>
+      <p>Created: {{ order.createdAt | date:'short' }}</p>
+
+      <ng-container *ngIf="order.status === 'OutForDelivery'">
+        <div class="confirmation-section" [routerLink]="null">
+          <p>
+            Courier confirmation:
+            <ng-container *ngIf="order.confirmedByCourier; else confirmButton">
+              <i class="fa fa-check text-success"></i>
+            </ng-container>
+            <ng-template #confirmButton>
+              <button (click)="confirmDelivery(order); $event.stopPropagation()">Confirm</button>
+            </ng-template>
+          </p>
+          <p>
+            Client confirmation:
+            <i
+            [ngClass]="{
+              'fas fa-check text-success': order.confirmedByClient,
+              'fa fa-times text-danger': !order.confirmedByClient
+            }">
+          </i>
+          </p>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

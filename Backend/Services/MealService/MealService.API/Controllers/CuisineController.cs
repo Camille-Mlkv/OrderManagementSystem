@@ -2,6 +2,7 @@
 using MealService.Application.UseCases.Cuisines.Commands.AddCuisine;
 using MealService.Application.UseCases.Cuisines.Commands.DeleteCuisine;
 using MealService.Application.UseCases.Cuisines.Commands.UpdateCuisine;
+using MealService.Application.UseCases.Cuisines.Queries.GetCuisineById;
 using MealService.Application.UseCases.Cuisines.Queries.GetCuisines;
 using MealService.Application.UseCases.Cuisines.Queries.GetCuisinesByName;
 using MediatR;
@@ -30,6 +31,16 @@ namespace MealService.API.Controllers
             _logger.LogInformation("Cuisines retrieved.");
 
             return Ok(cuisines);
+        }
+
+        [HttpGet("{cuisineId}")]
+        public async Task<IActionResult> GetCuisineById(Guid cuisineId, CancellationToken cancellationToken)
+        {
+            var cuisine = await _mediator.Send(new GetCuisineByIdQuery(cuisineId), cancellationToken);
+
+            _logger.LogInformation($"Cuisine with id {cuisineId} retrieved.");
+
+            return Ok(cuisine);
         }
 
         [HttpGet("name/{name}")]

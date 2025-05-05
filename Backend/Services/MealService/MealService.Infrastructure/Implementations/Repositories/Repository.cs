@@ -1,4 +1,5 @@
-﻿using MealService.Application.Specifications.Repositories;
+﻿using MealService.Application.DTOs;
+using MealService.Application.Specifications.Repositories;
 using MealService.Domain.Entities;
 using MealService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +44,7 @@ namespace MealService.Infrastructure.Implementations.Repositories
             return await query.FirstOrDefaultAsync(cancellationToken);
         }
 
-        public async Task<List<T>> GetPagedListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken, Expression<Func<T, bool>>? filter = null)
+        public async Task<PagedList<T>> GetPagedListAsync(int pageNumber, int pageSize, CancellationToken cancellationToken, Expression<Func<T, bool>>? filter = null)
         {
             var query = _context.Set<T>().AsQueryable();
 
@@ -52,13 +53,21 @@ namespace MealService.Infrastructure.Implementations.Repositories
                 query = query.Where(filter);
             }
 
+            var count = query.Count();
+
             var items = await query
                 .OrderBy(entity => entity.Id)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
-            return items;
+            return new PagedList<T>
+            {
+                Items = items,
+                TotalCount = count,
+                CurrentPage = pageNumber,
+                PageSize = pageSize
+            };
         }
 
         public async Task<IReadOnlyList<T>> ListAllAsync(CancellationToken cancellationToken)

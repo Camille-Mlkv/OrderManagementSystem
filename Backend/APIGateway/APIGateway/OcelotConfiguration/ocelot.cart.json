@@ -21,7 +21,7 @@
       "SwaggerKey": "Cart"
     },
     {
-      "DownstreamPathTemplate": "/api/cart/{mealId}/increase",
+      "DownstreamPathTemplate": "/api/cart",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -29,28 +29,8 @@
           "Port": 5014
         }
       ],
-      "UpstreamPathTemplate": "/cart/{mealId}/increase",
-      "UpstreamHttpMethod": [ "POST" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "Client"
-      },
-      "SwaggerKey": "Cart"
-    },
-    {
-      "DownstreamPathTemplate": "/api/cart/{mealId}/decrease",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "cartservice.api",
-          "Port": 5014
-        }
-      ],
-      "UpstreamPathTemplate": "/cart/{mealId}/decrease",
-      "UpstreamHttpMethod": [ "POST" ],
+      "UpstreamPathTemplate": "/cart",
+      "UpstreamHttpMethod": [ "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using UserService.DataAccess.Models;
 using UserService.DataAccess.Specifications.Repositories;
 
@@ -122,7 +123,7 @@ namespace UserService.DataAccess.Implementations.Repositories
             return resetResult;
         }
 
-        public async Task<string> GetUserEmailById(string userId, CancellationToken cancellationToken)
+        public async Task<string> GetUserEmailByIdAsync(string userId, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -131,6 +132,22 @@ namespace UserService.DataAccess.Implementations.Repositories
             var email = user!.Email;
 
             return email!;
+        }
+
+        public async Task<List<string>> GetRolesAsync(CancellationToken cancellationToken)
+        {
+            var roles = await _roleManager.Roles
+               .Select(role => role.Name)
+               .ToListAsync(cancellationToken);
+
+            return roles!;
+        }
+
+        public async Task<List<ApplicationUser>> GetUsersByRoleAsync(string role, CancellationToken cancellationToken)
+        {
+            var users = (await _userManager.GetUsersInRoleAsync(role)).ToList();
+
+            return users;
         }
     }
 }

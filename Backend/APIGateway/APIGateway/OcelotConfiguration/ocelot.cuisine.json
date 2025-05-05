@@ -66,6 +66,19 @@
       "UpstreamHttpMethod": [ "GET" ],
 
       "SwaggerKey": "Meal"
+    },
+    {
+      "DownstreamPathTemplate": "/api/cuisines/{cuisineId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "mealservice.api",
+          "Port": 5013
+        }
+      ],
+      "UpstreamPathTemplate": "/cuisines/{cuisineId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "SwaggerKey": "Meal"
     }
   ]
 }

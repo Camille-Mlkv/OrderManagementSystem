@@ -1,0 +1,57 @@
+.order-step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+  }
+  
+.step-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+}
+  
+.step-number {
+    background-color: #2d8655;
+    color: white;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 16px;
+}
+  
+.form-section {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 32px;
+}
+  
+.custom-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+  
+.custom-input {
+    width: 100%;
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 16px;
+}
+  
+.continue-button {
+    background-color: #2d8655;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+}
+  

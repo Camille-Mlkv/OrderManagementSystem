@@ -2,24 +2,29 @@
 using UserService.DataAccess.Specifications;
 using UserService.BusinessLogic.Specifications.Services;
 using UserService.BusinessLogic.DTOs.Requests;
+using UserService.BusinessLogic.DTOs;
+using AutoMapper;
 
 namespace UserService.BusinessLogic.Implementations.Services
 {
     public class AccountService : IAccountService
     {
-        private IUnitOfWork _unitOfWork;
-        private IEmailService _emailService;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
+        private readonly IMapper _mapper;
 
-        public AccountService(IUnitOfWork unitOfWork, IEmailService emailService)
+        public AccountService(IUnitOfWork unitOfWork, IEmailService emailService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _emailService = emailService;
+            _mapper = mapper;
         }
+
         public async Task SendConfirmationEmailAsync(string callBack, string userName, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var user=await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName, cancellationToken);
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(userName, cancellationToken);
             if (user is null)
             {
                 throw new BadRequestException("Bad request", $"User with username {userName} doesn't exist.");
@@ -110,7 +115,14 @@ namespace UserService.BusinessLogic.Implementations.Services
                 var error = result.Errors.FirstOrDefault();
                 throw new BadRequestException(error!.Code, error.Description);
             }
+        }
 
+        public async Task<List<User>> GetUsersByRoleAsync(string role, CancellationToken cancellationToken)
+        {
+            var users = await _unitOfWork.UserRepository.GetUsersByRoleAsync(role, cancellationToken);
+            var usersDtos = _mapper.Map<List<User>>(users);
+
+            return usersDtos;
         }
     }
 }
